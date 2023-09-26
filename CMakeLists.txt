@@ -16,11 +16,15 @@ include_directories(
 )
 
 SET(TARGET_H
+	Renderer.h
+	Shader.h
    )
 
 # Local source files here
 SET(TARGET_SRC
     main.cpp
+	Renderer.cpp
+	Shader.cpp
     )
 
 set(ALL_LIBS

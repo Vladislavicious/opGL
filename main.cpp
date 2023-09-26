@@ -1,8 +1,4 @@
-#include <GL/glew.h> // подключение GLEW
-#include <GLFW/glfw3.h> // подключение GLFW
-#include <stdio.h> //Для простого консольного вывода ошибок
-#include <glm/glm.hpp>
-#include <iostream>
+#include "Renderer.h"
 
 GLfloat* get_random_points(int number_of_points)
 {
@@ -84,81 +80,21 @@ int main()
     //                                         Определение координат
     int coord_number = 9; // Количество координат вершин
 
-    GLfloat points[coord_number] =
-    {
-        -0.5f,  -0.5f,  0.0f,
-         0.0f,   0.5f,  0.0f,
-         0.5f,  -0.5f,  0.0f,
-    };
-
-    GLfloat colors[coord_number] =
-    {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-    };
-
-    GLfloat points1[coord_number] =
-    {
-        -0.8f,  0.8f,  1.0f,
-         0.0f,   0.0f,  0.0f,
-         0.1f,  -0.2f,  0.0f,
-    };
-
-    GLfloat colors1[coord_number] =
-    {
-        1.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,
-    };
-
     GLuint vao = get_vao(get_random_points(coord_number), get_random_colors(coord_number), coord_number);
     GLuint vao1 = get_vao(get_random_points(coord_number), get_random_colors(coord_number), coord_number);
     GLuint vao2 = get_vao(get_random_points(coord_number), get_random_colors(coord_number), coord_number);
 
-    //                                              Шейдеры
-    const char* vertex_shader_text =
-    "#version 400\n"
-    "layout (location = 0) in vec3 vector_position;"                                       //Входные данные. В данном случае это координаты одной точки
-    "layout (location = 1) in vec3 vector_color;"
-    "out vec3 colour;"
+    std::vector<std::string> attribLocations;
+    attribLocations.push_back("vector_position");
+    attribLocations.push_back("vector_color");
 
-    "void main() {"                                     //Основная функция
-    " gl_Position = vec4(vector_position, 1.0);"                     //В данном случае простое преобразование без вычисления сложной проекции
-    " colour = vector_color;"
-    "}";
+    Shader shader = Shader("BasicShader.shader", attribLocations);
 
-    //Фрагмент - это по сути один пиксель на экране
-    const char* fragment_shader_text =                       //Фрагментный шейдер отвечает за окрашивание каждого фрагмента
-    "#version 400\n"                                    //Данный шейдер должен возвращать цвет пикселя
-    "in vec3 colour;"
-    "out vec4 frag_color;"                             //Цвет из 4-х координат - RGBA
-
-    "void main() {"
-    " frag_color = vec4(colour, 1.0);"
-    "}";
-    //                                          Загрузка шейдеров
-    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-    glCompileShader(vertex_shader);
-
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-    glCompileShader(fragment_shader);
-
-
-    GLuint shader_programme = glCreateProgram();
-    glAttachShader(shader_programme, vertex_shader);
-    glAttachShader(shader_programme, fragment_shader);
-    glBindAttribLocation(shader_programme, 0, "vector_position");
-    glBindAttribLocation(shader_programme, 1, "vector_color");
-    glLinkProgram(shader_programme);                   //Программа компонуется
-    //                                          Вывод на экран
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(shader_programme);                 //Подключается шейдерная программа
+        shader.Bind();
         glBindVertexArray(vao);                         //Подключается массив вершин
         glDrawArrays(GL_TRIANGLES, 0, coord_number / 3);               //Из массива рисуются три элемента начиная с элемента с индексом 0
 

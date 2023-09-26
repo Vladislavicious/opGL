@@ -2,24 +2,24 @@
 #include <sstream>
 #include <string>
 
-#include "Shader.h"
 #include "Renderer.h"
 
-Shader::Shader(const std::string& filePath)
-	: filePath(filePath), rendererID(0)
+Shader::Shader(const std::string& filePath, std::vector<std::string> Locations)
+	: filePath(filePath), attribLocations(Locations), shaderID(0)
 {
 	ShaderProgramSource shaders = ParseShader(filePath);
-	rendererID = CreateShader(shaders.vertexShader, shaders.fragmentShader);
+
+	shaderID = CreateShader(shaders.vertexShader, shaders.fragmentShader);
 }
 
 Shader::~Shader()
 {
-	GLCall(glDeleteProgram(rendererID));
+	GLCall(glDeleteProgram(shaderID));
 }
 
 void Shader::Bind() const
 {
-	GLCall(glUseProgram(rendererID));
+	GLCall(glUseProgram(shaderID));
 }
 
 void Shader::UnBind() const
@@ -50,13 +50,25 @@ int Shader::GetUniformLocation(const std::string name)
 
 	int uniformLocation;
 
-	GLCall(uniformLocation = glGetUniformLocation(rendererID, name.c_str()));
+	GLCall(uniformLocation = glGetUniformLocation(shaderID, name.c_str()));
 
 	if (uniformLocation == -1)
 		std::cout << "there's no uniform " << name << std::endl;
 
 	uniformLocationsMap[name] = uniformLocation;
 	return uniformLocation;
+}
+
+
+void Shader::bindAttribLocation(const unsigned int shader_programme)
+{
+	if ( attribLocations.empty() )
+		return;
+	int i = 0;
+	for (auto it = attribLocations.begin(); it != attribLocations.end(); it++, i++)
+	{
+		glBindAttribLocation(shader_programme, i, (*it).c_str());
+	}
 }
 
 ShaderProgramSource Shader::ParseShader(const std::string& filePath)
@@ -130,8 +142,13 @@ unsigned int Shader::CreateShader(const std::string& VertexShader, const std::st
 	unsigned int vertexShaderIndex = CompileShader(GL_VERTEX_SHADER, VertexShader);
 	unsigned int fragmentShaderIndex = CompileShader(GL_FRAGMENT_SHADER, FragmentShader);
 
+	auto programIndex = glCreateProgram();
+
 	glAttachShader(programIndex, vertexShaderIndex);
 	glAttachShader(programIndex, fragmentShaderIndex);
+
+	bindAttribLocation(programIndex);
+
 	glLinkProgram(programIndex);
 	glValidateProgram(programIndex);
 
