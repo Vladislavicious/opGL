@@ -19,6 +19,8 @@ SET(TARGET_H
 	Renderer.h
 	Shader.h
 	VertexBuffer.h
+	VertexArray.h
+	VertexBufferLayout.h
    )
 
 # Local source files here
@@ -27,6 +29,8 @@ SET(TARGET_SRC
 	Renderer.cpp
 	Shader.cpp
 	VertexBuffer.cpp
+	VertexArray.cpp
+	VertexBufferLayout.cpp
     )
 
 set(ALL_LIBS

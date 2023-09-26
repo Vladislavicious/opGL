@@ -1,0 +1,18 @@
+#include <GL/glew.h> // подключение GLEW
+#include <GLFW/glfw3.h> // подключение GLFW
+#include <stdio.h> //Для простого консольного вывода ошибок
+#include <glm/glm.hpp>
+#include <iostream>
+#include <signal.h>
+#include "Shader.h"
+#include "VertexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
+
+#define ASSERT(x) if(!(x)) raise(SIGTRAP);
+#define GLCall(x) GLClearError();x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
+void GLClearError();
+
+bool GLLogCall(const char* function, const char* file, int line);
