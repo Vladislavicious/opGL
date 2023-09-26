@@ -15,4 +15,18 @@
 
 void GLClearError();
 
+#ifndef RENDERER_H_
+#define RENDERER_H_
+
 bool GLLogCall(const char* function, const char* file, int line);
+
+class Renderer
+{
+public:
+
+    void Clear() const;
+
+    void Draw(const VertexArray& vertexArray, const Shader& shader, int count) const;
+};
+
+#endif //RENDERER_H_

@@ -1,6 +1,5 @@
 #include "Renderer.h"
 
-
 void GLClearError()
 {
     while (glGetError() != GL_NO_ERROR);
@@ -15,4 +14,19 @@ bool GLLogCall(const char* function, const char* file, int line)
         return false;
     }
     return true;
+}
+
+
+void Renderer::Clear() const
+{
+    GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+}
+
+void Renderer::Draw(const VertexArray& vertexArray, const Shader& shader, int count) const
+{
+    shader.Bind();
+    vertexArray.Bind();
+
+    GLCall(glDrawArrays(GL_TRIANGLES, 0, count));
+
 }

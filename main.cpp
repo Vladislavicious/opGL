@@ -2,14 +2,32 @@
 
 GLfloat* get_random_points(int number_of_colors)
 {
-    srand(131);
+    srand(1);
     GLfloat* arr = new GLfloat[number_of_colors];
-    for (int i=0;i<number_of_colors;i++)
+    for (int j=0;j<number_of_colors/3;j++)
     {
-        arr[i] = ((float)rand()) / RAND_MAX;
+        if (j % 2 ==0)
+        {
+            for(int i = j * 3; i < j * 3 + 3; i++)
+            {
+                arr[i] = ((float)rand()) / (RAND_MAX / 2) - 1;
+            }
+        }
+        else
+        {
+            for(int i = j * 3; i < j * 3 + 3; i++)
+            {
+                arr[i] = ((float)rand()) / RAND_MAX;
+            }
+        }
     }
+
     return arr;
 }
+
+int WinWidth= 640;
+int WinHeight= 480;
+void glfw_window_size_callback (GLFWwindow* window, int width, int height);
 
 int main()
 {
@@ -20,7 +38,11 @@ int main()
         return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "Triangle", NULL, NULL);
+    GLFWmonitor* mon = glfwGetPrimaryMonitor ();
+    const GLFWvidmode* vmode = glfwGetVideoMode (mon);
+    GLFWwindow* window = glfwCreateWindow (640, 480, "Triangle", NULL, NULL);
+    glfwSetWindowSizeCallback (window, glfw_window_size_callback);
+
     if (!window)
     {
         fprintf(stderr, "ERROR: could not open window with GLFW3\n");
@@ -33,10 +55,6 @@ int main()
     glewExperimental = GL_TRUE;                         // Подключение новейшей из доступных версий OpenGL
 
     glewInit();                                         //Включение GLEW
-    const GLubyte* renderer = glGetString(GL_RENDERER); // информация о графической карте
-    const GLubyte* version = glGetString(GL_VERSION);   // информация о версии OpenGL
-    printf("Renderer: %s\n", renderer);
-    printf("OpenGL version supported %s\n", version);
     glEnable(GL_DEPTH_TEST);                            // Включение буфера глубины
     glDepthFunc(GL_LESS);                               // А вот тут можно управлять его работой. Сейчас установлен режим по умолчанию
     //                                         Определение координат
@@ -56,19 +74,28 @@ int main()
     attribLocations.push_back("vector_position");
     attribLocations.push_back("vector_color");
 
-    Shader shader = Shader("BasicShader.shader", attribLocations);
+    Shader shader = Shader("../BasicShader.shader", attribLocations);
 
+    Renderer renderer;
 
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        renderer.Clear();
 
-        shader.Bind();
-        vertexArray.Bind();
-
-        glDrawArrays(GL_TRIANGLES, 0, coord_number / 3);               //Из массива рисуются три элемента начиная с элемента с индексом 0
+        renderer.Draw(vertexArray, shader, coord_number / 3);
         glfwPollEvents();                               //Обработка очереди событий
         glfwSwapBuffers(window);                        //Использование двойной буферизации
+        if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ESCAPE))
+        {
+            glfwSetWindowShouldClose (window, 1);
+        }
+        glViewport(0, 0, WinWidth, WinHeight);
     }
     glfwTerminate();
     return 0;
+}
+
+void glfw_window_size_callback (GLFWwindow* window, int width, int height)
+{
+    WinWidth = width;
+    WinHeight = height;
 }
