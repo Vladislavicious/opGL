@@ -22,25 +22,18 @@ GLfloat* get_random_colors(int number_of_colors)
 
 GLuint get_vao(GLfloat points[], GLfloat colors[], int coord_number)
 {
-    GLuint points_vbo = 0;
-    glGenBuffers(1, &points_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-    glBufferData(GL_ARRAY_BUFFER, coord_number * sizeof(GLfloat), points, GL_STATIC_DRAW);
-
-    GLuint colors_vbo = 0;
-    glGenBuffers(1, &colors_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-    glBufferData(GL_ARRAY_BUFFER, coord_number * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+    auto points_buffer = VertexBuffer(points, coord_number * sizeof(GLfloat));
+    auto colors_buffer = VertexBuffer(colors, coord_number * sizeof(GLfloat));
 
     GLuint vao = 0;
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
+    points_buffer.Bind();
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
+    colors_buffer.Bind();
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
     glEnableVertexAttribArray(0);
