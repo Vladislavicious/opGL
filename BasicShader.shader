@@ -2,7 +2,7 @@
 #version 400
 layout (location = 0) in vec2 vector_position;
 layout (location = 1) in vec3 vector_color;
-out vec3 colour;
+flat out vec3 colour;
 
 void main()
 {
@@ -11,7 +11,7 @@ void main()
 };
 #shader fragment
 #version 400
-in vec3 colour;
+flat in vec3 colour;
 out vec4 frag_color;
 
 void main()
