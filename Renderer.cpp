@@ -29,6 +29,6 @@ void Renderer::Draw(const VertexArray& vertexArray, const Shader& shader, int co
     vertexArray.Bind();
     glLineWidth(10.0f);
 
-    GLCall(glDrawArrays(GL_TRIANGLES, 0, count));
+    GLCall(glDrawArrays(GL_TRIANGLE_STRIP, 0, count));
 
 }
