@@ -40,7 +40,7 @@ int main()
 
     GLFWmonitor* mon = glfwGetPrimaryMonitor ();
     const GLFWvidmode* vmode = glfwGetVideoMode (mon);
-    GLFWwindow* window = glfwCreateWindow (640, 480, "Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow (640, 480, "Octagon", NULL, NULL);
     glfwSetWindowSizeCallback (window, glfw_window_size_callback);
 
     if (!window)
@@ -56,16 +56,28 @@ int main()
 
     glewInit();                                         //Включение GLEW
     glEnable(GL_DEPTH_TEST);                            // Включение буфера глубины
+    glEnable(GL_POINT_SMOOTH);
     glDepthFunc(GL_LESS);                               // А вот тут можно управлять его работой. Сейчас установлен режим по умолчанию
     //                                         Определение координат
-    int coord_number = 18;
+    int coord_number = 40;
 
-    auto points_buffer = VertexBuffer(get_random_points(coord_number), coord_number * sizeof(GLfloat));
+    GLfloat points[coord_number] = {
+         -0.25f,   0.5f,   1.0f, 0.0f, 0.0f,
+          0.25f,   0.5f,   0.0f, 1.0f, 0.0f,
+          0.604f,  0.146f, 0.0f, 0.0f, 1.0f,
+          0.604f, -0.354f, 1.0f, 1.0f, 0.0f,
+          0.25f,  -0.708f, 0.0f, 1.0f, 1.0f,
+         -0.25f,  -0.708f, 1.0f, 0.0f, 1.0f,
+         -0.604f, -0.354f, 0.5f, 0.5f, 0.5f,
+         -0.604f,  0.146f, 0.5f, 1.0f, 0.0f,
+    };
+
+    auto points_buffer = VertexBuffer(points, coord_number * sizeof(GLfloat));
 
     VertexArray vertexArray;
 
     VertexBufferLayout vbLayout;
-    vbLayout.Push<float>(3);
+    vbLayout.Push<float>(2);
     vbLayout.Push<float>(3);
 
     vertexArray.AddBuffer(points_buffer, vbLayout);
@@ -81,7 +93,7 @@ int main()
     while (!glfwWindowShouldClose(window)) {
         renderer.Clear();
 
-        renderer.Draw(vertexArray, shader, coord_number / 3);
+        renderer.Draw(vertexArray, shader, coord_number / 5);
         glfwPollEvents();                               //Обработка очереди событий
         glfwSwapBuffers(window);                        //Использование двойной буферизации
         if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ESCAPE))
