@@ -27,7 +27,8 @@ void Renderer::Draw(const VertexArray& vertexArray, const Shader& shader, int co
 
     shader.Bind();
     vertexArray.Bind();
-    GLCall(glPointSize(10.0f));
-    GLCall(glDrawArrays(GL_POINTS, 0, count));
+    glLineWidth(15.0f);
+
+    GLCall(glDrawArrays(GL_LINE_LOOP, 0, count));
 
 }
