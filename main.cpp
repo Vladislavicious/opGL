@@ -40,7 +40,7 @@ int main()
 
     GLFWmonitor* mon = glfwGetPrimaryMonitor ();
     const GLFWvidmode* vmode = glfwGetVideoMode (mon);
-    GLFWwindow* window = glfwCreateWindow (640, 480, "Octagon", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow (640, 480, "Line", NULL, NULL);
     glfwSetWindowSizeCallback (window, glfw_window_size_callback);
 
     if (!window)
@@ -58,30 +58,19 @@ int main()
     glEnable(GL_DEPTH_TEST);                            // Включение буфера глубины
     glDepthFunc(GL_LESS);                               // А вот тут можно управлять его работой. Сейчас установлен режим по умолчанию
     //                                         Определение координат
-    int coord_number = 100;
 
-    GLfloat points[coord_number] = {
-         -0.25f,   0.5f,   1.0f, 0.0f, 0.0f,
-          0.25f,   0.5f,   0.0f, 1.0f, 0.0f,
-          0.25f,   0.5f,   0.0f, 1.0f, 0.0f,
-          0.604f,  0.146f, 0.0f, 0.0f, 1.0f,
-          0.604f,  0.146f, 0.0f, 0.0f, 1.0f,
-          0.604f, -0.354f, 1.0f, 1.0f, 0.0f,
-          0.604f,  0.146f, 0.0f, 0.0f, 1.0f,
-          0.604f, -0.354f, 1.0f, 1.0f, 0.0f,
-          0.25f,  -0.708f, 0.0f, 1.0f, 1.0f,
-          0.604f, -0.354f, 1.0f, 1.0f, 0.0f,
-          0.25f,  -0.708f, 0.0f, 1.0f, 1.0f,
-         -0.25f,  -0.708f, 1.0f, 0.0f, 1.0f,
-         0.25f,  -0.708f, 0.0f, 1.0f, 1.0f,
-         -0.25f,  -0.708f, 1.0f, 0.0f, 1.0f,
-         -0.604f, -0.354f, 0.5f, 0.5f, 0.5f,
-         -0.25f,  -0.708f, 1.0f, 0.0f, 1.0f,
-         -0.604f, -0.354f, 0.5f, 0.5f, 0.5f,
-         -0.604f,  0.146f, 0.5f, 1.0f, 0.0f,
-         -0.604f, -0.354f, 0.5f, 0.5f, 0.5f,
-         -0.604f,  0.146f, 0.5f, 1.0f, 0.0f,
+
+    GLfloat points[] = {
+         -0.9f,   0.0f, 1.0f, 0.0f, 0.0f,
+         -0.5f,   0.7f, 0.0f, 1.0f, 0.0f,
+         -0.2f,  -0.5f, 0.0f, 1.0f, 0.0f,
+         -0.2f,   0.0f, 0.0f, 1.0f, 0.0f,
+          0.0f,   0.0f, 0.0f, 0.0f, 1.0f,
+          0.0f,   0.7f, 0.0f, 0.0f, 1.0f,
+          0.9f,  -0.5f, 0.0f, 0.0f, 1.0f,
     };
+
+    int coord_number = sizeof(points) / sizeof(GLfloat);
 
     auto points_buffer = VertexBuffer(points, coord_number * sizeof(GLfloat));
 
