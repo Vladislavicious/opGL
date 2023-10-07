@@ -63,78 +63,61 @@ int main()
     glDepthFunc(GL_LESS);                               // А вот тут можно управлять его работой. Сейчас установлен режим по умолчанию
     //                                         Определение координат
 
-    GLfloat old_points[] = {
-        -0.5f,    0.9f,   1.0f, 0.0f, 0.0f, //1
-         0.9f,    0.6f,   1.0f, 0.0f, 0.0f, //2
-         0.6f,   -0.9f,   0.0f, 1.0f, 0.0f, //3
-         -0.6f,  -0.7f,   0.0f, 0.0f, 1.0f, //4
-         -0.4f,   0.0f,   1.0f, 1.0f, 0.0f, //5
-         -0.2f,  -0.4f,   0.0f, 1.0f, 1.0f, //6
-         0.1,    -0.4f,   1.0f, 0.0f, 1.0f, //7
-         -0.2f,   0.6f,   0.5f, 0.5f, 0.5f, //8
-         -0.2f,   0.0f,   0.5f, 1.0f, 0.0f, //9
-         -0.5f,   0.0f,   1.0f, 0.0f, 0.0f, //10
-    };
-
     GLfloat points[] = {
-        -0.2f,   0.0f,   0.5f, 1.0f, 0.0f, //9
-        -0.5f,   0.0f,   1.0f, 0.0f, 0.0f, //10
-        -0.5f,   0.9f,   1.0f, 0.0f, 0.0f, //1
-
-        -0.5f,   0.9f,   1.0f, 0.0f, 0.0f, //1
-        -0.2f,   0.0f,   0.5f, 1.0f, 0.0f, //9
-        -0.2f,   0.6f,   0.5f, 0.5f, 0.5f, //8
-
-        -0.5f,   0.9f,   1.0f, 0.0f, 0.0f, //1
-         0.9f,   0.6f,   1.0f, 0.0f, 0.0f, //2
-        -0.2f,   0.6f,   0.5f, 0.5f, 0.5f, //8
-
-         0.9f,   0.6f,   1.0f, 0.0f, 0.0f, //2
-         0.1,   -0.4f,   1.0f, 0.0f, 1.0f, //7
-        -0.2f,   0.6f,   0.5f, 0.5f, 0.5f, //8
-
-         0.9f,   0.6f,   1.0f, 0.0f, 0.0f, //2
-         0.6f,  -0.9f,   0.0f, 1.0f, 0.0f, //3
-         0.1,   -0.4f,   1.0f, 0.0f, 1.0f, //7
-
-         0.6f,  -0.9f,   0.0f, 1.0f, 0.0f, //3
-        -0.6f,  -0.7f,   0.0f, 0.0f, 1.0f, //4
-         0.1,   -0.4f,   1.0f, 0.0f, 1.0f, //7
-
-        -0.6f,  -0.7f,   0.0f, 0.0f, 1.0f, //4
-        -0.2f,  -0.4f,   0.0f, 1.0f, 1.0f, //6
-         0.1,   -0.4f,   1.0f, 0.0f, 1.0f, //7
-
-        -0.6f,  -0.7f,   0.0f, 0.0f, 1.0f, //4
-        -0.4f,   0.0f,   1.0f, 1.0f, 0.0f, //5
-        -0.2f,  -0.4f,   0.0f, 1.0f, 1.0f, //6
+        -0.5, 0.5, 0.8, 0.9, 0.3, // 0
+        -0.2, 0.7, 0.2, 1.0, 0.3, // 1
+        0.0, 0.3, 0.1, 0.8, 0.0, // 2
+        0.4, 0.7, 0.1, 0.3, 0.8, // 3
+        0.3, 0.0, 0.6, 0.4, 0.1, // 4
+        0.0, -0.3, 0.6, 0.5, 1.0, // 5
+        -0.3, -0.2, 0.7, 0.1, 0.4, // 6
+        -0.7, 0.2, 0.5, 0.6, 0.7 // 7
     };
 
     int coord_number = sizeof(points) / sizeof(GLfloat);
 
     auto points_buffer = VertexBuffer(points, coord_number * sizeof(GLfloat));
 
-    VertexArray vertexArray;
-
     VertexBufferLayout vbLayout;
-    vbLayout.Push<float>(2);
-    vbLayout.Push<float>(3);
+    vbLayout.Push<float>(2); // 2 координаты
+    vbLayout.Push<float>(3); // 3 цвета
 
+    VertexArray vertexArray;
     vertexArray.AddBuffer(points_buffer, vbLayout);
 
-    std::vector<std::string> attribLocations;
-    attribLocations.push_back("vector_position");
-    attribLocations.push_back("vector_color");
 
+    unsigned int vertexIndices[] = {
+            0, 1, 2,
+            1, 2, 3,
+            2, 3, 4,
+            4, 2, 5,
 
-    auto shader = Shader(PROJECT_DIR "res\\BasicShader.shader", attribLocations);
+            6, 5, 2,
+            7, 6, 0,
+            0, 2, 6,
+            4, 5, 6,
+
+            0, 2, 7,
+            0, 1, 3,
+            3, 4, 1,
+            3, 4, 5,
+
+            0, 7, 1,
+            5, 0, 7,
+            7, 6, 3,
+            0, 1, 5
+    };
+
+    IndexBuffer indexBufferObject(vertexIndices, sizeof(vertexIndices) / sizeof(unsigned int));
+
+    auto shader = Shader(PROJECT_DIR "res\\BasicShader.shader");
 
     Renderer renderer;
 
     while (!glfwWindowShouldClose(window)) {
         renderer.Clear();
 
-        renderer.Draw(vertexArray, shader, coord_number / 5);
+        renderer.Draw(vertexArray, indexBufferObject, shader);
         glfwPollEvents();                               //Обработка очереди событий
         glfwSwapBuffers(window);                        //Использование двойной буферизации
         if (GLFW_PRESS == glfwGetKey (window, GLFW_KEY_ESCAPE))

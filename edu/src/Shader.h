@@ -34,11 +34,9 @@ private:
 
 	std::unordered_map<std::string, int> uniformLocationsMap;
 
-	std::vector<std::string> attribLocations;
-
 	unsigned int shaderID;
 public:
-	Shader(const std::string& filePath, std::vector<std::string> Locations);
+	Shader(const std::string& filePath);
 	~Shader();
 
 	void Bind() const;
@@ -55,8 +53,6 @@ private://functions
 	unsigned int CompileShader(unsigned int shaderType, const std::string& sourceShaderCode);
 
 	unsigned int CreateShader(const std::string& VertexShader, const std::string& FragmentShader);
-
-	void bindAttribLocation(const unsigned int shader_programme);
 };
 
 #endif // !SHADER_H_

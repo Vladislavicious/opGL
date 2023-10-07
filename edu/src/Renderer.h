@@ -7,15 +7,17 @@
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
+#include "IndexBuffer.h"
+
+
+#ifndef RENDERER_H_
+#define RENDERER_H_
 
 #define ASSERT(x) if(!(x)) __debugbreak();
 #define GLCall(x) GLClearError();x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 void GLClearError();
-
-#ifndef RENDERER_H_
-#define RENDERER_H_
 
 bool GLLogCall(const char* function, const char* file, int line);
 
@@ -25,7 +27,7 @@ public:
 
     void Clear() const;
 
-    void Draw(const VertexArray& vertexArray, const Shader& shader, int count) const;
+    void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
 };
 
 #endif //RENDERER_H_

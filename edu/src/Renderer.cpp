@@ -22,12 +22,13 @@ void Renderer::Clear() const
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
-void Renderer::Draw(const VertexArray& vertexArray, const Shader& shader, int count) const
+void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const
 {
-
+    GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     shader.Bind();
     vertexArray.Bind();
-    glLineWidth(10.0f);
-    GLCall(glDrawArrays(GL_TRIANGLES, 0, count));
+    indexBuffer.Bind();
+
+    GLCall(glDrawElements(GL_TRIANGLES, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
 
 }

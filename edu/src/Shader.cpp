@@ -4,8 +4,8 @@
 
 #include "Renderer.h"
 
-Shader::Shader(const std::string& filePath, std::vector<std::string> Locations)
-	: filePath(filePath), attribLocations(Locations), shaderID(0)
+Shader::Shader(const std::string& filePath)
+	: filePath(filePath), shaderID(0)
 {
 	ShaderProgramSource shaders = ParseShader(filePath);
 
@@ -57,18 +57,6 @@ int Shader::GetUniformLocation(const std::string name)
 
 	uniformLocationsMap[name] = uniformLocation;
 	return uniformLocation;
-}
-
-
-void Shader::bindAttribLocation(const unsigned int shader_programme)
-{
-	if ( attribLocations.empty() )
-		return;
-	int i = 0;
-	for (auto it = attribLocations.begin(); it != attribLocations.end(); it++, i++)
-	{
-		glBindAttribLocation(shader_programme, i, (*it).c_str());
-	}
 }
 
 ShaderProgramSource Shader::ParseShader(const std::string& filePath)
@@ -146,8 +134,6 @@ unsigned int Shader::CreateShader(const std::string& VertexShader, const std::st
 
 	glAttachShader(programIndex, vertexShaderIndex);
 	glAttachShader(programIndex, fragmentShaderIndex);
-
-	bindAttribLocation(programIndex);
 
 	glLinkProgram(programIndex);
 	glValidateProgram(programIndex);
