@@ -1,8 +1,6 @@
 #include "Renderer.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "windows.h"
+
 
 GLfloat* get_random_points(int number_of_colors)
 {
@@ -87,30 +85,31 @@ int main()
 
 
     unsigned int vertexIndices[] = {
-            0, 1, 2,
-            1, 2, 3,
-            2, 3, 4,
-            4, 2, 5,
+            0, 1, 1, 2, 1, 3,
+            2, 6, 2, 4, 2, 5,
 
-            6, 5, 2,
-            7, 6, 0,
-            0, 2, 6,
-            4, 5, 6,
+            3, 4, 3, 2, 3, 0,
+            5, 3, 5, 4, 5, 6,
 
-            0, 2, 7,
-            0, 1, 3,
-            3, 4, 1,
-            3, 4, 5,
+            6, 0, 6, 7, 6, 1,
+            7, 0, 7, 3, 7, 1,
 
-            0, 7, 1,
-            5, 0, 7,
-            7, 6, 3,
-            0, 1, 5
+            2, 7, 0, 2, 6, 3,
+            4, 6, 4, 1, 4, 0
     };
 
     IndexBuffer indexBufferObject(vertexIndices, sizeof(vertexIndices) / sizeof(unsigned int));
 
+
     auto shader = Shader(PROJECT_DIR "res\\BasicShader.shader");
+    shader.Bind();
+    glm::mat4 proj = glm::ortho(-1.6f, 1.6f, -0.9f, 0.9f, -1.0f, 1.0f);
+    shader.SetUniformMat4f("u_MVP", proj);
+     
+
+    vertexArray.UnBind();
+    points_buffer.UnBind();
+    shader.UnBind();
 
     Renderer renderer;
 

@@ -1,8 +1,11 @@
-#include <GL/glew.h> // подключение GLEW
-#include <GLFW/glfw3.h> // подключение GLFW
 #include <stdio.h> //Для простого консольного вывода ошибок
 #include <iostream>
 #include <signal.h>
+
+#include <GL/glew.h> // подключение GLEW
+#include <GLFW/glfw3.h> // подключение GLFW
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
