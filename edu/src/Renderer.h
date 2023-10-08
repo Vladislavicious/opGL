@@ -30,7 +30,7 @@ public:
 
     void Clear() const;
 
-    void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
+    void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader, GLenum mode) const;
 };
 
 #endif //RENDERER_H_
