@@ -2,6 +2,7 @@
 #include <iostream>
 #include <signal.h>
 
+
 #include <GL/glew.h> // подключение GLEW
 #include <GLFW/glfw3.h> // подключение GLFW
 #include "glm/glm.hpp"
