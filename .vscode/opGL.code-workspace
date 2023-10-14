@@ -1,10 +1,11 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": ".."
 		}
 	],
 	"settings": {
+		"cmake.cmakePath": "cmake",
 		"files.associations": {
 			"stb_image.h": "c",
 			"array": "cpp",
@@ -68,5 +69,10 @@
 			"typeinfo": "cpp",
 			"variant": "cpp"
 		}
+	},
+	"extensions": {
+		"recommendations": [
+			"twxs.cmake"
+		]
 	}
 }
