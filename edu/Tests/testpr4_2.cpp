@@ -1,0 +1,136 @@
+﻿#include "testpr4_2.h"
+
+namespace test {
+
+	TestPR4_2::TestPR4_2()
+	{
+
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        VertexBufferLayout vbLayout;
+        vbLayout.Push<float>(3); // 3 координаты
+        vbLayout.Push<float>(3); // 3 цвета
+
+        GLfloat cube[] = {
+            -0.5f,  0.5f, -0.5f, 0.5f, 0.1f, 0.5f, // V0
+            -0.5f, -0.5f, -0.5f, 0.4f, 0.3f, 0.1f, // V1
+            0.5f, -0.5f, -0.5f, 0.3f, 0.3f, 0.6f, // V2
+            0.5f,  0.5f, -0.5f, 0.1f, 0.3f, 0.9f, // V3
+            -0.5f,  0.5f,  0.5f, 0.3f, 0.1f, 0.8f, // V4
+            -0.5f, -0.5f,  0.5f, 0.6f, 0.7f, 0.2f, // V5
+            0.5f, -0.5f,  0.5f, 0.2f, 0.4f, 0.1f, // V6
+            0.5f,  0.5f,  0.5f, 0.9f, 0.5f, 0.0f, // V7
+        };
+
+        auto squareBuffer = VertexBuffer(cube, sizeof(cube));
+
+        m_cubeVertexArray = new VertexArray();
+        m_cubeVertexArray->AddBuffer(squareBuffer, vbLayout);
+        unsigned int cubeIndices[] = {
+        0, 1, 2,
+        2, 3, 0,
+
+        4, 7, 6,
+        6, 5, 4,
+
+        4, 0, 3,
+        3, 7, 4,
+
+        1, 5, 6,
+        6, 2, 1,
+
+        3, 2, 6,
+        6, 7, 3,
+
+        4, 5, 1,
+        1, 0, 4
+        };
+
+        m_cubeIndexBuffer = new IndexBuffer(cubeIndices, sizeof(cubeIndices) / sizeof(unsigned int));
+        m_cubeVertexArray->UnBind();
+        squareBuffer.UnBind();
+        m_cubeIndexBuffer->UnBind();
+
+        m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+        x_ortho[0] = y_ortho[0] = z_ortho[0] = -1.0f;
+        x_ortho[1] = y_ortho[1] = z_ortho[1] = 1.0f;
+
+        m_proj = glm::ortho(x_ortho[0], x_ortho[1], y_ortho[0],
+                            y_ortho[1], z_ortho[0], z_ortho[1]);
+        m_view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        m_model = glm::mat4(1.0f);
+        m_mvp = m_proj * m_view * m_model;
+
+        m_shader = new Shader("../edu/res/BasicShader.shader");
+
+        m_renderer = new Renderer();
+
+	}
+
+	TestPR4_2::~TestPR4_2()
+	{
+        delete m_cubeIndexBuffer;
+        delete m_shader;
+        delete m_cubeVertexArray;
+        delete m_renderer;
+	}
+
+	void TestPR4_2::OnUpdate(float deltaTime)
+	{
+        m_renderer->Clear();
+	}
+
+	void TestPR4_2::OnRender()
+	{
+        m_proj = getViewMatrix(x_ortho, y_ortho, z_ortho);
+        m_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, m_translationZ));
+        m_model = glm::rotate(m_model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        m_model = glm::rotate(m_model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        m_model = glm::rotate(m_model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        m_mvp = m_proj * m_view * m_model;
+
+        m_shader->Bind();
+        m_shader->SetUniformMat4f("u_MVP", m_mvp);
+
+        m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_shader);
+	}
+
+	void TestPR4_2::OnImGuiRender()
+	{
+        if ( ortho )
+        {
+            if( ImGui::Button("Perspective view") )
+                ortho = false;
+        }
+        else
+        {
+            if( ImGui::Button("Ortho view") )
+                ortho = true;
+        }
+
+        ImGui::Text("Bounds:");
+        ImGui::InputFloat2("X:", x_ortho, "%.1f");
+        ImGui::InputFloat2("Y:", y_ortho, "%.1f");
+        ImGui::InputFloat2("Z:", z_ortho, "%.1f");
+
+        ImGui::SliderFloat("model rotation around X", &m_rotation.x, 0.0f, 360.0f);
+        ImGui::SliderFloat("model rotation around Y", &m_rotation.y, 0.0f, 360.0f);
+        ImGui::SliderFloat("model rotation around Z", &m_rotation.z, 0.0f, 360.0f);
+
+        ImGui::SliderFloat("model translation around Z", &m_translationZ, 0.0f, -10.0f);
+
+        auto& io = ImGui::GetIO();
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+	}
+
+    glm::mat4 TestPR4_2::getViewMatrix(float *x_bounds, float *y_bounds, float *z_bounds)
+    {
+        if ( ortho )
+            return glm::ortho(x_bounds[0], x_bounds[1], y_bounds[0],
+                              y_bounds[1], z_bounds[0], z_bounds[1]);
+
+        return glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, z_bounds[0], z_bounds[1]);
+    }
+}

@@ -9,7 +9,6 @@ uniform mat4 u_MVP;
 
 void main()
 {
-    
     gl_Position = u_MVP * vector_position;
     colour = vector_color;
 };

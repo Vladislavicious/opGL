@@ -2,8 +2,9 @@
 
 #include "TestClearColor.h"
 #include "TestMovingSquare.h"
-#include "testpr4_1.h"
 #include "TestCube.h"
+#include "testpr4_1.h"
+#include "testpr4_2.h"
 
 int WinWidth= 640;
 int WinHeight= 480;
@@ -62,8 +63,9 @@ int main()
     testMenu->RegisterTest<test::TestMovingSquare>("Moving Square");
     testMenu->RegisterTest<test::TestCube>("Rotating Cube");
     testMenu->RegisterTest<test::TestPR4_1>("PR4 task 1");
+    testMenu->RegisterTest<test::TestPR4_2>("PR4 task 2");
 
-    currentTest = new test::TestCube();
+    currentTest = new test::TestPR4_2();
 
     Renderer renderer;
 
