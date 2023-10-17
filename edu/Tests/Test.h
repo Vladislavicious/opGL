@@ -8,7 +8,9 @@ namespace test {
 
 	class Test
 	{
+
 	public:
+		static GLFWwindow* window;
 		Test() {}
 		virtual ~Test() {}
 

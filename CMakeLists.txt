@@ -29,6 +29,17 @@ set(GLM_INCLUDE_DIR Dependencies/glm)
 # stb_image
 set(STB_IMAGE_DIR Dependencies/stb_image)
 
+#assimp
+set(ASSIMP_DIR Dependencies/assimp)
+set(ENABLE_BOOST_WORKAROUND ON)
+set(BUILD_STATIC_LIB ON)
+set(BUILD_ASSIMP_TOOLS  ON)
+set(ASSIMP_BUILD_STATIC_LIB ON)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+
 # ImGui
 set(imgui-directory Dependencies/imgui)
 set(imgui-source ${imgui-directory}/imconfig.h
@@ -52,10 +63,11 @@ add_subdirectory(Dependencies/glad)
 add_subdirectory(Dependencies/glfw)
 add_subdirectory(Dependencies/stb_image)
 add_subdirectory(Dependencies/glm)
+add_subdirectory(Dependencies/assimp)
 
 # Set `source` variable to all .h and .cpp files in `edu/src`
 file(GLOB_RECURSE source CONFIGURE_DEPENDS "edu/src/*.h" "edu/src/*.cpp" "edu/Tests/*.h" "edu/Tests/*.cpp")
 
 add_executable(CMakeGraphicsProject ${source} ${imgui-source})
-target_link_libraries(CMakeGraphicsProject ${OPENGL_LIBRARIES} glad glfw stb_image glm)
-target_include_directories(CMakeGraphicsProject PRIVATE ${imgui-directory} ${GLM_INCLUDE_DIR} ${STB_IMAGE_DIR})
+target_link_libraries(CMakeGraphicsProject ${OPENGL_LIBRARIES} glad glfw stb_image glm assimp)
+target_include_directories(CMakeGraphicsProject PRIVATE ${imgui-directory} ${GLM_INCLUDE_DIR} ${STB_IMAGE_DIR} ${ASSIMP_DIR})

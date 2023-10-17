@@ -3,8 +3,9 @@
 #include "TestClearColor.h"
 #include "TestMovingSquare.h"
 #include "TestCube.h"
-#include "testpr4_1.h"
-#include "testpr4_2.h"
+#include "TestCamera.h"
+
+
 
 int WinWidth= 640;
 int WinHeight= 480;
@@ -55,6 +56,7 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
 
+    test::Test::window = window;
     test::Test* currentTest = nullptr;
     test::TestMenu* testMenu = new test::TestMenu(currentTest);
     currentTest = testMenu;
@@ -62,10 +64,9 @@ int main()
     testMenu->RegisterTest<test::TestClearColor>("Clear Color");
     testMenu->RegisterTest<test::TestMovingSquare>("Moving Square");
     testMenu->RegisterTest<test::TestCube>("Rotating Cube");
-    testMenu->RegisterTest<test::TestPR4_1>("PR4 task 1");
-    testMenu->RegisterTest<test::TestPR4_2>("PR4 task 2");
+    testMenu->RegisterTest<test::TestCamera>("PR4 task 2");
 
-    currentTest = new test::TestPR4_2();
+    currentTest = new test::TestCamera();
 
     Renderer renderer;
 
