@@ -3,22 +3,20 @@
 
 namespace test {
 
-    class TestMovingSquare : public Test
+    class TestPR4_1: public Test
     {
 	private:
-		glm::mat4 m_proj;
-		glm::mat4 m_view;
-		glm::mat4 m_model;
-		glm::mat4 m_mvp;
-		glm::vec3 m_translation;
-
+		bool enabled = false;
 		VertexArray* m_squareVertexArray;
+		VertexArray* m_square1VertexArray;
+		VertexArray* m_triangleVertexArray;
 		IndexBuffer* m_squareIndexBuffer;
+		IndexBuffer* m_triangleIndexBuffer;
 		Shader* m_shader;
 		Renderer* m_renderer;
 	public:
-		TestMovingSquare();
-		virtual ~TestMovingSquare();
+		TestPR4_1();
+		virtual ~TestPR4_1();
 
 		virtual void OnUpdate(float deltaTime) override;
 		virtual void OnRender() override;

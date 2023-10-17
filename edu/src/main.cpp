@@ -2,6 +2,8 @@
 
 #include "TestClearColor.h"
 #include "TestMovingSquare.h"
+#include "testpr4_1.h"
+#include "TestCube.h"
 
 int WinWidth= 640;
 int WinHeight= 480;
@@ -39,8 +41,6 @@ int main()
         return -1;
     }
 
-    glEnable(GL_DEPTH_TEST);                            // Включение буфера глубины
-    glDepthFunc(GL_LESS);                               // А вот тут можно управлять его работой. Сейчас установлен режим по умолчанию
     //                                         Определение координат
 
     // Setup Dear ImGui context
@@ -60,6 +60,10 @@ int main()
 
     testMenu->RegisterTest<test::TestClearColor>("Clear Color");
     testMenu->RegisterTest<test::TestMovingSquare>("Moving Square");
+    testMenu->RegisterTest<test::TestCube>("Rotating Cube");
+    testMenu->RegisterTest<test::TestPR4_1>("PR4 task 1");
+
+    currentTest = new test::TestCube();
 
     Renderer renderer;
 
@@ -88,15 +92,6 @@ int main()
             currentTest->OnImGuiRender();
             ImGui::End();
         }
-
-
-
-        //ImGui::Begin("Debug properties");                          // Create a window called "Hello, world!" and append into it.
-
-
-
-        //ImGui::End();
-
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
