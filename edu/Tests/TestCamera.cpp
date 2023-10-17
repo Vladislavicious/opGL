@@ -54,18 +54,20 @@ namespace test {
 
                 m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
-                x_ortho[0] = y_ortho[0] = z_ortho[0] = -1.0f;
-                x_ortho[1] = y_ortho[1] = z_ortho[1] = 1.0f;
+                x_ortho[0] = y_ortho[0] = -1.0f;
+                x_ortho[1] = y_ortho[1] = 1.0f;
+                z_ortho[0] = 0.01f;
+                z_ortho[1] = 10.0f;
 
                 m_proj = glm::ortho(x_ortho[0], x_ortho[1], y_ortho[0],
                                 y_ortho[1], z_ortho[0], z_ortho[1]);
-                m_view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
                 m_model = glm::mat4(1.0f);
-                m_mvp = m_proj * m_view * m_model;
+                m_mvp = m_proj * myCamera::getViewMatrix() * m_model;
 
                 m_shader = new Shader("../edu/res/BasicShader.shader");
 
                 m_renderer = new Renderer();
+
 
                // glfwSetKeyCallback(window, key_callback);
 	}
@@ -85,12 +87,12 @@ namespace test {
 
 	void TestCamera::OnRender()
 	{
-                m_proj = getViewMatrix(x_ortho, y_ortho, z_ortho);
+                m_proj = getProjectionMatrix(x_ortho, y_ortho, z_ortho);
                 m_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, m_translationZ));
                 m_model = glm::rotate(m_model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
                 m_model = glm::rotate(m_model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
                 m_model = glm::rotate(m_model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-                m_mvp = m_proj * m_view * m_model;
+                m_mvp = m_proj * myCamera::getViewMatrix() * m_model;
 
                 m_shader->Bind();
                 m_shader->SetUniformMat4f("u_MVP", m_mvp);
@@ -111,7 +113,7 @@ namespace test {
                                 ortho = true;
                 }
 
-                ImGui::Text("Bounds:");
+
                 ImGui::InputFloat2("X:", x_ortho, "%.1f");
                 ImGui::InputFloat2("Y:", y_ortho, "%.1f");
                 ImGui::InputFloat2("Z:", z_ortho, "%.1f");
@@ -126,18 +128,12 @@ namespace test {
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 	}
 
-        glm::mat4 TestCamera::getViewMatrix(float *x_bounds, float *y_bounds, float *z_bounds)
+        glm::mat4 TestCamera::getProjectionMatrix(float *x_bounds, float *y_bounds, float *z_bounds)
         {
                 if ( ortho )
                         return glm::ortho(x_bounds[0], x_bounds[1], y_bounds[0],
                                         y_bounds[1], z_bounds[0], z_bounds[1]);
 
                 return glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, z_bounds[0], z_bounds[1]);
-        }
-
-        void TestCamera::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-        {
-                if (key == GLFW_KEY_E && action == GLFW_PRESS)
-                        ortho = !ortho;
         }
 }

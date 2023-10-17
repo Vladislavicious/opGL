@@ -2,6 +2,8 @@
 
 namespace test {
 
+	GLFWwindow* Test::window = nullptr;
+
 	TestMenu::TestMenu(Test*& currentTestPointer) :
 		m_CurrentTest(currentTestPointer)
 	{

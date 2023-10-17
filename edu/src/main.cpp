@@ -11,6 +11,9 @@ int WinWidth= 640;
 int WinHeight= 480;
 void glfw_window_size_callback (GLFWwindow* window, int width, int height);
 
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
 int main()
 {
     //                                        Инициализация
@@ -44,7 +47,7 @@ int main()
     }
 
     //                                         Определение координат
-
+    myCamera::initialize(window);// Важно инициализировать камеру до ImGui
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -64,7 +67,7 @@ int main()
     testMenu->RegisterTest<test::TestClearColor>("Clear Color");
     testMenu->RegisterTest<test::TestMovingSquare>("Moving Square");
     testMenu->RegisterTest<test::TestCube>("Rotating Cube");
-    testMenu->RegisterTest<test::TestCamera>("PR4 task 2");
+    testMenu->RegisterTest<test::TestCamera>("Camera");
 
     currentTest = new test::TestCamera();
 
@@ -73,7 +76,9 @@ int main()
     while (!glfwWindowShouldClose(window)) {
         renderer.Clear();
 
-
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
         glfwPollEvents();                               //Обработка очереди событий
 
 

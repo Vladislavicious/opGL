@@ -28,6 +28,10 @@
 #define GLCall(x) GLClearError();x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
+
+extern float deltaTime;	// Time between current frame and last frame
+extern float lastFrame; // Time of last frame
+
 void GLClearError();
 
 bool GLLogCall(const char* function, const char* file, int line);
