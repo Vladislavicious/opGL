@@ -102,6 +102,11 @@ namespace test {
 
 	void TestCamera::OnImGuiRender()
 	{
+                ImGui::SetWindowCollapsed(myCamera::active);
+                if (myCamera::active)
+                {
+                        return;
+                }
                 if ( ortho )
                 {
                         if( ImGui::Button("Perspective view") )

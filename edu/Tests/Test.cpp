@@ -20,4 +20,14 @@ namespace test {
 		}
 	}
 
+    void TestMenu::BuildAll()
+    {
+		for (auto& test : m_Tests)
+		{
+			std::cout << "Building " << test.first.c_str() << std::endl;
+			auto temp = test.second();
+			std::cout << "Build completed\n";
+			delete temp;
+		}
+    }
 }

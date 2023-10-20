@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MY_CAMERA_H_
+#define MY_CAMERA_H_
 #include "Renderer.h"
 
 
@@ -23,3 +24,4 @@ public:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
+#endif // MY_CAMERA_H_

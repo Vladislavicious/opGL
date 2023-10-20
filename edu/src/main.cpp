@@ -7,8 +7,8 @@
 
 
 
-int WinWidth= 640;
-int WinHeight= 480;
+int WinWidth = 640;
+int WinHeight = 480;
 void glfw_window_size_callback (GLFWwindow* window, int width, int height);
 
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -46,14 +46,16 @@ int main()
         return -1;
     }
 
-    //                                         Определение координат
+#ifdef MY_CAMERA_H_
     myCamera::initialize(window);// Важно инициализировать камеру до ImGui
+#endif
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiWindowFlags_NoFocusOnAppearing;
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
@@ -69,6 +71,8 @@ int main()
     testMenu->RegisterTest<test::TestCube>("Rotating Cube");
     testMenu->RegisterTest<test::TestCamera>("Camera");
 
+    testMenu->BuildAll();
+
     currentTest = new test::TestCamera();
 
     Renderer renderer;
@@ -80,7 +84,6 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         glfwPollEvents();                               //Обработка очереди событий
-
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();

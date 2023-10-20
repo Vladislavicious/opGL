@@ -5,8 +5,8 @@ glm::vec3 myCamera::cameraPos   = glm::vec3(0.0f, 0.0f,  0.01f);
 glm::vec3 myCamera::cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 myCamera::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
-float myCamera::lastX = 320.0f;
-float myCamera::lastY = 240.0f;
+float myCamera::lastX = WinWidth / 2.0f;
+float myCamera::lastY = WinHeight / 2.0f;
 float myCamera::yaw = 90.0f;
 float myCamera::pitch = 0.0f;
 bool myCamera::firstMouse = true;
@@ -26,6 +26,8 @@ glm::mat4 myCamera::getViewMatrix()
 
 void myCamera::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    if (!active && key != GLFW_KEY_SPACE)
+        return;
     float cameraSpeed = 2.5f * deltaTime; //deltaTime - global variable from renderer.h
     switch (key)
     {

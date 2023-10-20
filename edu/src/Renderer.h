@@ -32,6 +32,9 @@
 extern float deltaTime;	// Time between current frame and last frame
 extern float lastFrame; // Time of last frame
 
+extern int WinWidth;
+extern int WinHeight;
+
 void GLClearError();
 
 bool GLLogCall(const char* function, const char* file, int line);
