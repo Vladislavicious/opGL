@@ -12,10 +12,12 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
+#include "Texture.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
 
 #ifndef RENDERER_H_
 #define RENDERER_H_

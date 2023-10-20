@@ -55,7 +55,6 @@ int main()
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiWindowFlags_NoFocusOnAppearing;
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
@@ -73,7 +72,7 @@ int main()
 
     testMenu->BuildAll();
 
-    currentTest = new test::TestCamera();
+    currentTest = new test::TestMovingSquare();
 
     Renderer renderer;
 

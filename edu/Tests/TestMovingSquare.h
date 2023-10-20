@@ -16,6 +16,7 @@ namespace test {
 		IndexBuffer* m_squareIndexBuffer;
 		Shader* m_shader;
 		Renderer* m_renderer;
+		Texture* m_texture;
 	public:
 		TestMovingSquare();
 		virtual ~TestMovingSquare();

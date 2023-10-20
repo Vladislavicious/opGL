@@ -67,13 +67,12 @@ namespace test {
                 m_shader = new Shader("../edu/res/BasicShader.shader");
 
                 m_renderer = new Renderer();
-
-
-               // glfwSetKeyCallback(window, key_callback);
 	}
 
 	TestCamera::~TestCamera()
 	{
+                glDisable(GL_DEPTH_TEST);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                 delete m_cubeIndexBuffer;
                 delete m_shader;
                 delete m_cubeVertexArray;
