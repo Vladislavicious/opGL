@@ -34,6 +34,13 @@ void Shader::SetUniform1i(const std::string& name, int layer)
 	GLCall(glUniform1i(uniformLocation, layer));
 }
 
+void Shader::SetUniform1f(const std::string& name, float v)
+{
+	int uniformLocation = GetUniformLocation(name);
+
+	GLCall(glUniform1f(uniformLocation, v));
+}
+
 void Shader::SetUniform3f(const std::string& name, float v0, float v1, float v2)
 {
 	int uniformLocation = GetUniformLocation(name);

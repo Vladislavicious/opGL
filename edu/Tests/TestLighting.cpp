@@ -91,9 +91,12 @@ namespace test {
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
         m_cubeModel = glm::mat4(1.0f);
+        m_cubeColor = glm::vec3(1.0f, 1.0f, 1.0f);
+
         m_lightPos = glm::vec3(-0.8f, 0.8f, 0.4f);
         m_lightModel = glm::translate(glm::mat4(1.0f), m_lightPos);
         m_lightModel = glm::scale(m_lightModel, glm::vec3(0.4f));
+        m_lightColor = glm::vec3(1.0f, 0.0f, 0.0f);
 
         m_cubeShader = new Shader("../edu/res/cubeShader.shader");
 
@@ -129,6 +132,7 @@ namespace test {
         m_lightShader->SetUniformMat4f("model", m_lightModel);
         m_lightShader->SetUniformMat4f("view", view);
         m_lightShader->SetUniformMat4f("projection", m_proj);
+        m_lightShader->SetUniform3f("colour", m_lightColor);
 
         m_cubeModel = glm::rotate(m_cubeModel, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
         m_cubeModel = glm::rotate(m_cubeModel, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -137,10 +141,15 @@ namespace test {
         m_cubeShader->SetUniformMat4f("model", m_cubeModel);
         m_cubeShader->SetUniformMat4f("view", view);
         m_cubeShader->SetUniformMat4f("projection", m_proj);
-        m_cubeShader->SetUniform3f("lightPos",  m_lightPos);
+        m_cubeShader->SetUniform3f("light.position",  m_lightPos);
+        m_cubeShader->SetUniform3f("light.ambient",  0.3f, 0.3f, 0.3f);
+        m_cubeShader->SetUniform3f("light.diffuse",  m_lightColor);
+        m_cubeShader->SetUniform3f("light.specular",  1.0f, 1.0f, 1.0f);
         m_cubeShader->SetUniform3f("viewPos",  myCamera::getPosition());
-        m_cubeShader->SetUniform3f("objectColor", 0.8f, 0.7f, 0.25f);
-        m_cubeShader->SetUniform3f("lightColor",  1.0f, 1.0f, 1.0f);
+        m_cubeShader->SetUniform3f("material.ambient", m_cubeColor);
+        m_cubeShader->SetUniform3f("material.diffuse", m_cubeColor);
+        m_cubeShader->SetUniform3f("material.specular", 0.5f, 0.5f, 0.5f);
+        m_cubeShader->SetUniform1f("material.shininess", 32.0f);
 
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
         m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_cubeShader);
@@ -154,6 +163,8 @@ namespace test {
 
         ImGui::InputFloat2("Z:", z_ortho, "%.1f");
         ImGui::SliderFloat3("model rotation around XYZ", &m_rotation.x, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat3("cube colour", &m_cubeColor.x, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat3("light colour", &m_lightColor.x, 0.0f, 1.0f, "%.2f");
 
         auto& io = ImGui::GetIO();
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

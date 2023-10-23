@@ -9,10 +9,12 @@ namespace test {
 	private:
 		glm::mat4 m_proj;
 		glm::mat4 m_cubeModel;
-		glm::mat4 m_lightModel;
+		glm::vec3 m_cubeColor;
 		glm::vec3 m_rotation;
 
+		glm::mat4 m_lightModel;
 		glm::vec3 m_lightPos;
+		glm::vec3 m_lightColor;
 
 		VertexArray* m_cubeVertexArray;
 		IndexBuffer* m_cubeIndexBuffer;
