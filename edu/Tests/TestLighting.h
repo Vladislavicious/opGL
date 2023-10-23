@@ -9,13 +9,14 @@ namespace test {
 	private:
 		glm::mat4 m_proj;
 		glm::mat4 m_cubeModel;
-		glm::vec3 m_cubeColor;
 		glm::vec3 m_rotation;
 
 		glm::mat4 m_lightModel;
 		glm::vec3 m_lightPos;
 		glm::vec3 m_lightColor;
 
+		Texture* m_cubeTexture;
+		Texture* m_cubeSpecTexture;
 		VertexArray* m_cubeVertexArray;
 		IndexBuffer* m_cubeIndexBuffer;
 		Shader* m_cubeShader;
