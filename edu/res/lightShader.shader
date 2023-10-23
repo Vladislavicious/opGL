@@ -18,6 +18,7 @@ void main()
 #shader fragment
 #version 430
 
+in vec3 Normal;
 out vec4 FragColor;
 
 void main()

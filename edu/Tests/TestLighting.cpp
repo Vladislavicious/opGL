@@ -137,9 +137,10 @@ namespace test {
         m_cubeShader->SetUniformMat4f("model", m_cubeModel);
         m_cubeShader->SetUniformMat4f("view", view);
         m_cubeShader->SetUniformMat4f("projection", m_proj);
-        m_cubeShader->SetUniform3f("objectColor", 1.0f, 0.5f, 0.31f);
-        m_cubeShader->SetUniform3f("lightColor",  1.0f, 1.0f, 1.0f);
         m_cubeShader->SetUniform3f("lightPos",  m_lightPos);
+        m_cubeShader->SetUniform3f("viewPos",  myCamera::getPosition());
+        m_cubeShader->SetUniform3f("objectColor", 0.8f, 0.7f, 0.25f);
+        m_cubeShader->SetUniform3f("lightColor",  1.0f, 1.0f, 1.0f);
 
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
         m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_cubeShader);
