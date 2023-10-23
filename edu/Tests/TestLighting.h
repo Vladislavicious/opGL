@@ -9,11 +9,16 @@ namespace test {
 	private:
 		glm::mat4 m_proj;
 		glm::mat4 m_cubeModel;
-		glm::vec3 m_rotation;
-
+		glm::vec3 m_cubePositions[10];
 		glm::mat4 m_lightModel;
 		glm::vec3 m_lightPos;
-		glm::vec3 m_lightColor;
+
+		glm::vec3 m_pointLightColor;
+		glm::vec3 m_dirLightPower;
+		float m_spotLightRadius;
+
+		bool isDirLightOn = true;
+		bool isSpotLightOn = true;
 
 		Texture* m_cubeTexture;
 		Texture* m_cubeSpecTexture;

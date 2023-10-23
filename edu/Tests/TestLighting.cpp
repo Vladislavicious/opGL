@@ -58,6 +58,17 @@ namespace test {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
 
+        m_cubePositions[0] = glm::vec3( 0.0f,  0.0f,  0.0f);
+        m_cubePositions[1] = glm::vec3( 2.0f,  5.0f, 15.0f);
+        m_cubePositions[2] = glm::vec3(-1.5f, -2.2f, 2.5f);
+        m_cubePositions[3] = glm::vec3(-3.8f, -2.0f, 12.3f);
+        m_cubePositions[4] = glm::vec3( 2.4f, -0.4f, 3.5f);
+        m_cubePositions[5] = glm::vec3(-1.7f,  3.0f, 7.5f);
+        m_cubePositions[6] = glm::vec3( 1.3f, -2.0f, 2.5f);
+        m_cubePositions[7] = glm::vec3( 1.5f,  2.0f, 2.5f);
+        m_cubePositions[8] = glm::vec3( 1.5f,  0.2f, 1.5f);
+        m_cubePositions[9] = glm::vec3(-1.3f,  1.0f, 1.5f);
+
         auto squareBuffer = VertexBuffer(cube, sizeof(cube));
 
         m_cubeVertexArray = new VertexArray();
@@ -86,20 +97,20 @@ namespace test {
         lightBuffer.UnBind();
         m_lightIndexBuffer->UnBind();
 
-        m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-
         z_ortho[0] = 0.01f;
-        z_ortho[1] = 10.0f;
+        z_ortho[1] = 20.0f;
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
         m_cubeModel = glm::mat4(1.0f);
         m_cubeTexture = new Texture("../edu/res/cont.png");
         m_cubeSpecTexture = new Texture("../edu/res/spec.png");
 
-        m_lightPos = glm::vec3(-0.8f, 0.8f, 0.4f);
+        m_lightPos = glm::vec3(-0.8f, -0.8f, 0.4f);
         m_lightModel = glm::translate(glm::mat4(1.0f), m_lightPos);
         m_lightModel = glm::scale(m_lightModel, glm::vec3(0.4f));
-        m_lightColor = glm::vec3(1.0f, 0.0f, 0.0f);
+        m_pointLightColor = glm::vec3(1.0f, 0.0f, 0.0f);
+        m_spotLightRadius = 12.0f;
+        m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
 
         m_cubeShader = new Shader("../edu/res/cubeShader.shader");
 
@@ -138,31 +149,61 @@ namespace test {
         m_lightShader->SetUniformMat4f("model", m_lightModel);
         m_lightShader->SetUniformMat4f("view", view);
         m_lightShader->SetUniformMat4f("projection", m_proj);
-        m_lightShader->SetUniform3f("colour", m_lightColor);
+        m_lightShader->SetUniform3f("colour", m_pointLightColor);
 
-        m_cubeModel = glm::rotate(m_cubeModel, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        m_cubeModel = glm::rotate(m_cubeModel, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        m_cubeModel = glm::rotate(m_cubeModel, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         m_cubeShader->Bind();
-        m_cubeShader->SetUniformMat4f("model", m_cubeModel);
         m_cubeShader->SetUniformMat4f("view", view);
         m_cubeShader->SetUniformMat4f("projection", m_proj);
-        m_cubeShader->SetUniform3f("light.position",  m_lightPos);
-        m_cubeShader->SetUniform3f("light.ambient",  0.3f, 0.3f, 0.3f);
-        m_cubeShader->SetUniform3f("light.diffuse",  m_lightColor);
-        m_cubeShader->SetUniform3f("light.specular",  1.0f, 1.0f, 1.0f);
-        m_cubeShader->SetUniform1f("light.constant",  1.0f);
-        m_cubeShader->SetUniform1f("light.linear",    0.09f);
-        m_cubeShader->SetUniform1f("light.quadratic", 0.032f);
+        m_cubeShader->SetUniform3f("pointLights[0].position",  m_lightPos);
+        m_cubeShader->SetUniform3f("pointLights[0].ambient",  0.3f, 0.3f, 0.3f);
+        m_cubeShader->SetUniform3f("pointLights[0].diffuse",  m_pointLightColor);
+        m_cubeShader->SetUniform3f("pointLights[0].specular",  1.0f, 1.0f, 1.0f);
+        m_cubeShader->SetUniform1f("pointLights[0].constant",  1.0f);
+        m_cubeShader->SetUniform1f("pointLights[0].linear",    0.09f);
+        m_cubeShader->SetUniform1f("pointLights[0].quadratic", 0.032f);
         m_cubeShader->SetUniform3f("viewPos",  myCamera::getPosition());
         m_cubeShader->SetUniform1f("material.shininess", 32.0f);
+
+        if ( isDirLightOn )
+        {
+            m_cubeShader->SetUniform3f("dirLight.direction", -0.2f, -1.0f, -0.3f);
+            m_cubeShader->SetUniform3f("dirLight.ambient", m_dirLightPower);
+            m_cubeShader->SetUniform3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+            m_cubeShader->SetUniform3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        }
+        else
+            m_cubeShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+        if ( isSpotLightOn )
+        {
+            m_cubeShader->SetUniform3f("spotLight.position", myCamera::getPosition());
+            m_cubeShader->SetUniform3f("spotLight.direction", myCamera::getFront());
+            m_cubeShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+            m_cubeShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+            m_cubeShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
+            m_cubeShader->SetUniform1f("spotLight.constant", 1.0f);
+            m_cubeShader->SetUniform1f("spotLight.linear", 0.09f);
+            m_cubeShader->SetUniform1f("spotLight.quadratic", 0.032f);
+            m_cubeShader->SetUniform1f("spotLight.cutOff", glm::cos(glm::radians(m_spotLightRadius)));
+            m_cubeShader->SetUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(m_spotLightRadius + 3.0f)));
+        }
+        else
+            m_cubeShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+
         m_cubeTexture->bind(0);
         m_cubeShader->SetUniform1i("material.diffuse", 0);
         m_cubeSpecTexture->bind(1);
         m_cubeShader->SetUniform1i("material.specular", 1);
 
+        for (unsigned int i = 0; i < 10; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, m_cubePositions[i]);
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            m_cubeShader->SetUniformMat4f("model", model);
+            m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_cubeShader);
+        }
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
-        m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_cubeShader);
 	}
 
 	void TestLighting::OnImGuiRender()
@@ -171,9 +212,15 @@ namespace test {
         if (myCamera::active)
             return;
 
-        ImGui::InputFloat2("Z:", z_ortho, "%.1f");
-        ImGui::SliderFloat3("model rotation around XYZ", &m_rotation.x, 0.0f, 1.0f, "%.2f");
-        ImGui::SliderFloat3("light colour", &m_lightColor.x, 0.0f, 1.0f, "%.2f");
+        if ( ImGui::Button("DirLight"))
+            isDirLightOn = !isDirLightOn;
+
+        if ( ImGui::Button("SpotLight"))
+            isSpotLightOn = !isSpotLightOn;
+
+        ImGui::SliderFloat3("light colour", &m_pointLightColor.x, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat("spotLight radius", &m_spotLightRadius, 10.0f, 50.0f, "%.2f");
 
         auto& io = ImGui::GetIO();
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
