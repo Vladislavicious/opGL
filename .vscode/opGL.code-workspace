@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
+		"editor.tabSize": 4,
 		"cmake.cmakePath": "cmake",
 		"files.associations": {
 			"stb_image.h": "c",

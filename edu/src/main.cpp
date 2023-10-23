@@ -4,6 +4,7 @@
 #include "TestMovingSquare.h"
 #include "TestCube.h"
 #include "TestCamera.h"
+#include "TestLighting.h"
 
 
 
@@ -69,10 +70,11 @@ int main()
     testMenu->RegisterTest<test::TestMovingSquare>("Moving Square");
     testMenu->RegisterTest<test::TestCube>("Rotating Cube");
     testMenu->RegisterTest<test::TestCamera>("Camera");
+    testMenu->RegisterTest<test::TestLighting>("Lighting");
 
     testMenu->BuildAll();
 
-    currentTest = new test::TestMovingSquare();
+    currentTest = new test::TestLighting();
 
     Renderer renderer;
 

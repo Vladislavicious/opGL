@@ -1,7 +1,7 @@
 #include "myCamera.h"
 
 GLFWwindow* myCamera::m_window  = nullptr;
-glm::vec3 myCamera::cameraPos   = glm::vec3(0.0f, 0.0f,  0.01f);
+glm::vec3 myCamera::cameraPos   = glm::vec3(-1.0f, 0.0f,  -1.0f);
 glm::vec3 myCamera::cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 myCamera::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
