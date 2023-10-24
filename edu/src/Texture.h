@@ -23,7 +23,7 @@ public:
 
 	inline int getWidth() const { return m_Width; }
 	inline int getHeight() const { return m_Height; }
-	inline std::string getType() { return m_type; }
+	inline std::string getType() const { return m_type; }
 };
 
 #endif // MY_TEXTURE_H_

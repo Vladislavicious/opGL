@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
 #include "Renderer.h"
-#include "myMesh.h"
+#include "myVertex.h"
 struct Vertex;
 
 class VertexBuffer

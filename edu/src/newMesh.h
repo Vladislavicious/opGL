@@ -1,24 +1,20 @@
-#ifndef MY_MESH_H_
-#define MY_MESH_H_
+#ifndef NEW_MESH_H_
+#define NEW_MESH_H_
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Renderer.h"
-class Renderer;
 #include "VertexBufferLayout.h"
+class VertexBufferLayout;
 #include "VertexArray.h"
 class VertexArray;
+#include "VertexBuffer.h"
+class VertexBuffer;
 #include "IndexBuffer.h"
 class IndexBuffer;
 #include "Texture.h"
 #include "Shader.h"
+#include "myVertex.h"
 
-struct Vertex {
-    glm::vec4 Position;
-    glm::vec3 Normal;
-    glm::vec2 TexCoords;
-};
-
-class myMesh {
+class newMesh {
     private:
         //  render data
         VertexArray* m_VertexArray;
@@ -27,12 +23,13 @@ class myMesh {
         std::vector<Vertex>       m_vertices;
         std::vector<unsigned int> m_indices;
         std::vector<Texture>      m_textures;
-
-        void setupMesh();
     public:
-        myMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-        ~myMesh();
-        void Draw(Renderer &renderer, Shader &shader);
+        inline const std::vector<Texture>& getTextures() const { return m_textures; }
+        inline unsigned int getCount() const { return m_IndexBuffer->GetCount(); }
+        void Bind() const;
+	    void UnBind() const;
+        newMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+        ~newMesh();
 };
 
 #endif // MY_MESH_H_

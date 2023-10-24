@@ -1,20 +1,20 @@
 #pragma once
 #include "Test.h"
 #include "myCamera.h"
-#include "myMesh.h"
 #include "Shader.h"
+#include "VertexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
+#include "IndexBuffer.h"
 #include "Texture.h"
 #include "Renderer.h"
-#include "VertexBufferLayout.h"
+#include "newMesh.h"
 
 namespace test {
 
     class TestModel : public Test
     {
 	private:
-		std::vector<Vertex> m_vertices;
-		std::vector<unsigned int> m_indices;
-
 		glm::mat4 m_proj;
 		glm::mat4 m_cubeModel;
 		glm::mat4 m_lightModel;
@@ -25,12 +25,16 @@ namespace test {
 		float m_spotLightRadius;
 
 		bool isDirLightOn = true;
-		bool isSpotLightOn = false;
+		bool isSpotLightOn = true;
+
+		std::vector<Texture> m_cubeTextures;
 		Texture* m_cubeTexture;
 		Texture* m_cubeSpecTexture;
-		std::vector<Texture> m_cubeTextures;
-		myMesh* m_cubeMesh;
+		VertexArray* m_cubeVertexArray;
+		IndexBuffer* m_cubeIndexBuffer;
 		Shader* m_cubeShader;
+
+		newMesh* m_cubeMesh;
 
 		VertexArray* m_lightVertexArray;
 		IndexBuffer* m_lightIndexBuffer;

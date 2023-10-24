@@ -2,6 +2,7 @@
 #define INDEXBUFFER_H_
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
+#include <vector>
 class IndexBuffer
 {
 private:
@@ -9,6 +10,7 @@ private:
 	unsigned int indexCount;
 public:
 	IndexBuffer(const unsigned int* data, unsigned int countElements);
+	IndexBuffer(std::vector<unsigned int> data);
 	~IndexBuffer();
 
 	void Bind() const;

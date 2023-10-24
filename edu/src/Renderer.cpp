@@ -33,3 +33,27 @@ void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuff
     GLCall(glDrawElements(GL_TRIANGLES, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
 
 }
+
+void Renderer::Draw(const newMesh &mesh, Shader &shader)
+{
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+    shader.Bind();
+    for(unsigned int i = 0; i < mesh.getTextures().size(); i++)
+    {
+        mesh.getTextures()[i].bind(i); // activate proper texture unit before binding
+        // retrieve texture number (the N in diffuse_textureN)
+        std::string number;
+        std::string name = mesh.getTextures()[i].getType();
+        if(name == "texture_diffuse")
+            number = std::to_string(diffuseNr++);
+        else if(name == "texture_specular")
+            number = std::to_string(specularNr++);
+
+        mesh.getTextures()[i].bind(i);
+        shader.SetUniform1i(("material." + name + number).c_str(), i);
+    }
+    shader.Bind();
+    mesh.Bind();
+    GLCall(glDrawElements(GL_TRIANGLES, mesh.getCount(), GL_UNSIGNED_INT, nullptr));
+}
