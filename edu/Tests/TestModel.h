@@ -1,22 +1,22 @@
 #pragma once
 #include "Test.h"
 #include "myCamera.h"
+#include "myMesh.h"
 #include "Shader.h"
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "VertexBufferLayout.h"
-#include "IndexBuffer.h"
 #include "Texture.h"
 #include "Renderer.h"
+#include "VertexBufferLayout.h"
 
 namespace test {
 
-    class TestLighting : public Test
+    class TestModel : public Test
     {
 	private:
+		std::vector<Vertex> m_vertices;
+		std::vector<unsigned int> m_indices;
+
 		glm::mat4 m_proj;
 		glm::mat4 m_cubeModel;
-		glm::vec3 m_cubePositions[10];
 		glm::mat4 m_lightModel;
 		glm::vec3 m_lightPos;
 
@@ -25,12 +25,11 @@ namespace test {
 		float m_spotLightRadius;
 
 		bool isDirLightOn = true;
-		bool isSpotLightOn = true;
-
+		bool isSpotLightOn = false;
 		Texture* m_cubeTexture;
 		Texture* m_cubeSpecTexture;
-		VertexArray* m_cubeVertexArray;
-		IndexBuffer* m_cubeIndexBuffer;
+		std::vector<Texture> m_cubeTextures;
+		myMesh* m_cubeMesh;
 		Shader* m_cubeShader;
 
 		VertexArray* m_lightVertexArray;
@@ -44,8 +43,8 @@ namespace test {
 		bool cursorActivated = false;
 		glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);
 	public:
-		TestLighting();
-		virtual ~TestLighting();
+		TestModel();
+		virtual ~TestModel();
 
 		virtual void OnUpdate(float deltaTime) override;
 		virtual void OnRender() override;

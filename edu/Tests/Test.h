@@ -2,7 +2,12 @@
 
 #include <vector>
 #include <functional>
-#include "Renderer.h"
+#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h> // подключение GLFW
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 namespace test {
 

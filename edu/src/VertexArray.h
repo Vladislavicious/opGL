@@ -1,10 +1,11 @@
 #ifndef VERTEXARRAY_H_
 #define VERTEXARRAY_H_
 
-#include "VertexBuffer.h"
-
+#include "Renderer.h"
+#include "VertexBufferLayout.h"
 class VertexBufferLayout;
-
+#include "VertexBuffer.h"
+class VertexBuffer;
 class VertexArray
 {
 private:

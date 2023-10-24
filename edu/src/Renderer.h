@@ -1,27 +1,11 @@
-#include <stdio.h> //Для простого консольного вывода ошибок
-#include <iostream>
-#include <signal.h>
-
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h> // подключение GLFW
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "Shader.h"
-#include "VertexBuffer.h"
-#include "VertexArray.h"
-#include "VertexBufferLayout.h"
-#include "IndexBuffer.h"
-#include "Texture.h"
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
-
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
+#include <signal.h>
+#include "VertexArray.h"
+#include "IndexBuffer.h"
+#include "Shader.h"
+class VertexArray;
 #ifdef SIGTRAP
 #define ASSERT(x) if(!(x)) raise(SIGTRAP);
 #else
@@ -47,7 +31,7 @@ public:
 
     void Clear() const;
 
-    void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader, GLenum mode = GL_TRIANGLES) const;
+    void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
 };
 
 #endif //RENDERER_H_

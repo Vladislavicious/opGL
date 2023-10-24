@@ -1,6 +1,9 @@
 #pragma once
 #include "Test.h"
 #include "myCamera.h"
+#include "Renderer.h"
+#include "VertexBufferLayout.h"
+class VertexBufferLayout;
 
 namespace test {
 

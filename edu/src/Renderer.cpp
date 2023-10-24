@@ -1,5 +1,6 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h> // подключение GLFW
 #include "Renderer.h"
-
 void GLClearError()
 {
     while (glGetError() != GL_NO_ERROR);
@@ -23,12 +24,12 @@ void Renderer::Clear() const
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
-void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader, GLenum mode) const
+void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const
 {
     shader.Bind();
     vertexArray.Bind();
     indexBuffer.Bind();
 
-    GLCall(glDrawElements(mode, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
+    GLCall(glDrawElements(GL_TRIANGLES, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
 
 }

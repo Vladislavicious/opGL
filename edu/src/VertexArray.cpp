@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "VertexArray.h"
 
 VertexArray::VertexArray() : vertexArrayID(0)
 {

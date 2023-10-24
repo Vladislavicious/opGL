@@ -1,5 +1,9 @@
 #include "myCamera.h"
 
+extern int WinWidth;
+extern int WinHeight;
+extern float deltaTime;
+
 GLFWwindow* myCamera::m_window  = nullptr;
 glm::vec3 myCamera::cameraPos   = glm::vec3(-1.0f, 0.0f,  -1.0f);
 glm::vec3 myCamera::cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);

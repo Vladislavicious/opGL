@@ -1,4 +1,6 @@
 ﻿#include "TestCube.h"
+#include "VertexBufferLayout.h"
+#include "VertexBuffer.h"
 
 namespace test {
 

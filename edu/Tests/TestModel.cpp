@@ -1,10 +1,9 @@
-﻿#include "TestLighting.h"
+﻿#include "TestModel.h"
 
 namespace test {
 
-	TestLighting::TestLighting()
+	TestModel::TestModel()
 	{
-
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -58,21 +57,6 @@ namespace test {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
 
-        m_cubePositions[0] = glm::vec3( 0.0f,  0.0f,  0.0f);
-        m_cubePositions[1] = glm::vec3( 2.0f,  5.0f, 15.0f);
-        m_cubePositions[2] = glm::vec3(-1.5f, -2.2f, 2.5f);
-        m_cubePositions[3] = glm::vec3(-3.8f, -2.0f, 12.3f);
-        m_cubePositions[4] = glm::vec3( 2.4f, -0.4f, 3.5f);
-        m_cubePositions[5] = glm::vec3(-1.7f,  3.0f, 7.5f);
-        m_cubePositions[6] = glm::vec3( 1.3f, -2.0f, 2.5f);
-        m_cubePositions[7] = glm::vec3( 1.5f,  2.0f, 2.5f);
-        m_cubePositions[8] = glm::vec3( 1.5f,  0.2f, 1.5f);
-        m_cubePositions[9] = glm::vec3(-1.3f,  1.0f, 1.5f);
-
-        auto squareBuffer = VertexBuffer(cube, sizeof(cube));
-
-        m_cubeVertexArray = new VertexArray();
-        m_cubeVertexArray->AddBuffer(squareBuffer, vbLayout);
         unsigned int cubeIndices[] = {
             0, 1, 2, 3, 4, 5,
             6, 7, 8, 9, 10, 11,
@@ -82,12 +66,8 @@ namespace test {
             30, 31, 32, 33, 34, 35
         };
 
-        m_cubeIndexBuffer = new IndexBuffer(cubeIndices, sizeof(cubeIndices) / sizeof(unsigned int));
-        m_cubeVertexArray->UnBind();
-        squareBuffer.UnBind();
-        m_cubeIndexBuffer->UnBind();
-
         auto lightBuffer = VertexBuffer(cube, sizeof(cube));
+        //auto lightBuffer = VertexBuffer(cube.data(), cube.size() * sizeof(GLfloat) );
 
         m_lightVertexArray = new VertexArray();
         m_lightVertexArray->AddBuffer(lightBuffer, vbLayout);
@@ -102,8 +82,25 @@ namespace test {
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
         m_cubeModel = glm::mat4(1.0f);
-        m_cubeTexture = new Texture("../edu/res/cont.png");
+        m_cubeTexture = new Texture("../edu/res/cont.png", "texture_diffuse");
         m_cubeSpecTexture = new Texture("../edu/res/spec.png");
+        m_cubeTextures.push_back(*m_cubeTexture);
+        m_cubeTextures.push_back(*m_cubeSpecTexture);
+
+        m_vertices.reserve(sizeof(cube) / sizeof(GLfloat) / vbLayout.GetCount());
+        for (int i = 0; i < sizeof(cube) / sizeof(GLfloat); i+=8)
+        {
+            Vertex temp;
+            temp.Position = {glm::vec4(cube[i], cube[i+1], cube[i+2], 1.0f)};
+            temp.Normal = {glm::vec3(cube[i+3], cube[i+4], cube[i+5])};
+            temp.TexCoords = { glm::vec2(cube[i+6], cube[i+7]) };
+            m_vertices.push_back(temp);
+        }
+        std::vector<unsigned int> m_indices;
+        m_indices.reserve(sizeof(cubeIndices) / sizeof(unsigned int));
+        for (int i = 0; i < sizeof(cubeIndices) / sizeof(unsigned int); i++)
+            m_indices.push_back(cubeIndices[i]);
+        m_cubeMesh = new myMesh(m_vertices, m_indices, m_cubeTextures);
 
         m_lightPos = glm::vec3(-0.8f, -0.8f, 0.4f);
         m_lightModel = glm::translate(glm::mat4(1.0f), m_lightPos);
@@ -112,20 +109,19 @@ namespace test {
         m_spotLightRadius = 12.0f;
         m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
 
-        m_cubeShader = new Shader("../edu/res/cubeShader.shader");
+        m_cubeShader = new Shader("../edu/res/meshShader.shader");
 
         m_lightShader = new Shader("../edu/res/lightShader.shader");
+
 
         m_renderer = new Renderer();
 	}
 
-	TestLighting::~TestLighting()
+	TestModel::~TestModel()
 	{
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        delete m_cubeIndexBuffer;
         delete m_cubeShader;
-        delete m_cubeVertexArray;
         delete m_cubeTexture;
         delete m_cubeSpecTexture;
 
@@ -135,12 +131,12 @@ namespace test {
         delete m_renderer;
 	}
 
-	void TestLighting::OnUpdate(float deltaTime)
+	void TestModel::OnUpdate(float deltaTime)
 	{
         m_renderer->Clear();
 	}
 
-	void TestLighting::OnRender()
+	void TestModel::OnRender()
 	{
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
         auto view = myCamera::getViewMatrix();
@@ -151,6 +147,8 @@ namespace test {
         m_lightShader->SetUniform3f("colour", m_pointLightColor);
 
         m_cubeShader->Bind();
+        glm::mat4 model = glm::mat4(1.0f);
+        m_cubeShader->SetUniformMat4f("model", model);
         m_cubeShader->SetUniformMat4f("view", view);
         m_cubeShader->SetUniformMat4f("projection", m_proj);
         m_cubeShader->SetUniform3f("pointLights[0].position",  m_lightPos);
@@ -188,24 +186,12 @@ namespace test {
         else
             m_cubeShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
 
-        m_cubeTexture->bind(0);
-        m_cubeShader->SetUniform1i("material.diffuse", 0);
-        m_cubeSpecTexture->bind(1);
-        m_cubeShader->SetUniform1i("material.specular", 1);
 
-        for (unsigned int i = 0; i < 10; i++)
-        {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, m_cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            m_cubeShader->SetUniformMat4f("model", model);
-            m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_cubeShader);
-        }
+        m_cubeMesh->Draw(*m_renderer, *m_cubeShader);
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
 	}
 
-	void TestLighting::OnImGuiRender()
+	void TestModel::OnImGuiRender()
 	{
         ImGui::SetWindowCollapsed(myCamera::active);
         if (myCamera::active)
@@ -225,7 +211,7 @@ namespace test {
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 	}
 
-    glm::mat4 TestLighting::getProjectionMatrix(float near_z_bound, float far_z_bound)
+    glm::mat4 TestModel::getProjectionMatrix(float near_z_bound, float far_z_bound)
     {
         return glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, near_z_bound, far_z_bound);
     }

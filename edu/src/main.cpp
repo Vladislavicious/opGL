@@ -1,10 +1,12 @@
-#include "Renderer.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h> // подключение GLFW
 
 #include "TestClearColor.h"
 #include "TestMovingSquare.h"
 #include "TestCube.h"
 #include "TestCamera.h"
 #include "TestLighting.h"
+#include "TestModel.h"
 
 
 
@@ -71,10 +73,9 @@ int main()
     testMenu->RegisterTest<test::TestCube>("Rotating Cube");
     testMenu->RegisterTest<test::TestCamera>("Camera");
     testMenu->RegisterTest<test::TestLighting>("Lighting");
+    testMenu->RegisterTest<test::TestModel>("Model");
 
-    testMenu->BuildAll();
-
-    currentTest = new test::TestLighting();
+    currentTest = new test::TestModel();
 
     Renderer renderer;
 

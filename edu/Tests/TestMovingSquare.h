@@ -1,5 +1,12 @@
 #pragma once
 #include "Test.h"
+#include "Shader.h"
+#include "VertexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
+#include "IndexBuffer.h"
+#include "Texture.h"
+#include "Renderer.h"
 
 namespace test {
 

@@ -1,7 +1,9 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-
+#include <glad/glad.h>
+#include <GLFW/glfw3.h> // подключение GLFW
+#include "Shader.h"
 #include "Renderer.h"
 
 Shader::Shader(const std::string& filePath)

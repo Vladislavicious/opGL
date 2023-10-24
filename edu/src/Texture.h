@@ -1,6 +1,9 @@
-#pragma once
+#ifndef MY_TEXTURE_H_
+#define MY_TEXTURE_H_
 
-#include "Renderer.h"
+#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h> // подключение GLFW
 #include "stb_image.h"
 
 class Texture
@@ -10,8 +13,9 @@ private:
 	std::string m_FilePath;
 	unsigned char* m_localBuffer;
 	int m_Width, m_Height, m_BPP;
+	std::string m_type;
 public:
-	Texture(const std::string& path);
+	Texture(const std::string& path, const std::string& type = "texture_specular");
 	~Texture();
 
 	void bind(unsigned int slot = 0) const;
@@ -19,4 +23,7 @@ public:
 
 	inline int getWidth() const { return m_Width; }
 	inline int getHeight() const { return m_Height; }
+	inline std::string getType() { return m_type; }
 };
+
+#endif // MY_TEXTURE_H_

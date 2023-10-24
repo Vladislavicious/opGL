@@ -39,4 +39,3 @@ private:
 };
 
 #endif // !MODEL_LOADER_H
-

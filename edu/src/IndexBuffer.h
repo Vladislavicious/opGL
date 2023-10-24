@@ -1,7 +1,7 @@
 #ifndef INDEXBUFFER_H_
 #define INDEXBUFFER_H_
-
-
+#include <glad/glad.h>
+#include <GLFW/glfw3.h> // подключение GLFW
 class IndexBuffer
 {
 private:
