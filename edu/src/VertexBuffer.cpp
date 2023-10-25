@@ -2,17 +2,17 @@
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int sizeInBites)
 {
-    glGenBuffers(1, &bufferID);
-    glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-    glBufferData(GL_ARRAY_BUFFER, sizeInBites, data, GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &bufferID));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, bufferID));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeInBites, data, GL_STATIC_DRAW));
 }
 
-VertexBuffer::VertexBuffer(std::vector<Vertex> vertices)
+VertexBuffer::VertexBuffer(std::vector<Vertex> &vertices)
 {
-    glGenBuffers(1, &bufferID);
-    glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-    unsigned int sizeInBites = vertices.size() * sizeof(Vertex);
-    glBufferData(GL_ARRAY_BUFFER, sizeInBites, &vertices[0], GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &bufferID));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, bufferID));
+    GLCall(unsigned int sizeInBites = vertices.size() * sizeof(Vertex));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeInBites, &vertices[0], GL_STATIC_DRAW));
 }
 VertexBuffer::~VertexBuffer()
 {
@@ -21,10 +21,10 @@ VertexBuffer::~VertexBuffer()
 
 void VertexBuffer::Bind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, bufferID));
 }
 
 void VertexBuffer::UnBind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }

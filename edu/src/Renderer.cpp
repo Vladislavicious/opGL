@@ -1,9 +1,24 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
 #include "Renderer.h"
-void GLClearError()
+void GLClearError(const char *file, int line)
 {
-    while (glGetError() != GL_NO_ERROR);
+    GLenum errorCode;
+    while ((errorCode = glGetError()) != GL_NO_ERROR)
+    {
+        std::string error;
+        switch (errorCode)
+        {
+            case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
+            case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
+            case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
+            case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
+            case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
+            case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
+        }
+        std::cout << error << " | " << file << " (" << line << ")" << std::endl;
+    }
 }
 
 bool GLLogCall(const char* function, const char* file, int line)
@@ -31,7 +46,6 @@ void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuff
     indexBuffer.Bind();
 
     GLCall(glDrawElements(GL_TRIANGLES, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
-
 }
 
 void Renderer::Draw(const newMesh &mesh, Shader &shader)
@@ -39,21 +53,21 @@ void Renderer::Draw(const newMesh &mesh, Shader &shader)
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     shader.Bind();
-    for(unsigned int i = 0; i < mesh.getTextures().size(); i++)
+    auto textures = mesh.getTextures();
+    for(unsigned int i = 0; i < textures.size(); i++)
     {
-        mesh.getTextures()[i].bind(i); // activate proper texture unit before binding
+        textures[i]->bind(i); // activate proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
         std::string number;
-        std::string name = mesh.getTextures()[i].getType();
+        std::string name = textures[i]->getType();
         if(name == "texture_diffuse")
             number = std::to_string(diffuseNr++);
         else if(name == "texture_specular")
             number = std::to_string(specularNr++);
 
-        mesh.getTextures()[i].bind(i);
+        textures[i]->bind(i);
         shader.SetUniform1i(("material." + name + number).c_str(), i);
     }
-    shader.Bind();
     mesh.Bind();
     GLCall(glDrawElements(GL_TRIANGLES, mesh.getCount(), GL_UNSIGNED_INT, nullptr));
 }

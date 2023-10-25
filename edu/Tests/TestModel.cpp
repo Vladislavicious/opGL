@@ -58,10 +58,6 @@ namespace test {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
         auto temp = getVertices(cube, 36);
-       // auto squareBuffer = VertexBuffer(temp);
-
-      //  m_cubeVertexArray = new VertexArray();
-      //  m_cubeVertexArray->AddBuffer(squareBuffer, vbLayout);
         unsigned int cubeIndices[] = {
             0, 1, 2, 3, 4, 5,
             6, 7, 8, 9, 10, 11,
@@ -75,18 +71,14 @@ namespace test {
         for (int i = 0; i < sizeof(cubeIndices) / sizeof(unsigned int); i++)
             indices.push_back(cubeIndices[i]);
 
-       // m_cubeIndexBuffer = new IndexBuffer(indices);
-
         m_cubeTexture = new Texture("../edu/res/cont.png", "texture_diffuse");
         m_cubeSpecTexture = new Texture("../edu/res/spec.png");
-        m_cubeTextures.push_back(*m_cubeTexture);
-        m_cubeTextures.push_back(*m_cubeSpecTexture);
 
-        m_cubeMesh = new newMesh(temp, indices, m_cubeTextures);
+        std::vector<Texture*> textures;
+        textures.push_back(m_cubeSpecTexture);
+        textures.push_back(m_cubeTexture);
 
-      //  m_cubeVertexArray->UnBind();
-      //  squareBuffer.UnBind();
-      //  m_cubeIndexBuffer->UnBind();
+        m_cubeMesh = new newMesh(temp, indices, textures);
 
         auto lightBuffer = VertexBuffer(cube, sizeof(cube));
 
@@ -122,11 +114,10 @@ namespace test {
 	{
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        delete m_cubeIndexBuffer;
         delete m_cubeShader;
-        delete m_cubeVertexArray;
         delete m_cubeTexture;
         delete m_cubeSpecTexture;
+        delete m_cubeMesh;
 
         delete m_lightIndexBuffer;
         delete m_lightShader;
@@ -187,7 +178,6 @@ namespace test {
         }
         else
             m_cubeShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
-
 
         m_renderer->Draw(*m_cubeMesh, *m_cubeShader);
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);

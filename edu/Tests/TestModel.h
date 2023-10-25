@@ -27,13 +27,9 @@ namespace test {
 		bool isDirLightOn = true;
 		bool isSpotLightOn = true;
 
-		std::vector<Texture> m_cubeTextures;
 		Texture* m_cubeTexture;
 		Texture* m_cubeSpecTexture;
-		VertexArray* m_cubeVertexArray;
-		IndexBuffer* m_cubeIndexBuffer;
 		Shader* m_cubeShader;
-
 		newMesh* m_cubeMesh;
 
 		VertexArray* m_lightVertexArray;

@@ -13,7 +13,7 @@ class VertexArray;
 #else
 #define ASSERT(x) if(!(x)) raise(SIGABRT);
 #endif // SIGTRAP
-#define GLCall(x) GLClearError();x;\
+#define GLCall(x) GLClearError(__FILE__, __LINE__);x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 
@@ -23,7 +23,7 @@ extern float lastFrame; // Time of last frame
 extern int WinWidth;
 extern int WinHeight;
 
-void GLClearError();
+void GLClearError(const char *file, int line);
 
 bool GLLogCall(const char* function, const char* file, int line);
 

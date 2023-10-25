@@ -16,19 +16,17 @@ class IndexBuffer;
 
 class newMesh {
     private:
-        //  render data
-        VertexArray* m_VertexArray;
-		IndexBuffer* m_IndexBuffer;
-        // mesh data
         std::vector<Vertex>       m_vertices;
         std::vector<unsigned int> m_indices;
-        std::vector<Texture>      m_textures;
+        std::vector<Texture*>      m_textures;
+        VertexArray* m_VertexArray;
+		IndexBuffer* m_IndexBuffer;
     public:
-        inline const std::vector<Texture>& getTextures() const { return m_textures; }
+        inline std::vector<Texture*> getTextures() const { return m_textures; }
         inline unsigned int getCount() const { return m_IndexBuffer->GetCount(); }
         void Bind() const;
 	    void UnBind() const;
-        newMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+        newMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures);
         ~newMesh();
 };
 

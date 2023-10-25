@@ -6,12 +6,16 @@
 class VertexBufferLayout;
 #include "VertexBuffer.h"
 class VertexBuffer;
+#include "myVertex.h"
 class VertexArray
 {
 private:
 	unsigned int vertexArrayID;
+	VertexBufferLayout *layout;
+	VertexBuffer *buffer;
 public:
 	VertexArray();
+	VertexArray(std::vector<Vertex>& vertices);
 	~VertexArray();
 
 	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vbLayout);
