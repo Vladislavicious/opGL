@@ -17,7 +17,6 @@ namespace test {
     {
 	private:
 		glm::mat4 m_proj;
-		glm::mat4 m_cubeModel;
 		glm::mat4 m_lightModel;
 		glm::vec3 m_lightPos;
 
@@ -28,11 +27,8 @@ namespace test {
 		bool isDirLightOn = true;
 		bool isSpotLightOn = true;
 
-		Texture* m_cubeTexture;
-		Texture* m_cubeSpecTexture;
-		Shader* m_cubeShader;
-		myMesh* m_cubeMesh;
-
+		std::vector<std::shared_ptr<Texture>> m_textures;
+		Shader* m_modelShader;
 		myModel* m_backpack;
 
 		VertexArray* m_lightVertexArray;

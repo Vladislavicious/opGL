@@ -71,14 +71,8 @@ namespace test {
         for (int i = 0; i < sizeof(cubeIndices) / sizeof(unsigned int); i++)
             indices.push_back(cubeIndices[i]);
 
-        m_cubeTexture = new Texture("../edu/res/cont.png", "texture_diffuse");
-        m_cubeSpecTexture = new Texture("../edu/res/spec.png");
-
-        std::vector<std::shared_ptr<Texture>> textures;
-        textures.push_back(std::make_shared<Texture>("../edu/res/cont.png", "texture_diffuse"));
-        textures.push_back(std::make_shared<Texture>("../edu/res/spec.png"));
-
-        m_cubeMesh = new myMesh(temp, indices, textures);
+        m_textures.push_back(std::make_shared<Texture>("../edu/res/cont.png", "texture_diffuse"));
+        m_textures.push_back(std::make_shared<Texture>("../edu/res/spec.png", "texture_specular"));
 
         auto lightBuffer = VertexBuffer(cube, sizeof(cube));
 
@@ -94,7 +88,6 @@ namespace test {
         z_ortho[1] = 20.0f;
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
-        m_cubeModel = glm::mat4(1.0f);
 
         m_lightPos = glm::vec3(-0.8f, -0.8f, 0.4f);
         m_lightModel = glm::translate(glm::mat4(1.0f), m_lightPos);
@@ -103,7 +96,7 @@ namespace test {
         m_spotLightRadius = 12.0f;
         m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
 
-        m_cubeShader = new Shader("../edu/res/meshShader.shader");
+        m_modelShader = new Shader("../edu/res/meshShader.shader");
 
         m_lightShader = new Shader("../edu/res/lightShader.shader");
 
@@ -116,12 +109,9 @@ namespace test {
 	{
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        delete m_cubeShader;
-        delete m_cubeTexture;
-        delete m_cubeSpecTexture;
-        delete m_cubeMesh;
+        delete m_modelShader;
 
-        //delete m_backpack;
+        delete m_backpack;
 
         delete m_lightIndexBuffer;
         delete m_lightShader;
@@ -144,50 +134,47 @@ namespace test {
         m_lightShader->SetUniformMat4f("projection", m_proj);
         m_lightShader->SetUniform3f("colour", m_pointLightColor);
 
-        m_cubeShader->Bind();
-        m_cubeShader->SetUniformMat4f("model", m_cubeModel);
-        m_cubeShader->SetUniformMat4f("view", view);
-        m_cubeShader->SetUniformMat4f("projection", m_proj);
-        m_cubeShader->SetUniform3f("pointLights[0].position",  m_lightPos);
-        m_cubeShader->SetUniform3f("pointLights[0].ambient",  0.3f, 0.3f, 0.3f);
-        m_cubeShader->SetUniform3f("pointLights[0].diffuse",  m_pointLightColor);
-        m_cubeShader->SetUniform3f("pointLights[0].specular",  1.0f, 1.0f, 1.0f);
-        m_cubeShader->SetUniform1f("pointLights[0].constant",  1.0f);
-        m_cubeShader->SetUniform1f("pointLights[0].linear",    0.09f);
-        m_cubeShader->SetUniform1f("pointLights[0].quadratic", 0.032f);
-        m_cubeShader->SetUniform3f("viewPos",  myCamera::getPosition());
-        m_cubeShader->SetUniform1f("material.shininess", 32.0f);
+        m_modelShader->Bind();
+        auto modelPlace = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 1.0f, 0.0f));
+        m_modelShader->SetUniformMat4f("model", modelPlace);
+        m_modelShader->SetUniformMat4f("view", view);
+        m_modelShader->SetUniformMat4f("projection", m_proj);
+        m_modelShader->SetUniform3f("pointLights[0].position",  m_lightPos);
+        m_modelShader->SetUniform3f("pointLights[0].ambient",  0.3f, 0.3f, 0.3f);
+        m_modelShader->SetUniform3f("pointLights[0].diffuse",  m_pointLightColor);
+        m_modelShader->SetUniform3f("pointLights[0].specular",  1.0f, 1.0f, 1.0f);
+        m_modelShader->SetUniform1f("pointLights[0].constant",  1.0f);
+        m_modelShader->SetUniform1f("pointLights[0].linear",    0.09f);
+        m_modelShader->SetUniform1f("pointLights[0].quadratic", 0.032f);
+        m_modelShader->SetUniform3f("viewPos",  myCamera::getPosition());
+        m_modelShader->SetUniform1f("material.shininess", 32.0f);
 
         if ( isDirLightOn )
         {
-            m_cubeShader->SetUniform3f("dirLight.direction", -0.2f, -1.0f, -0.3f);
-            m_cubeShader->SetUniform3f("dirLight.ambient", m_dirLightPower);
-            m_cubeShader->SetUniform3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-            m_cubeShader->SetUniform3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
+            m_modelShader->SetUniform3f("dirLight.direction", -0.2f, -1.0f, -0.3f);
+            m_modelShader->SetUniform3f("dirLight.ambient", m_dirLightPower);
+            m_modelShader->SetUniform3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+            m_modelShader->SetUniform3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
         }
         else
-            m_cubeShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+            m_modelShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
         if ( isSpotLightOn )
         {
-            m_cubeShader->SetUniform3f("spotLight.position", myCamera::getPosition());
-            m_cubeShader->SetUniform3f("spotLight.direction", myCamera::getFront());
-            m_cubeShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-            m_cubeShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-            m_cubeShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
-            m_cubeShader->SetUniform1f("spotLight.constant", 1.0f);
-            m_cubeShader->SetUniform1f("spotLight.linear", 0.09f);
-            m_cubeShader->SetUniform1f("spotLight.quadratic", 0.032f);
-            m_cubeShader->SetUniform1f("spotLight.cutOff", glm::cos(glm::radians(m_spotLightRadius)));
-            m_cubeShader->SetUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(m_spotLightRadius + 3.0f)));
+            m_modelShader->SetUniform3f("spotLight.position", myCamera::getPosition());
+            m_modelShader->SetUniform3f("spotLight.direction", myCamera::getFront());
+            m_modelShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+            m_modelShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+            m_modelShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
+            m_modelShader->SetUniform1f("spotLight.constant", 1.0f);
+            m_modelShader->SetUniform1f("spotLight.linear", 0.09f);
+            m_modelShader->SetUniform1f("spotLight.quadratic", 0.032f);
+            m_modelShader->SetUniform1f("spotLight.cutOff", glm::cos(glm::radians(m_spotLightRadius)));
+            m_modelShader->SetUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(m_spotLightRadius + 3.0f)));
         }
         else
-            m_cubeShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+            m_modelShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
 
-        m_renderer->Draw(*m_cubeMesh, *m_cubeShader);
-
-        auto modelPlace = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 1.0f, 0.0f));
-        m_cubeShader->SetUniformMat4f("model", modelPlace);
-        m_renderer->Draw(*m_backpack, *m_cubeShader);
+        m_renderer->Draw(*m_backpack, *m_modelShader);
 
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
 	}

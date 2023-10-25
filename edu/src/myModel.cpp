@@ -34,7 +34,7 @@ void myModel::processNode(aiNode *node, const aiScene *scene)
     }
 }
 
-myMesh myModel::processMesh(aiMesh *mesh, const aiScene *scene)
+std::shared_ptr<myMesh> myModel::processMesh(aiMesh *mesh, const aiScene *scene)
 {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -85,8 +85,7 @@ myMesh myModel::processMesh(aiMesh *mesh, const aiScene *scene)
                                             aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
-
-    return myMesh(vertices, indices, textures);
+    return std::make_shared<myMesh>(vertices, indices, textures);
 }
 
 std::vector<std::shared_ptr<Texture>> myModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type,

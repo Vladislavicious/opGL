@@ -15,18 +15,18 @@ class myModel
 {
     private:
         // model data
-        std::vector<myMesh> m_meshes;
+        std::vector<std::shared_ptr<myMesh>> m_meshes;
         std::string m_directory;
         std::vector<std::shared_ptr<Texture>> m_texturesLoaded;
 
         void loadModel(std::string path);
         void processNode(aiNode *node, const aiScene *scene);
-        myMesh processMesh(aiMesh *mesh, const aiScene *scene);
+        std::shared_ptr<myMesh> processMesh(aiMesh *mesh, const aiScene *scene);
         std::vector<std::shared_ptr<Texture>> loadMaterialTextures(aiMaterial *mat,
                                                                     aiTextureType type,
                                                                     std::string typeName);
     public:
-        inline const std::vector<myMesh> getMeshes() const { return m_meshes; }
+        inline const std::vector<std::shared_ptr<myMesh>> getMeshes() const { return m_meshes; }
         myModel(const std::string& path);
 };
 

@@ -26,7 +26,7 @@ Texture::Texture(const std::string& path, const std::string& type)
 Texture::~Texture()
 {
 	GLCall(glDeleteTextures(1, &m_TextureID));
-	std::cout << "Texture " << m_FilePath << "deleted\n";
+	std::cout << "Texture " << m_FilePath << " deleted\n";
 }
 
 void Texture::bind(unsigned int slot) const

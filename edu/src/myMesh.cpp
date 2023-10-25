@@ -9,8 +9,8 @@ myMesh::myMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 
 myMesh::~myMesh()
 {
-   //delete m_VertexArray;
-   //delete m_IndexBuffer;
+   delete m_VertexArray;
+   delete m_IndexBuffer;
 }
 
 void myMesh::Bind() const

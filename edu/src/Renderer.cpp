@@ -75,5 +75,5 @@ void Renderer::Draw(const myMesh &mesh, Shader &shader)
 void Renderer::Draw(const myModel &model, Shader &shader)
 {
     for (auto& mesh : model.getMeshes())
-        Draw(mesh, shader);
+        Draw(*mesh, shader);
 }
