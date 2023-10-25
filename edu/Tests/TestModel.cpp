@@ -74,11 +74,11 @@ namespace test {
         m_cubeTexture = new Texture("../edu/res/cont.png", "texture_diffuse");
         m_cubeSpecTexture = new Texture("../edu/res/spec.png");
 
-        std::vector<Texture*> textures;
-        textures.push_back(m_cubeSpecTexture);
-        textures.push_back(m_cubeTexture);
+        std::vector<std::shared_ptr<Texture>> textures;
+        textures.push_back(std::make_shared<Texture>("../edu/res/cont.png", "texture_diffuse"));
+        textures.push_back(std::make_shared<Texture>("../edu/res/spec.png"));
 
-        m_cubeMesh = new newMesh(temp, indices, textures);
+        m_cubeMesh = new myMesh(temp, indices, textures);
 
         auto lightBuffer = VertexBuffer(cube, sizeof(cube));
 
@@ -107,6 +107,8 @@ namespace test {
 
         m_lightShader = new Shader("../edu/res/lightShader.shader");
 
+        m_backpack = new myModel("../edu/res/backpack/backpack.obj");
+
         m_renderer = new Renderer();
 	}
 
@@ -118,6 +120,8 @@ namespace test {
         delete m_cubeTexture;
         delete m_cubeSpecTexture;
         delete m_cubeMesh;
+
+        //delete m_backpack;
 
         delete m_lightIndexBuffer;
         delete m_lightShader;
@@ -180,6 +184,11 @@ namespace test {
             m_cubeShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
 
         m_renderer->Draw(*m_cubeMesh, *m_cubeShader);
+
+        auto modelPlace = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 1.0f, 0.0f));
+        m_cubeShader->SetUniformMat4f("model", modelPlace);
+        m_renderer->Draw(*m_backpack, *m_cubeShader);
+
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
 	}
 

@@ -8,7 +8,8 @@
 #include "IndexBuffer.h"
 #include "Texture.h"
 #include "Renderer.h"
-#include "newMesh.h"
+#include "myMesh.h"
+#include "myModel.h"
 
 namespace test {
 
@@ -30,7 +31,9 @@ namespace test {
 		Texture* m_cubeTexture;
 		Texture* m_cubeSpecTexture;
 		Shader* m_cubeShader;
-		newMesh* m_cubeMesh;
+		myMesh* m_cubeMesh;
+
+		myModel* m_backpack;
 
 		VertexArray* m_lightVertexArray;
 		IndexBuffer* m_lightIndexBuffer;

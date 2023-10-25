@@ -14,3 +14,12 @@ std::vector<Vertex> getVertices(float* data, unsigned int count)
     }
     return vertices;
 }
+
+VertexBufferLayout* getLayout()
+{
+    auto temp = new VertexBufferLayout();
+    temp->Push<float>(3); // 3 координаты
+    temp->Push<float>(3); // 3 нормали
+    temp->Push<float>(2); // 2 текстурных координаты
+    return temp;
+}

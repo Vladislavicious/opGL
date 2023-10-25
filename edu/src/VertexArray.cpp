@@ -7,14 +7,9 @@ VertexArray::VertexArray() :
 }
 
 VertexArray::VertexArray(std::vector<Vertex>& vertices) :
-	vertexArrayID(0), layout(new VertexBufferLayout()), buffer(new VertexBuffer(vertices))
+	vertexArrayID(0), layout(getLayout()), buffer(new VertexBuffer(vertices))
 {
 	GLCall(glGenVertexArrays(1, &vertexArrayID));
-
-    layout->Push<float>(3); // 3 координаты
-    layout->Push<float>(3); // 3 нормали
-    layout->Push<float>(2); // 2 текстурных координаты
-
     AddBuffer(*buffer, *layout);
 }
 

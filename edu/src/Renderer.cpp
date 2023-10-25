@@ -48,7 +48,7 @@ void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuff
     GLCall(glDrawElements(GL_TRIANGLES, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
-void Renderer::Draw(const newMesh &mesh, Shader &shader)
+void Renderer::Draw(const myMesh &mesh, Shader &shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -70,4 +70,10 @@ void Renderer::Draw(const newMesh &mesh, Shader &shader)
     }
     mesh.Bind();
     GLCall(glDrawElements(GL_TRIANGLES, mesh.getCount(), GL_UNSIGNED_INT, nullptr));
+}
+
+void Renderer::Draw(const myModel &model, Shader &shader)
+{
+    for (auto& mesh : model.getMeshes())
+        Draw(mesh, shader);
 }

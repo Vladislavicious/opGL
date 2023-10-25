@@ -5,8 +5,10 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
-#include "newMesh.h"
-class newMesh;
+#include "myMesh.h"
+#include "myModel.h"
+class myMesh;
+class myModel;
 class VertexArray;
 #ifdef SIGTRAP
 #define ASSERT(x) if(!(x)) raise(SIGTRAP);
@@ -34,7 +36,8 @@ public:
     void Clear() const;
 
     void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
-    void Draw(const newMesh &mesh, Shader &shader);
+    void Draw(const myMesh &mesh, Shader &shader);
+    void Draw(const myModel &model, Shader &shader);
 };
 
 #endif //RENDERER_H_
