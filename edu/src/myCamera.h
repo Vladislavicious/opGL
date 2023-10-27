@@ -18,6 +18,7 @@ private:
     static float pitch; // left-right
     static float lastX;
     static float lastY;
+    static float speed;
     static bool firstMouse;
 public:
     static bool active;

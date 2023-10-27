@@ -7,6 +7,8 @@
 #include "TestCamera.h"
 #include "TestLighting.h"
 #include "TestModel.h"
+#include "TestPR5.h"
+#include "TestPR6.h"
 
 
 
@@ -130,8 +132,10 @@ int main()
     testMenu->RegisterTest<test::TestCamera>("Camera");
     testMenu->RegisterTest<test::TestLighting>("Lighting");
     testMenu->RegisterTest<test::TestModel>("Model");
+    testMenu->RegisterTest<test::TestPR5>("PR5");
+    testMenu->RegisterTest<test::TestPR6>("PR6");
 
-    currentTest = new test::TestModel();
+    currentTest = new test::TestPR6();
 
     Renderer renderer;
 

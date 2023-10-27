@@ -13,6 +13,7 @@ float myCamera::lastX = WinWidth / 2.0f;
 float myCamera::lastY = WinHeight / 2.0f;
 float myCamera::yaw = 90.0f;
 float myCamera::pitch = 0.0f;
+float myCamera::speed = 15.5f;
 bool myCamera::firstMouse = true;
 bool myCamera::active = false;
 
@@ -32,7 +33,7 @@ void myCamera::key_callback(GLFWwindow* window, int key, int scancode, int actio
 {
     if (!active && key != GLFW_KEY_SPACE)
         return;
-    float cameraSpeed = 2.5f * deltaTime; //deltaTime - global variable from renderer.h
+    float cameraSpeed = speed * deltaTime; //deltaTime - global variable from renderer.h
     switch (key)
     {
     case GLFW_KEY_W:
