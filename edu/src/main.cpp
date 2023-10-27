@@ -9,6 +9,7 @@
 #include "TestModel.h"
 #include "TestPR5.h"
 #include "TestPR6.h"
+#include "TestPR7.h"
 
 
 
@@ -134,8 +135,9 @@ int main()
     testMenu->RegisterTest<test::TestModel>("Model");
     testMenu->RegisterTest<test::TestPR5>("PR5");
     testMenu->RegisterTest<test::TestPR6>("PR6");
+    testMenu->RegisterTest<test::TestPR7>("PR7");
 
-    currentTest = new test::TestPR6();
+    currentTest = new test::TestPR7();
 
     Renderer renderer;
 

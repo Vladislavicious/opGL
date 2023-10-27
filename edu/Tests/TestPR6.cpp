@@ -27,7 +27,7 @@ namespace test {
                                                 "../edu/res/lightShader.shader"));
         m_pointLights.push_back(std::make_shared<PointLight>(lightPos2, glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 0.0f, 1.0f),
-                                                glm::vec3(1.0f), 1.0f, 0.001f, 0.001f, 0.4f,
+                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
                                                 "../edu/res/lightShader.shader"));
 
         m_spotLightRadius = 12.0f;
@@ -66,7 +66,7 @@ namespace test {
 
         m_modelShader->Bind();
         auto modelPlace = glm::translate(glm::mat4(1.0f), m_modelMovement);
-        auto sphereColour = glm::vec3(1.0f, 0.3f, 0.3f);
+        auto sphereColour = glm::vec3(0.9f, 0.3f, 0.3f);
         m_modelShader->SetUniform3f("sphereColour", sphereColour);
         m_modelShader->SetUniformMat4f("model", modelPlace);
         m_modelShader->SetUniformMat4f("view", view);
