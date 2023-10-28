@@ -25,6 +25,8 @@ namespace test {
 		float z_ortho[2];
 		float m_translationZ = 0.0f;
 
+		std::unique_ptr<myCamera> m_camera;
+		
 		bool ortho = false;
 		bool cursorActivated = false;
 		glm::mat4 getProjectionMatrix(float *x_bounds, float *y_bounds, float *z_bounds);

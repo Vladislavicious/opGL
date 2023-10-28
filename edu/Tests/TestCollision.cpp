@@ -1,8 +1,8 @@
-﻿#include "TestPR6.h"
+#include "TestCollision.h"
 
 namespace test {
 
-	TestPR6::TestPR6()
+	TestCollision::TestCollision()
 	{
 
         glEnable(GL_DEPTH_TEST);
@@ -13,6 +13,9 @@ namespace test {
         z_ortho[1] = 12.0f;
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
+
+		m_textures.push_back(std::make_shared<Texture>("../edu/res/cont.png", "texture_diffuse"));
+        m_textures.push_back(std::make_shared<Texture>("../edu/res/spec.png", "texture_specular"));
 
         auto lightPos = glm::vec3(0.8f, -0.8f, 0.4f);
         auto lightPos1 = glm::vec3(8.8f, 2.3f, 1.4f);
@@ -30,18 +33,22 @@ namespace test {
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
                                                 "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
 
+        m_bBoxes.push_back(std::make_shared<bBox>(glm::vec3(-0.8f, -0.8f, 1.4f), glm::vec3(0.5f),
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
+		m_camera = std::make_unique<myCamera>();
+
         m_spotLightRadius = 12.0f;
         m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
-        m_modelShader = new Shader("../edu/res/PR6/sphereShader.vs", "../edu/res/PR6/sphereShader.fs");
+        m_modelShader = new Shader("../edu/res/meshShader.vs", "../edu/res/meshShader.fs");
 
-        m_myModel = new myModel("../edu/res/PR6/pinkSphere.obj");
+        m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
 
         m_renderer = new Renderer();
 	}
 
-	TestPR6::~TestPR6()
+	TestCollision::~TestCollision()
 	{
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -52,54 +59,39 @@ namespace test {
         delete m_renderer;
 	}
 
-	void TestPR6::OnUpdate(float deltaTime)
+	void TestCollision::OnUpdate(float deltaTime)
 	{
         m_renderer->Clear();
 	}
 
-	void TestPR6::OnRender()
+	void TestCollision::OnRender()
 	{
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
-        auto view = myCamera::getViewMatrix();
+        auto view = m_camera->getViewMatrix();
         for (auto& pointLight : m_pointLights)
-            pointLight->ToLightShader(view, m_proj);
+            pointLight->ToDrawShader(view, m_proj);
+
+        for (auto& box : m_bBoxes)
+            box->ToDrawShader(view, m_proj);
 
         m_modelShader->Bind();
         auto modelPlace = glm::translate(glm::mat4(1.0f), m_modelMovement);
-        auto sphereColour = glm::vec3(0.9f, 0.3f, 0.3f);
-        m_modelShader->SetUniform3f("sphereColour", sphereColour);
         m_modelShader->SetUniformMat4f("model", modelPlace);
         m_modelShader->SetUniformMat4f("view", view);
         m_modelShader->SetUniformMat4f("projection", m_proj);
 
         int i = 0;
+        m_modelShader->SetUniform1i("pointLightsNumber", m_pointLights.size());
         for (auto& pointLight : m_pointLights)
         {
             pointLight->ToObjectShader(*m_modelShader, "pointLights[" + std::to_string(i++) +"]");
         }
 
-        m_modelShader->SetUniform3f("viewPos",  myCamera::getPosition());
+        m_modelShader->SetUniform3f("viewPos",  m_camera->getPosition());
 
-        if ( isMaterial )
-        {
-            auto temp = glm::vec3(1.0f, 1.0f, 1.0f);
-            m_modelShader->SetUniform3f("material.ambient", temp);
-            temp = glm::vec3(0.3f, 0.3f, 0.3f);
-            m_modelShader->SetUniform3f("material.diffuse", temp);
-            glm::vec3(1.0f, 1.0f, 1.0f);
-            m_modelShader->SetUniform3f("material.specular", temp);
-            m_modelShader->SetUniform1f("material.shininess", 32.0f);
-        }
-        else
-        {
-            auto temp = glm::vec3(0.1f, 0.1f, 0.1f);
-            m_modelShader->SetUniform3f("material.ambient", temp);
-            temp = glm::vec3(0.3f, 0.3f, 0.3f);
-            m_modelShader->SetUniform3f("material.diffuse", temp);
-            glm::vec3(0.0f, 0.0f, 0.0f);
-            m_modelShader->SetUniform3f("material.specular", temp);
-            m_modelShader->SetUniform1f("material.shininess", 1.0f);
-        }
+
+		m_modelShader->SetUniform1f("material.shininess", 32.0f);
+
 
         if ( isDirLightOn )
         {
@@ -112,8 +104,8 @@ namespace test {
             m_modelShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
         if ( isSpotLightOn )
         {
-            m_modelShader->SetUniform3f("spotLight.position", myCamera::getPosition());
-            m_modelShader->SetUniform3f("spotLight.direction", myCamera::getFront());
+            m_modelShader->SetUniform3f("spotLight.position", m_camera->getPosition());
+            m_modelShader->SetUniform3f("spotLight.direction", m_camera->getFront());
             m_modelShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
             m_modelShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
             m_modelShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
@@ -126,15 +118,26 @@ namespace test {
         else
             m_modelShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
 
+		m_textures[0]->bind(0);
+        m_modelShader->SetUniform1i("material.texture_diffuse1", 0);
+        m_textures[1]->bind(1);
+        m_modelShader->SetUniform1i("material.texture_specular1", 1);
+
         m_renderer->Draw(*m_myModel, *m_modelShader);
         for (auto& pointLight : m_pointLights)
             m_renderer->Draw(pointLight->getModel(), pointLight->getShader());
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(10.0f);
+        for (auto& box : m_bBoxes)
+            m_renderer->Draw(box->getModel(), box->getShader());
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	void TestPR6::OnImGuiRender()
+	void TestCollision::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(myCamera::active);
-        if (myCamera::active)
+        ImGui::SetWindowCollapsed(m_camera->active);
+        if (m_camera->active)
             return;
 
         if ( ImGui::Button("DirLight"))
@@ -142,9 +145,6 @@ namespace test {
 
         if ( ImGui::Button("SpotLight"))
             isSpotLightOn = !isSpotLightOn;
-
-        if ( ImGui::Button("Material"))
-            isMaterial = !isMaterial;
 
         ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
@@ -155,18 +155,22 @@ namespace test {
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 	}
 
-    glm::mat4 TestPR6::getProjectionMatrix(float near_z_bound, float far_z_bound)
+    glm::mat4 TestCollision::getProjectionMatrix(float near_z_bound, float far_z_bound)
     {
         return glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, near_z_bound, far_z_bound);
     }
 
-    void TestPR6::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    void TestCollision::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        myCamera::key_callback(window, key, scancode, action, mods);
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose (window, 1);
+        }
+        m_camera->key_callback(window, key, scancode, action, mods);
     }
 
-    void TestPR6::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+    void TestCollision::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
-        myCamera::mouse_callback(window, xpos, ypos);
+        m_camera->mouse_callback(window, xpos, ypos);
     }
 }

@@ -40,6 +40,7 @@ namespace test {
 		Renderer* m_renderer;
 
 		float z_ortho[2];
+		std::unique_ptr<myCamera> m_camera;
 
 		bool cursorActivated = false;
 		glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);

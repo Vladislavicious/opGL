@@ -23,7 +23,7 @@ public:
                 float quadratic, float scale, const std::string& vsShaderPath,
                 const std::string& fsShaderPath);
     ~PointLight();
-    void ToLightShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const;
+    void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const;
     void ToObjectShader(Shader& shader, const std::string& prefix) const;
     glm::vec3& getLightPos() { return m_lightPos; }
     glm::vec3& getLightColor() { return m_diffuse; }

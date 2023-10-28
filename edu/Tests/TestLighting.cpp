@@ -100,6 +100,8 @@ namespace test {
         z_ortho[0] = 0.01f;
         z_ortho[1] = 20.0f;
 
+        m_camera = std::make_unique<myCamera>();
+
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
         m_cubeModel = glm::mat4(1.0f);
         m_cubeTexture = new Texture("../edu/res/cont.png");
@@ -143,7 +145,7 @@ namespace test {
 	void TestLighting::OnRender()
 	{
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
-        auto view = myCamera::getViewMatrix();
+        auto view = m_camera->getViewMatrix();
         m_lightShader->Bind();
         m_lightShader->SetUniformMat4f("model", m_lightModel);
         m_lightShader->SetUniformMat4f("view", view);
@@ -160,7 +162,7 @@ namespace test {
         m_cubeShader->SetUniform1f("pointLights[0].constant",  1.0f);
         m_cubeShader->SetUniform1f("pointLights[0].linear",    0.09f);
         m_cubeShader->SetUniform1f("pointLights[0].quadratic", 0.032f);
-        m_cubeShader->SetUniform3f("viewPos",  myCamera::getPosition());
+        m_cubeShader->SetUniform3f("viewPos",  m_camera->getPosition());
         m_cubeShader->SetUniform1f("material.shininess", 32.0f);
 
         if ( isDirLightOn )
@@ -174,8 +176,8 @@ namespace test {
             m_cubeShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
         if ( isSpotLightOn )
         {
-            m_cubeShader->SetUniform3f("spotLight.position", myCamera::getPosition());
-            m_cubeShader->SetUniform3f("spotLight.direction", myCamera::getFront());
+            m_cubeShader->SetUniform3f("spotLight.position", m_camera->getPosition());
+            m_cubeShader->SetUniform3f("spotLight.direction", m_camera->getFront());
             m_cubeShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
             m_cubeShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
             m_cubeShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
@@ -207,8 +209,8 @@ namespace test {
 
 	void TestLighting::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(myCamera::active);
-        if (myCamera::active)
+        ImGui::SetWindowCollapsed(m_camera->active);
+        if (m_camera->active)
             return;
 
         if ( ImGui::Button("DirLight"))
@@ -232,11 +234,11 @@ namespace test {
 
     void TestLighting::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        myCamera::key_callback(window, key, scancode, action, mods);
+        m_camera->key_callback(window, key, scancode, action, mods);
     }
 
     void TestLighting::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
-        myCamera::mouse_callback(window, xpos, ypos);
+        m_camera->mouse_callback(window, xpos, ypos);
     }
 }

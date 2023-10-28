@@ -36,6 +36,7 @@ namespace test {
 		Shader* m_lightShader;
 
 		Renderer* m_renderer;
+		std::unique_ptr<myCamera> m_camera;
 
 		float z_ortho[2];
 

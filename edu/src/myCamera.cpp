@@ -4,17 +4,21 @@ extern int WinWidth;
 extern int WinHeight;
 extern float deltaTime;
 
-glm::vec3 myCamera::cameraPos   = glm::vec3(-1.0f, 0.0f,  -1.0f);
-glm::vec3 myCamera::cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
-glm::vec3 myCamera::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
-float myCamera::lastX = WinWidth / 2.0f;
-float myCamera::lastY = WinHeight / 2.0f;
-float myCamera::yaw = 90.0f;
-float myCamera::pitch = 0.0f;
-float myCamera::speed = 15.5f;
-bool myCamera::firstMouse = true;
-bool myCamera::active = false;
+myCamera::myCamera()
+{
+    cameraPos   = glm::vec3(0.0f, 0.0f,  0.0f);
+    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+
+    lastX = WinWidth / 2.0f;
+    lastY = WinHeight / 2.0f;
+    yaw = 90.0f;
+    pitch = 0.0f;
+    speed = 15.5f;
+    firstMouse = true;
+    active = false;
+}
 
 glm::mat4 myCamera::getViewMatrix()
 {
@@ -99,7 +103,7 @@ void myCamera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     cameraFront = glm::normalize(direction);
 }
 
-void myCamera::toggleMouse(GLFWwindow* window)
+void myCamera::toggleMouse(GLFWwindow *window)
 {
     if ( active )
     {

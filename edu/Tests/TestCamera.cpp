@@ -58,10 +58,12 @@ namespace test {
         z_ortho[0] = 0.01f;
         z_ortho[1] = 10.0f;
 
+        m_camera = std::make_unique<myCamera>();
+
         m_proj = glm::ortho(x_ortho[0], x_ortho[1], y_ortho[0],
                         y_ortho[1], z_ortho[0], z_ortho[1]);
         m_model = glm::mat4(1.0f);
-        m_mvp = m_proj * myCamera::getViewMatrix() * m_model;
+        m_mvp = m_proj * m_camera->getViewMatrix() * m_model;
 
         m_shader = new Shader("../edu/res/BasicShader.vs", "../edu/res/BasicShader.fs");
 
@@ -90,7 +92,7 @@ namespace test {
         m_model = glm::rotate(m_model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
         m_model = glm::rotate(m_model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
         m_model = glm::rotate(m_model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        m_mvp = m_proj * myCamera::getViewMatrix() * m_model;
+        m_mvp = m_proj * m_camera->getViewMatrix() * m_model;
 
         m_shader->Bind();
         m_shader->SetUniformMat4f("u_MVP", m_mvp);
@@ -100,8 +102,8 @@ namespace test {
 
 	void TestCamera::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(myCamera::active);
-        if (myCamera::active)
+        ImGui::SetWindowCollapsed(m_camera->active);
+        if (m_camera->active)
         {
                 return;
         }
@@ -142,11 +144,11 @@ namespace test {
 
     void TestCamera::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        myCamera::key_callback(window, key, scancode, action, mods);
+        m_camera->key_callback(window, key, scancode, action, mods);
     }
 
     void TestCamera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
-        myCamera::mouse_callback(window, xpos, ypos);
+        m_camera->mouse_callback(window, xpos, ypos);
     }
 }

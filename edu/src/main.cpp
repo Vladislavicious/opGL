@@ -7,10 +7,7 @@
 #include "TestCamera.h"
 #include "TestLighting.h"
 #include "TestModel.h"
-#include "TestPR5.h"
-#include "TestPR6.h"
-#include "TestPR7.h"
-
+#include "TestCollision.h"
 
 void glfw_window_size_callback (GLFWwindow* window, int width, int height);
 void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity,
@@ -93,11 +90,9 @@ int main()
     testMenu->RegisterTest<test::TestCamera>("Camera");
     testMenu->RegisterTest<test::TestLighting>("Lighting");
     testMenu->RegisterTest<test::TestModel>("Model");
-    testMenu->RegisterTest<test::TestPR5>("PR5");
-    testMenu->RegisterTest<test::TestPR6>("PR6");
-    testMenu->RegisterTest<test::TestPR7>("PR7");
+    testMenu->RegisterTest<test::TestCollision>("Collision");
 
-    currentTest = new test::TestPR7();
+    currentTest = new test::TestCollision();
 
     Renderer renderer;
 

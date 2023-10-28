@@ -71,9 +71,6 @@ namespace test {
         for (int i = 0; i < sizeof(cubeIndices) / sizeof(unsigned int); i++)
             indices.push_back(cubeIndices[i]);
 
-        m_textures.push_back(std::make_shared<Texture>("../edu/res/cont.png", "texture_diffuse"));
-        m_textures.push_back(std::make_shared<Texture>("../edu/res/spec.png", "texture_specular"));
-
         auto lightBuffer = VertexBuffer(cube, sizeof(cube));
 
         m_lightVertexArray = new VertexArray();
@@ -86,6 +83,8 @@ namespace test {
 
         z_ortho[0] = 0.01f;
         z_ortho[1] = 20.0f;
+
+        m_camera = std::make_unique<myCamera>();
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
 
@@ -127,7 +126,7 @@ namespace test {
 	void TestModel::OnRender()
 	{
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
-        auto view = myCamera::getViewMatrix();
+        auto view = m_camera->getViewMatrix();
         m_lightShader->Bind();
         m_lightShader->SetUniformMat4f("model", m_lightModel);
         m_lightShader->SetUniformMat4f("view", view);
@@ -135,10 +134,11 @@ namespace test {
         m_lightShader->SetUniform3f("colour", m_pointLightColor);
 
         m_modelShader->Bind();
-        auto modelPlace = glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 1.0f, 0.0f));
+        auto modelPlace = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 1.0f, 0.0f));
         m_modelShader->SetUniformMat4f("model", modelPlace);
         m_modelShader->SetUniformMat4f("view", view);
         m_modelShader->SetUniformMat4f("projection", m_proj);
+        m_modelShader->SetUniform1i("pointLightsNumber", 1);
         m_modelShader->SetUniform3f("pointLights[0].position",  m_lightPos);
         m_modelShader->SetUniform3f("pointLights[0].ambient",  0.3f, 0.3f, 0.3f);
         m_modelShader->SetUniform3f("pointLights[0].diffuse",  m_pointLightColor);
@@ -146,7 +146,7 @@ namespace test {
         m_modelShader->SetUniform1f("pointLights[0].constant",  1.0f);
         m_modelShader->SetUniform1f("pointLights[0].linear",    0.09f);
         m_modelShader->SetUniform1f("pointLights[0].quadratic", 0.032f);
-        m_modelShader->SetUniform3f("viewPos",  myCamera::getPosition());
+        m_modelShader->SetUniform3f("viewPos",  m_camera->getPosition());
         m_modelShader->SetUniform1f("material.shininess", 32.0f);
 
         if ( isDirLightOn )
@@ -160,8 +160,8 @@ namespace test {
             m_modelShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
         if ( isSpotLightOn )
         {
-            m_modelShader->SetUniform3f("spotLight.position", myCamera::getPosition());
-            m_modelShader->SetUniform3f("spotLight.direction", myCamera::getFront());
+            m_modelShader->SetUniform3f("spotLight.position", m_camera->getPosition());
+            m_modelShader->SetUniform3f("spotLight.direction", m_camera->getFront());
             m_modelShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
             m_modelShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
             m_modelShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
@@ -181,8 +181,8 @@ namespace test {
 
 	void TestModel::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(myCamera::active);
-        if (myCamera::active)
+        ImGui::SetWindowCollapsed(m_camera->active);
+        if (m_camera->active)
             return;
 
         if ( ImGui::Button("DirLight"))
@@ -206,11 +206,15 @@ namespace test {
 
     void TestModel::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        myCamera::key_callback(window, key, scancode, action, mods);
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose (window, 1);
+        }
+        m_camera->key_callback(window, key, scancode, action, mods);
     }
 
     void TestModel::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
-        myCamera::mouse_callback(window, xpos, ypos);
+        m_camera->mouse_callback(window, xpos, ypos);
     }
 }

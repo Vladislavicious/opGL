@@ -29,7 +29,7 @@ void PointLight::ToObjectShader(Shader& shader, const std::string& prefix) const
     shader.SetUniform1f(prefix + ".quadratic", m_quadratic);
 }
 
-void PointLight::ToLightShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const
+void PointLight::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const
 {
     auto lightModel = glm::translate(glm::mat4(1.0f), m_lightPos);
     lightModel = glm::scale(lightModel, glm::vec3(m_scale));
