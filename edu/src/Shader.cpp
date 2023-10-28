@@ -6,10 +6,10 @@
 #include "Shader.h"
 #include "Renderer.h"
 
-Shader::Shader(const std::string& filePath)
-	: filePath(filePath), shaderID(0)
+Shader::Shader(const std::string& vsFilePath, const std::string& fsFilePath)
+	: m_vsFilePath(vsFilePath), m_fsFilePath(fsFilePath), shaderID(0)
 {
-	ShaderProgramSource shaders = ParseShader(filePath);
+	ShaderProgramSource shaders = ParseShader(vsFilePath, fsFilePath);
 
 	shaderID = CreateShader(shaders.vertexShader, shaders.fragmentShader);
 }
@@ -84,13 +84,20 @@ int Shader::GetUniformLocation(const std::string name)
 	return uniformLocation;
 }
 
-ShaderProgramSource Shader::ParseShader(const std::string& filePath)
+ShaderProgramSource Shader::ParseShader(const std::string& vsFilePath, const std::string& fsFilePath)
 {
-	std::ifstream fstream(filePath);
+	std::ifstream vsFstream(vsFilePath);
 
-	if (!fstream.is_open())
+	if (!vsFstream.is_open())
 	{
-		std::cout << "Could not open " << filePath;
+		std::cout << "Could not open " << vsFilePath;
+	}
+
+	std::ifstream fsFstream(fsFilePath);
+
+	if (!fsFstream.is_open())
+	{
+		std::cout << "Could not open " << fsFilePath;
 	}
 
 	ShaderType mode = ShaderType::NONE;
@@ -98,24 +105,15 @@ ShaderProgramSource Shader::ParseShader(const std::string& filePath)
 	std::string line;
 
 	std::stringstream shaders[2];
-
-	while (getline(fstream, line))
+	mode = ShaderType::VERTEX;
+	while (getline(vsFstream, line))
 	{
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-			{
-				mode = ShaderType::VERTEX;
-			}
-			else if (line.find("fragment") != std::string::npos)
-			{
-				mode = ShaderType::FRAGMENT;
-			}
-		}
-		else
-		{
-			shaders[(int)mode] << line << "\n";
-		}
+		shaders[(int)mode] << line << "\n";
+	}
+	mode = ShaderType::FRAGMENT;
+	while (getline(fsFstream, line))
+	{
+		shaders[(int)mode] << line << "\n";
 	}
 
 	ShaderProgramSource outputShaders(shaders[0].str(), shaders[1].str());

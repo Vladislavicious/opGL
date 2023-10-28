@@ -28,13 +28,17 @@ namespace test {
 		bool ortho = false;
 		bool cursorActivated = false;
 		glm::mat4 getProjectionMatrix(float *x_bounds, float *y_bounds, float *z_bounds);
-	public:
-		TestCamera();
+
+    public:
+        TestCamera();
 		virtual ~TestCamera();
 
 		virtual void OnUpdate(float deltaTime) override;
 		virtual void OnRender() override;
 		virtual void OnImGuiRender() override;
+
+        void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) override;
+		void mouse_callback(GLFWwindow* window, double xpos, double ypos) override;
     };
 
 }

@@ -38,7 +38,7 @@ namespace test {
                 m_mvp = m_proj * m_view * m_model;
                 m_translation = glm::vec3(0.0f, 0.5f, 0.0f);
 
-                m_shader = new Shader("../edu/res/TextureShader.shader");
+                m_shader = new Shader("../edu/res/TextureShader.vs", "../edu/res/TextureShader.fs");
                 m_shader->Bind();
                 m_shader->SetUniformMat4f("u_MVP", m_mvp);
                 m_shader->SetUniform1i("u_Texture", 0);

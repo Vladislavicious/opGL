@@ -97,9 +97,9 @@ namespace test {
         m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
-        m_modelShader = new Shader("../edu/res/meshShader.shader");
+        m_modelShader = new Shader("../edu/res/meshShader.vs", "../edu/res/meshShader.fs");
 
-        m_lightShader = new Shader("../edu/res/lightShader.shader");
+        m_lightShader = new Shader("../edu/res/lightShader.vs", "../edu/res/lightShader.fs");
 
         m_backpack = new myModel("../edu/res/Ancient_Vase.obj");
 
@@ -208,4 +208,15 @@ namespace test {
     {
         return glm::perspective(glm::radians(35.0f), 4.0f / 3.0f, near_z_bound, far_z_bound);
     }
+
+    void TestPR5::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        myCamera::key_callback(window, key, scancode, action, mods);
+    }
+
+    void TestPR5::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+    {
+        myCamera::mouse_callback(window, xpos, ypos);
+    }
+
 }

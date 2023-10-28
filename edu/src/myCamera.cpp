@@ -4,7 +4,6 @@ extern int WinWidth;
 extern int WinHeight;
 extern float deltaTime;
 
-GLFWwindow* myCamera::m_window  = nullptr;
 glm::vec3 myCamera::cameraPos   = glm::vec3(-1.0f, 0.0f,  -1.0f);
 glm::vec3 myCamera::cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 myCamera::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
@@ -16,13 +15,6 @@ float myCamera::pitch = 0.0f;
 float myCamera::speed = 15.5f;
 bool myCamera::firstMouse = true;
 bool myCamera::active = false;
-
-void myCamera::initialize(GLFWwindow *window)
-{
-    m_window = window;
-    glfwSetKeyCallback(m_window, key_callback);
-    glfwSetCursorPosCallback(m_window, mouse_callback);
-}
 
 glm::mat4 myCamera::getViewMatrix()
 {
@@ -63,7 +55,7 @@ void myCamera::key_callback(GLFWwindow* window, int key, int scancode, int actio
     case GLFW_KEY_SPACE:
         if ( action == GLFW_PRESS && action != GLFW_REPEAT)
         {
-            myCamera::toggleMouse();
+            myCamera::toggleMouse(window);
             break;
         }
     default:
@@ -107,16 +99,16 @@ void myCamera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     cameraFront = glm::normalize(direction);
 }
 
-void myCamera::toggleMouse()
+void myCamera::toggleMouse(GLFWwindow* window)
 {
     if ( active )
     {
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         firstMouse = true;
     }
     else
     {
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     active = !active;
 }

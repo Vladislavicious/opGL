@@ -1,14 +1,15 @@
 #include "pointLight.h"
 
 PointLight::PointLight(glm::vec3 lightPos, glm::vec3 ambient, glm::vec3 diffuse,
-                        glm::vec3 specular, float constant, float linear,
-                        float quadratic, float scale, const std::string& shaderPath):
+                glm::vec3 specular, float constant, float linear,
+                float quadratic, float scale, const std::string& vsShaderPath,
+                const std::string& fsShaderPath):
         m_lightPos(lightPos), m_ambient(ambient), m_diffuse(diffuse), m_specular(specular),
         m_constant(constant), m_linear(linear), m_quadratic(quadratic),
         m_scale(scale)
 {
     m_lightModel = new myModel("../edu/res/cube/cube.obj");
-    m_lightShader = new Shader(shaderPath);
+    m_lightShader = new Shader(vsShaderPath, fsShaderPath);
 }
 
 PointLight::~PointLight()

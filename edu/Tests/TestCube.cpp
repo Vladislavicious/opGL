@@ -61,7 +61,7 @@ namespace test {
                 m_model = glm::mat4(1.0f);
                 m_mvp = m_proj * m_view * m_model;
 
-                m_shader = new Shader("../edu/res/BasicShader.shader");
+                m_shader = new Shader("../edu/res/BasicShader.vs", "../edu/res/BasicShader.fs");
 
                 m_renderer = new Renderer();
 	}

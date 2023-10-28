@@ -20,21 +20,21 @@ namespace test {
         m_pointLights.push_back(std::make_shared<PointLight>(lightPos, glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(1.0f, 0.0f, 0.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
-                                                "../edu/res/lightShader.shader"));
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_pointLights.push_back(std::make_shared<PointLight>(lightPos1, glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 1.0f, 0.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
-                                                "../edu/res/lightShader.shader"));
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_pointLights.push_back(std::make_shared<PointLight>(lightPos2, glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 0.0f, 1.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
-                                                "../edu/res/lightShader.shader"));
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
 
         m_spotLightRadius = 12.0f;
         m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
-        m_modelShader = new Shader("../edu/res/PR6/sphereShader.shader");
+        m_modelShader = new Shader("../edu/res/PR6/sphereShader.vs", "../edu/res/PR6/sphereShader.fs");
 
         m_myModel = new myModel("../edu/res/PR6/pinkSphere.obj");
 
@@ -158,5 +158,15 @@ namespace test {
     glm::mat4 TestPR6::getProjectionMatrix(float near_z_bound, float far_z_bound)
     {
         return glm::perspective(glm::radians(60.0f), 4.0f / 3.0f, near_z_bound, far_z_bound);
+    }
+
+    void TestPR6::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        myCamera::key_callback(window, key, scancode, action, mods);
+    }
+
+    void TestPR6::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+    {
+        myCamera::mouse_callback(window, xpos, ypos);
     }
 }

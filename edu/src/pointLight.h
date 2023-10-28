@@ -20,7 +20,8 @@ private:
 public:
     PointLight(glm::vec3 lightPos, glm::vec3 ambient, glm::vec3 diffuse,
                 glm::vec3 specular, float constant, float linear,
-                float quadratic, float scale, const std::string& shaderPath);
+                float quadratic, float scale, const std::string& vsShaderPath,
+                const std::string& fsShaderPath);
     ~PointLight();
     void ToLightShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const;
     void ToObjectShader(Shader& shader, const std::string& prefix) const;

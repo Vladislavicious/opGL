@@ -36,7 +36,7 @@ namespace test {
         m_scale = 1.0f;
         m_rotation = 0.0f;
 
-        m_shader = new Shader("../edu/res/TextureShader.shader");
+        m_shader = new Shader("../edu/res/TextureShader.vs", "../edu/res/TextureShader.fs");
         m_shader->Bind();
         m_shader->SetUniformMat4f("u_MVP", m_mvp);
         m_shader->SetUniform1i("u_Texture", 0);

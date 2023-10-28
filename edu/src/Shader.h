@@ -29,13 +29,14 @@ enum ShaderType
 class Shader
 {
 private:
-	std::string filePath;
+	std::string m_vsFilePath;
+	std::string m_fsFilePath;
 
 	std::unordered_map<std::string, int> uniformLocationsMap;
 
 	unsigned int shaderID;
 public:
-	Shader(const std::string& filePath);
+	Shader(const std::string& vsFilePath, const std::string& fsFilePath);
 	~Shader();
 
 	void Bind() const;
@@ -50,7 +51,7 @@ public:
 private://functions
 	int GetUniformLocation(const std::string name);
 
-	ShaderProgramSource ParseShader(const std::string& filePath);
+	ShaderProgramSource ParseShader(const std::string& vsFilePath, const std::string& fsFilePath);
 
 	unsigned int CompileShader(unsigned int shaderType, const std::string& sourceShaderCode);
 

@@ -13,7 +13,6 @@ namespace test {
 
 	class Test
 	{
-
 	public:
 		static GLFWwindow* window;
 		Test() {}
@@ -22,6 +21,9 @@ namespace test {
 		virtual void OnUpdate(float deltaTime) {}
 		virtual void OnRender() {}
 		virtual void OnImGuiRender() {}
+
+		virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {}
+		virtual void mouse_callback(GLFWwindow* window, double xpos, double ypos) {}
 	};
 
 	class TestMenu : public Test

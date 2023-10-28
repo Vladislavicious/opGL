@@ -9,7 +9,6 @@
 class myCamera
 {
 private:
-    static GLFWwindow *m_window;
     static glm::vec3 cameraPos;
     static glm::vec3 cameraFront;
     static glm::vec3 cameraUp;
@@ -22,7 +21,7 @@ private:
     static bool firstMouse;
 public:
     static bool active;
-    static void toggleMouse();
+    static void toggleMouse(GLFWwindow* window);
     static void initialize(GLFWwindow *window);
     static glm::vec3 getPosition() { return cameraPos; }
     static glm::vec3 getFront() { return cameraFront; }

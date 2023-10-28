@@ -96,9 +96,9 @@ namespace test {
         m_spotLightRadius = 12.0f;
         m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
 
-        m_modelShader = new Shader("../edu/res/meshShader.shader");
+        m_modelShader = new Shader("../edu/res/meshShader.vs", "../edu/res/meshShader.fs");
 
-        m_lightShader = new Shader("../edu/res/lightShader.shader");
+        m_lightShader = new Shader("../edu/res/lightShader.vs", "../edu/res/lightShader.fs");
 
         m_backpack = new myModel("../edu/res/backpack/backpack.obj");
 
@@ -202,5 +202,15 @@ namespace test {
     glm::mat4 TestModel::getProjectionMatrix(float near_z_bound, float far_z_bound)
     {
         return glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, near_z_bound, far_z_bound);
+    }
+
+    void TestModel::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        myCamera::key_callback(window, key, scancode, action, mods);
+    }
+
+    void TestModel::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+    {
+        myCamera::mouse_callback(window, xpos, ypos);
     }
 }
