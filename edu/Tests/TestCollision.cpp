@@ -4,7 +4,7 @@ namespace test {
 
 	TestCollision::TestCollision()
 	{
-
+        m_renderer = std::make_shared<Renderer>();
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -20,32 +20,39 @@ namespace test {
         auto lightPos = glm::vec3(0.8f, -0.8f, 0.4f);
         auto lightPos1 = glm::vec3(8.8f, 2.3f, 1.4f);
         auto lightPos2 = glm::vec3(3.8f, 1.8f, -0.4f);
-        m_pointLights.push_back(std::make_shared<PointLight>(lightPos, glm::vec3(0.3f, 0.3f, 0.3f),
+        m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(1.0f, 0.0f, 0.0f),
-                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
-        m_pointLights.push_back(std::make_shared<PointLight>(lightPos1, glm::vec3(0.3f, 0.3f, 0.3f),
+                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
+                                                m_renderer));
+        m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos1, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 1.0f, 0.0f),
-                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
-        m_pointLights.push_back(std::make_shared<PointLight>(lightPos2, glm::vec3(0.3f, 0.3f, 0.3f),
+                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
+                                                m_renderer));
+        m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos2, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 0.0f, 1.0f),
-                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, 0.4f,
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
+                                                glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
+                                                m_renderer));
+        m_directLight = std::make_unique<v::DirLight>(m_dirLightPower, glm::vec3(0.4f, 0.4f, 0.4f),
+                                                    glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
 
-        m_bBoxes.push_back(std::make_shared<bBox>(glm::vec3(-0.8f, -0.8f, 1.4f), glm::vec3(0.5f),
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
+        m_spotLight = std::make_unique<v::SpotLight>(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.4f, 0.4f, 0.4f),
+                                                    glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f),
+                                                    1.0f, 0.09f, 0.032f, 12.0f, 15.0f);
+
+        m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(-0.8f, -0.8f, 1.4f), glm::vec3(0.5f),
+                                                "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
+                                                "../edu/res/lightShader.fs", m_renderer));
 		m_camera = std::make_unique<myCamera>();
 
-        m_spotLightRadius = 12.0f;
-        m_dirLightPower = glm::vec3(0.05f, 0.05f, 0.05f);
+        m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
         m_modelShader = new Shader("../edu/res/meshShader.vs", "../edu/res/meshShader.fs");
 
         m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
-
-        m_renderer = new Renderer();
 	}
 
 	TestCollision::~TestCollision()
@@ -55,8 +62,6 @@ namespace test {
         delete m_modelShader;
 
         delete m_myModel;
-
-        delete m_renderer;
 	}
 
 	void TestCollision::OnUpdate(float deltaTime)
@@ -92,31 +97,12 @@ namespace test {
 
 		m_modelShader->SetUniform1f("material.shininess", 32.0f);
 
+        m_directLight->setLightColor(m_dirLightPower);
+        m_directLight->ToObjectShader(*m_modelShader, "dirLight");
 
-        if ( isDirLightOn )
-        {
-            m_modelShader->SetUniform3f("dirLight.direction", -0.2f, -1.0f, -0.3f);
-            m_modelShader->SetUniform3f("dirLight.ambient", m_dirLightPower);
-            m_modelShader->SetUniform3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-            m_modelShader->SetUniform3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
-        }
-        else
-            m_modelShader->SetUniform3f("dirLight.ambient", 0.0f, 0.0f, 0.0f);
-        if ( isSpotLightOn )
-        {
-            m_modelShader->SetUniform3f("spotLight.position", m_camera->getPosition());
-            m_modelShader->SetUniform3f("spotLight.direction", m_camera->getFront());
-            m_modelShader->SetUniform3f("spotLight.ambient", 0.0f, 0.0f, 0.0f);
-            m_modelShader->SetUniform3f("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-            m_modelShader->SetUniform3f("spotLight.specular", 1.0f, 1.0f, 1.0f);
-            m_modelShader->SetUniform1f("spotLight.constant", 1.0f);
-            m_modelShader->SetUniform1f("spotLight.linear", 0.09f);
-            m_modelShader->SetUniform1f("spotLight.quadratic", 0.032f);
-            m_modelShader->SetUniform1f("spotLight.cutOff", glm::cos(glm::radians(m_spotLightRadius)));
-            m_modelShader->SetUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(m_spotLightRadius + 3.0f)));
-        }
-        else
-            m_modelShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+        m_spotLight->setLightDirection(m_camera->getFront());
+        m_spotLight->setLightPosition(m_camera->getPosition());
+        m_spotLight->ToObjectShader(*m_modelShader, "spotLight");
 
 		m_textures[0]->bind(0);
         m_modelShader->SetUniform1i("material.texture_diffuse1", 0);
@@ -125,12 +111,12 @@ namespace test {
 
         m_renderer->Draw(*m_myModel, *m_modelShader);
         for (auto& pointLight : m_pointLights)
-            m_renderer->Draw(pointLight->getModel(), pointLight->getShader());
+            pointLight->Draw();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glLineWidth(10.0f);
         for (auto& box : m_bBoxes)
-            m_renderer->Draw(box->getModel(), box->getShader());
+            box->Draw();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
@@ -140,16 +126,9 @@ namespace test {
         if (m_camera->active)
             return;
 
-        if ( ImGui::Button("DirLight"))
-            isDirLightOn = !isDirLightOn;
-
-        if ( ImGui::Button("SpotLight"))
-            isSpotLightOn = !isSpotLightOn;
-
         ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
-        ImGui::SliderFloat("spotLight radius", &m_spotLightRadius, 10.0f, 50.0f, "%.2f");
 
         auto& io = ImGui::GetIO();
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

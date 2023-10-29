@@ -56,8 +56,7 @@ void Renderer::Draw(const myMesh &mesh, Shader &shader)
     auto textures = mesh.getTextures();
     for(unsigned int i = 0; i < textures.size(); i++)
     {
-        textures[i]->bind(i); // activate proper texture unit before binding
-        // retrieve texture number (the N in diffuse_textureN)
+        textures[i]->bind(i);
         std::string number;
         std::string name = textures[i]->getType();
         if(name == "texture_diffuse")

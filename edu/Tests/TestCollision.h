@@ -13,7 +13,8 @@
 #include "myMesh.h"
 #include "myModel.h"
 #include "pointLight.h"
-#include "bBox.h"
+#include "vObject.h"
+#include "myLight.h"
 
 namespace test {
 
@@ -24,18 +25,16 @@ namespace test {
 
 		glm::vec3 m_dirLightPower;
 		glm::vec3 m_modelMovement;
-		float m_spotLightRadius;
 
-		bool isDirLightOn = true;
-		bool isSpotLightOn = true;
-		bool isMaterial = true;
 
 		std::vector<std::shared_ptr<Texture>> m_textures;
 		Shader* m_modelShader;
 		myModel* m_myModel;
-		std::vector<std::shared_ptr<PointLight>> m_pointLights;
-		std::vector<std::shared_ptr<bBox>> m_bBoxes;
-		Renderer* m_renderer;
+		std::vector<std::shared_ptr<v::PointLight>> m_pointLights;
+		std::vector<std::shared_ptr<v::Object>> m_bBoxes;
+		std::shared_ptr<Renderer> m_renderer;
+		std::unique_ptr<v::DirLight> m_directLight;
+		std::unique_ptr<v::SpotLight> m_spotLight;
 
 		std::unique_ptr<myCamera> m_camera;
 		float z_ortho[2];
