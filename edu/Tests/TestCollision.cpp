@@ -76,8 +76,12 @@ namespace test {
         for (auto& pointLight : m_pointLights)
             pointLight->ToDrawShader(view, m_proj);
 
+
         for (auto& box : m_bBoxes)
+        {
+            box->setPos(m_modelMovement);
             box->ToDrawShader(view, m_proj);
+        }
 
         m_modelShader->Bind();
         auto modelPlace = glm::translate(glm::mat4(1.0f), m_modelMovement);
@@ -110,6 +114,7 @@ namespace test {
         m_modelShader->SetUniform1i("material.texture_specular1", 1);
 
         m_renderer->Draw(*m_myModel, *m_modelShader);
+
         for (auto& pointLight : m_pointLights)
             pointLight->Draw();
 

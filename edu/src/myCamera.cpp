@@ -8,7 +8,7 @@ extern float deltaTime;
 myCamera::myCamera()
 {
     cameraPos   = glm::vec3(0.0f, 0.0f,  0.0f);
-    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
     cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
     lastX = WinWidth / 2.0f;

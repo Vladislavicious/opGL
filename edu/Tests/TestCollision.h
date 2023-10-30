@@ -26,7 +26,6 @@ namespace test {
 		glm::vec3 m_dirLightPower;
 		glm::vec3 m_modelMovement;
 
-
 		std::vector<std::shared_ptr<Texture>> m_textures;
 		Shader* m_modelShader;
 		myModel* m_myModel;

@@ -85,6 +85,7 @@ namespace test {
         z_ortho[1] = 20.0f;
 
         m_camera = std::make_unique<myCamera>();
+        m_camera->setInitialFront(glm::vec3(0.0f, 0.0f, -1.0f));
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
 

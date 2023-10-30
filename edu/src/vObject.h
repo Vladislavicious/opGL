@@ -24,6 +24,7 @@ namespace v
         virtual void Draw() const;
         virtual glm::vec3& getSize() { return m_size; }
         virtual glm::vec3& getPos() { return m_pos; }
+        virtual void setPos(glm::vec3 position) { m_pos = position; }
         virtual const myModel& getModel() { return *m_model; }
         virtual Shader& getShader() { return *m_shader; }
     };
