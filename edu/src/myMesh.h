@@ -23,6 +23,7 @@ class myMesh {
         VertexArray*                           m_VertexArray;
 		IndexBuffer*                           m_IndexBuffer;
     public:
+        inline std::vector<Vertex> getVertexes() const { return m_vertices; }
         inline std::vector<std::shared_ptr<Texture>> getTextures() const { return m_textures; }
         inline unsigned int getCount() const { return m_IndexBuffer->GetCount(); }
         void Bind() const;

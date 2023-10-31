@@ -3,6 +3,7 @@
 
 #include "Shader.h"
 #include "myModel.h"
+#include "pVector.h"
 
 namespace v
 {
@@ -27,6 +28,7 @@ namespace v
         virtual void setPos(glm::vec3 position) { m_pos = position; }
         virtual const myModel& getModel() { return *m_model; }
         virtual Shader& getShader() { return *m_shader; }
+        virtual std::vector<FlatVector> getVectorOfVertices() { return m_model->getVectorOfVertices(); }
     };
 }
 

@@ -1,6 +1,5 @@
 #include "pBody.h"
 
-
 FlatBody::FlatBody(float density, float mass, float inertia, float restitution, float area,
         bool isStatic, float radius, float width, float height, std::vector<FlatVector> vertices, ShapeType shapeType)
 {
@@ -60,7 +59,7 @@ std::vector<FlatVector> FlatBody::GetTransformedVertices()
 {
     if(this->transformUpdateRequired)
     {
-        FlatTransform transform = FlatTransform(this->position, this->angle);
+        FlatTransform transform(this->position.X, this->position.Y, this->angle);
 
         for(int i = 0; i < this->vertices.size(); i++)
         {
@@ -173,58 +172,6 @@ void FlatBody::AddForce(FlatVector amount)
     this->force = amount;
 }
 
-FlatBody* FlatBody::CreateCircleBody(float radius, float density, bool isStatic, float restitution)
-{
-    FlatBody* body = nullptr;
-    std::string errorMessage = "";
-
-    float area = radius * radius * glm::pi<float>();
-
-    if(area < FlatWorld::MinBodySize)
-    {
-        errorMessage = "Circle radius is too small. Min circle area is " + std::string(FlatWorld::MinBodySize);
-    }
-
-    if(area > FlatWorld::MaxBodySize)
-    {
-        errorMessage = "Circle radius is too large. Max circle area is " + std::string(FlatWorld::MaxBodySize);
-    }
-
-    if (density < FlatWorld::MinDensity)
-    {
-        errorMessage = "Density is too small. Min density is " + std::string(FlatWorld::MinDensity);
-    }
-
-    if (density > FlatWorld::MaxDensity)
-    {
-        errorMessage = "Density is too large. Max density is " + FlatWorld::MaxDensity;
-    }
-
-    if (errorMessage != "")
-    {
-        std::cout << errorMessage << std::endl;
-        return nullptr;
-    }
-
-
-    restitution = FlatMath::Clamp(restitution, 0.0f, 1.0f);
-
-    float mass = 0.0f;
-    float inertia = 0.0f;
-
-    if (!isStatic)
-    {
-        // mass = area * depth * density
-        mass = area * density;
-        inertia = (1.0f / 2.0f) * mass * radius * radius;
-    }
-    std::vector<FlatVector> temp;
-
-    body = new FlatBody(density, mass, inertia, restitution, area, isStatic,
-                        radius, 0.0f, 0.0f, temp, ShapeType::Circle);
-    return body;
-}
-
 FlatBody* FlatBody::CreateBoxBody(float width, float height, float density,
                                     bool isStatic, float restitution)
 {
@@ -235,22 +182,22 @@ FlatBody* FlatBody::CreateBoxBody(float width, float height, float density,
 
         if(area < FlatWorld::MinBodySize)
     {
-        errorMessage = "Area is too small. Min area is " + std::string(FlatWorld::MinBodySize);
+        errorMessage = "Area is too small. Min area is " + std::to_string(FlatWorld::MinBodySize);
     }
 
     if(area > FlatWorld::MaxBodySize)
     {
-        errorMessage = "Area is too large. Max area is " + std::string(FlatWorld::MaxBodySize);
+        errorMessage = "Area is too large. Max area is " + std::to_string(FlatWorld::MaxBodySize);
     }
 
     if (density < FlatWorld::MinDensity)
     {
-        errorMessage = "Density is too small. Min density is " + std::string(FlatWorld::MinDensity);
+        errorMessage = "Density is too small. Min density is " + std::to_string(FlatWorld::MinDensity);
     }
 
     if (density > FlatWorld::MaxDensity)
     {
-        errorMessage = "Density is too large. Max density is " + FlatWorld::MaxDensity;
+        errorMessage = "Density is too large. Max density is " + std::to_string(FlatWorld::MaxDensity);
     }
 
     if (errorMessage != "")

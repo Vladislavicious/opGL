@@ -10,6 +10,7 @@ class myMesh;
 
 #include <iostream>
 #include <memory>
+#include "pVector.h"
 
 class myModel
 {
@@ -27,6 +28,7 @@ class myModel
                                                                     std::string typeName);
     public:
         inline const std::vector<std::shared_ptr<myMesh>> getMeshes() const { return m_meshes; }
+        std::vector<FlatVector> getVectorOfVertices();
         myModel(const std::string& path);
 };
 

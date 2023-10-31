@@ -6,31 +6,13 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "pVector.h"
+#include "pWorld.h"
+#include "pAABB.h"
 
 enum ShapeType
 {
     Circle = 0,
     Box = 1,
-};
-
-struct FlatAABB
-{
-    FlatVector Min;
-    FlatVector Max;
-
-    FlatAABB() { this->Min = this->Max = FlatVector(0.0f); }
-
-    FlatAABB(FlatVector min, FlatVector max)
-    {
-        this->Min = min;
-        this->Max = max;
-    }
-
-    FlatAABB(float minX, float minY, float maxX, float maxY)
-    {
-        this->Min = FlatVector(minX, minY);
-        this->Max = FlatVector(maxX, maxY);
-    }
 };
 
 class FlatBody
@@ -83,12 +65,10 @@ public:
     void RotateTo(float angle);
     void AddForce(FlatVector amount);
 
-    static FlatBody* FlatBody::CreateCircleBody(float radius, float density,
-                                    bool isStatic, float restitution);
     static FlatBody* CreateBoxBody(float width, float height, float density,
                                     bool isStatic, float restitution);
 
-    static std::vector<FlatVector> CreateBoxVertices(float width, float height)
+    static std::vector<FlatVector> CreateBoxVertices(float width, float height);
 };
 
 #endif // _P_BODY_H

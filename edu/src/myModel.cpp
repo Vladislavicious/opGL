@@ -116,3 +116,14 @@ std::vector<std::shared_ptr<Texture>> myModel::loadMaterialTextures(aiMaterial *
     }
     return textures;
 }
+
+std::vector<FlatVector> myModel::getVectorOfVertices()
+{
+    std::vector<FlatVector> vectors;
+    for (auto& mesh : m_meshes)
+    {
+        auto temp = getFlatVectors(mesh->getVertexes());
+        vectors.insert(vectors.end(), temp.begin(), temp.end());
+    }
+    return vectors;
+}

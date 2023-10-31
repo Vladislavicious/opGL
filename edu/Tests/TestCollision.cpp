@@ -1,5 +1,7 @@
 #include "TestCollision.h"
 
+extern float deltaTime;
+
 namespace test {
 
 	TestCollision::TestCollision()
@@ -45,6 +47,9 @@ namespace test {
         m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(-0.8f, -0.8f, 1.4f), glm::vec3(0.5f),
                                                 "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
                                                 "../edu/res/lightShader.fs", m_renderer));
+        m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f),
+                                                "../edu/res/plane/plane.obj", "../edu/res/lightShader.vs",
+                                                "../edu/res/lightShader.fs", m_renderer));
 		m_camera = std::make_unique<myCamera>();
 
         m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
@@ -53,6 +58,7 @@ namespace test {
         m_modelShader = new Shader("../edu/res/meshShader.vs", "../edu/res/meshShader.fs");
 
         m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
+
 	}
 
 	TestCollision::~TestCollision()

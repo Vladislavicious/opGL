@@ -2,7 +2,12 @@
 #define _P_WORLD_H
 #include "pVector.h"
 #include "pBody.h"
+#include "pCollisions.h"
 #include <vector>
+#include <tuple>
+class FlatBody;
+#include "pManifold.h"
+struct FlatManifold;
 
 #define MIN(a, b) a > b?b:a
 
@@ -51,40 +56,35 @@ public:
 
     int getBodyCount() { return this->bodyList.size(); }
 
-    void AddBody(FlatBody body)
+    void AddBody(FlatBody& body)
     {
-        this->bodyList.Add(body);
+        this->bodyList.push_back(body);
     }
 
-    bool RemoveBody(FlatBody body)
+    bool RemoveBody(FlatBody& body)
     {
-        return this->bodyList.Remove(body);
+        //bodyList.erase(std::remove(bodyList.begin(), bodyList.end(), body), bodyList.end());
+        std::cout << "not implemented RemoveBody\n";
+        return false;
     }
 
-    bool GetBody(int index, out FlatBody body)
+    FlatBody* GetBody(int index)
     {
-        body = null;
+        FlatBody* body = nullptr;
 
         if(index < 0 || index >= this->bodyList.size())
         {
-            return false;
+            body = &this->bodyList[index];
         }
 
-        body = this->bodyList[index];
-        return true;
+        return body;
     }
 
     void Step(float time, int totalIterations);
 
-
-
     void StepBodies(float time, int totalIterations);
 
-    void ResolveCollisionBasic(FlatManifold& contact);
-
-    void ResolveCollisionWithRotation(FlatManifold& contact);
-
     void ResolveCollisionWithRotationAndFriction(FlatManifold& contact);
-}
+};
 
 #endif // _P_WORLD_H
