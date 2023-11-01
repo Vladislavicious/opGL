@@ -1,5 +1,4 @@
 #include "myVertex.h"
-#include "pVector.h"
 std::vector<Vertex> getVertices(float* data, unsigned int count)
 {
     std::vector<Vertex> vertices;
@@ -22,17 +21,4 @@ VertexBufferLayout* getLayout()
     temp->Push<float>(3); // 3 нормали
     temp->Push<float>(2); // 2 текстурных координаты
     return temp;
-}
-
-std::vector<FlatVector> getFlatVectors(std::vector<Vertex> vertices)
-{
-    std::vector<FlatVector> vectors;
-    vectors.reserve(vertices.size());
-
-    for (auto& vert : vertices)
-    {
-        FlatVector temp(vert.Position.x, vert.Position.y);
-        vectors.push_back(temp);
-    }
-    return vectors;
 }

@@ -10,7 +10,7 @@ namespace v
     {
     }
 
-    void Object::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const
+    void Object::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)
     {
         auto model = glm::translate(glm::mat4(1.0f), m_pos);
         model = glm::scale(model, glm::vec3(m_size));

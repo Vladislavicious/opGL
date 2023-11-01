@@ -1,5 +1,5 @@
 #include "TestCollision.h"
-
+#include "vMovingObject.h"
 extern float deltaTime;
 
 namespace test {
@@ -47,10 +47,12 @@ namespace test {
         m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(-0.8f, -0.8f, 1.4f), glm::vec3(0.5f),
                                                 "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
                                                 "../edu/res/lightShader.fs", m_renderer));
+
         m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f),
                                                 "../edu/res/plane/plane.obj", "../edu/res/lightShader.vs",
                                                 "../edu/res/lightShader.fs", m_renderer));
-		m_camera = std::make_unique<myCamera>();
+
+        m_camera = std::make_unique<myCamera>();
 
         m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
@@ -59,6 +61,12 @@ namespace test {
 
         m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
 
+        m_scene = new q3Scene( 1.0 / 60.0 );
+
+        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f),
+                                                "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
+                                                "../edu/res/lightShader.fs", m_renderer, m_scene));
+
 	}
 
 	TestCollision::~TestCollision()
@@ -66,6 +74,8 @@ namespace test {
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         delete m_modelShader;
+
+        delete m_scene;
 
         delete m_myModel;
 	}
@@ -77,6 +87,7 @@ namespace test {
 
 	void TestCollision::OnRender()
 	{
+        m_scene->Step();
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
         auto view = m_camera->getViewMatrix();
         for (auto& pointLight : m_pointLights)
@@ -118,7 +129,6 @@ namespace test {
         m_modelShader->SetUniform1i("material.texture_diffuse1", 0);
         m_textures[1]->bind(1);
         m_modelShader->SetUniform1i("material.texture_specular1", 1);
-
         m_renderer->Draw(*m_myModel, *m_modelShader);
 
         for (auto& pointLight : m_pointLights)
@@ -140,6 +150,8 @@ namespace test {
         ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
+
+
 
         auto& io = ImGui::GetIO();
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

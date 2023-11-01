@@ -1,6 +1,6 @@
 #ifndef _TEST_COLLISION_H
 #define _TEST_COLLISION_H
-
+#include "src/q3.h"
 #include "Test.h"
 #include "myCamera.h"
 #include "Shader.h"
@@ -31,6 +31,9 @@ namespace test {
 		myModel* m_myModel;
 		std::vector<std::shared_ptr<v::PointLight>> m_pointLights;
 		std::vector<std::shared_ptr<v::Object>> m_bBoxes;
+
+		q3Scene* m_scene;
+
 		std::shared_ptr<Renderer> m_renderer;
 		std::unique_ptr<v::DirLight> m_directLight;
 		std::unique_ptr<v::SpotLight> m_spotLight;

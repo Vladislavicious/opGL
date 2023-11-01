@@ -3,7 +3,6 @@
 
 #include "Shader.h"
 #include "myModel.h"
-#include "pVector.h"
 
 namespace v
 {
@@ -21,14 +20,13 @@ namespace v
                 const std::string& vsShaderPath, const std::string& fsShaderPath,
                 std::shared_ptr<Renderer> renderer);
         virtual ~Object() {}
-        virtual void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const;
+        virtual void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix);
         virtual void Draw() const;
         virtual glm::vec3& getSize() { return m_size; }
         virtual glm::vec3& getPos() { return m_pos; }
         virtual void setPos(glm::vec3 position) { m_pos = position; }
         virtual const myModel& getModel() { return *m_model; }
         virtual Shader& getShader() { return *m_shader; }
-        virtual std::vector<FlatVector> getVectorOfVertices() { return m_model->getVectorOfVertices(); }
     };
 }
 

@@ -20,7 +20,7 @@ namespace v
                     const std::string& vsShaderPath, const std::string& fsShaderPath,
                     std::shared_ptr<Renderer> renderer);
         ~PointLight() override;
-        void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) const override;
+        void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) override;
         void ToObjectShader(Shader& shader, const std::string& prefix) const override;
     };
 

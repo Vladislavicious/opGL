@@ -6,6 +6,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
 
+enum dir{
+    Forward = 0,
+    Backward = 1,
+    Left = 2,
+    Right = 3
+};
+
 class myCamera
 {
 private:
@@ -13,17 +20,22 @@ private:
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
 
+    glm::vec3 currentSpeed;
+
     float yaw; // up-down
     float pitch; // left-right
     float lastX;
     float lastY;
     float speed;
     bool firstMouse;
+
+    bool direction[4];
+    void MoveCamera();
 public:
     bool active;
     myCamera();
     void toggleMouse(GLFWwindow* window);
-    void initialize(GLFWwindow *window);
+    void setPosition(glm::vec3 position) { cameraPos = position; }
     glm::vec3 getPosition() { return cameraPos; }
     glm::vec3 getFront() { return cameraFront; }
     void setInitialFront(glm::vec3 front) { cameraFront = front; }
