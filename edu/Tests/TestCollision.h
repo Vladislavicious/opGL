@@ -32,7 +32,7 @@ namespace test {
 		std::vector<std::shared_ptr<v::PointLight>> m_pointLights;
 		std::vector<std::shared_ptr<v::Object>> m_bBoxes;
 
-		q3Scene* m_scene;
+		std::shared_ptr<q3Scene> m_scene;
 
 		std::shared_ptr<Renderer> m_renderer;
 		std::unique_ptr<v::DirLight> m_directLight;

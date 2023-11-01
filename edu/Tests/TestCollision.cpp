@@ -61,12 +61,13 @@ namespace test {
 
         m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
 
-        m_scene = new q3Scene( 1.0 / 60.0 );
-
-        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f),
+        m_scene = std::make_shared<q3Scene>( 1.0 / 60.0 );
+        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1.0f),
                                                 "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
                                                 "../edu/res/lightShader.fs", m_renderer, m_scene));
-
+        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 1.0f, 10.0f),
+                                                "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
+                                                "../edu/res/lightShader.fs", m_renderer, m_scene, true));
 	}
 
 	TestCollision::~TestCollision()
@@ -74,8 +75,6 @@ namespace test {
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         delete m_modelShader;
-
-        delete m_scene;
 
         delete m_myModel;
 	}
@@ -96,7 +95,6 @@ namespace test {
 
         for (auto& box : m_bBoxes)
         {
-            box->setPos(m_modelMovement);
             box->ToDrawShader(view, m_proj);
         }
 
