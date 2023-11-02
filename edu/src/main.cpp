@@ -15,6 +15,7 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum 
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 int WinWidth = 640;
 int WinHeight = 480;
@@ -68,6 +69,7 @@ int main()
 
     GLCall(glfwSetKeyCallback(window, key_callback));
     GLCall(glfwSetCursorPosCallback(window, mouse_callback));
+    GLCall(glfwSetMouseButtonCallback(window, mouse_button_callback));
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -156,6 +158,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     currentTest->mouse_callback(window, xpos, ypos);
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    currentTest->mouse_button_callback(window, button, action, mods);
 }
 
 void APIENTRY glDebugOutput(GLenum source,

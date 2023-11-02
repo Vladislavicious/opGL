@@ -1,5 +1,5 @@
 #include "TestCollision.h"
-#include "vMovingObject.h"
+#include "vBoundBox.h"
 extern float deltaTime;
 
 namespace test {
@@ -12,7 +12,7 @@ namespace test {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         z_ortho[0] = 0.01f;
-        z_ortho[1] = 12.0f;
+        z_ortho[1] = 100.0f;
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
 
@@ -61,12 +61,13 @@ namespace test {
 
         m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
 
-        m_scene = std::make_shared<q3Scene>( 1.0 / 60.0 );
-        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1.0f),
-                                                "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
-                                                "../edu/res/lightShader.fs", m_renderer, m_scene));
+        m_scene = std::make_shared<q3Scene>( 1.0 / 60.0);
+        m_scene->SetGravity(q3Vec3(0.0f, -1.0f, 0.0f));
+        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 7.0f, 0.0f), glm::vec3(1.0f),
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
+                                                m_renderer, m_scene));
         m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 1.0f, 10.0f),
-                                                "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
+                                                "../edu/res/lightShader.vs",
                                                 "../edu/res/lightShader.fs", m_renderer, m_scene, true));
 	}
 
@@ -133,7 +134,7 @@ namespace test {
             pointLight->Draw();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(10.0f);
+        glLineWidth(3.0f);
         for (auto& box : m_bBoxes)
             box->Draw();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -145,6 +146,9 @@ namespace test {
         if (m_camera->active)
             return;
 
+        if (ImGui::Button("add_body"))
+            addBody();
+
         ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
@@ -154,6 +158,13 @@ namespace test {
         auto& io = ImGui::GetIO();
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 	}
+
+    void TestCollision::addBody()
+    {
+        m_bBoxes.push_back(std::make_shared<v::boundBox>(m_camera->getPosition() + m_camera->getFront() * 3.0f, glm::vec3(1.0f),
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
+                                                m_renderer, m_scene));
+    }
 
     glm::mat4 TestCollision::getProjectionMatrix(float near_z_bound, float far_z_bound)
     {
@@ -172,5 +183,13 @@ namespace test {
     void TestCollision::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
         m_camera->mouse_callback(window, xpos, ypos);
+    }
+
+    void TestCollision::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+    {
+        if (!m_camera->active)
+            return;
+        if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+            addBody();
     }
 }

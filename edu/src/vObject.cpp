@@ -14,9 +14,6 @@ namespace v
     {
         auto model = glm::translate(glm::mat4(1.0f), m_pos);
         model = glm::scale(model, glm::vec3(m_size));
-        model = glm::rotate(model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         m_shader->Bind();
         m_shader->SetUniformMat4f("model", model);
         m_shader->SetUniformMat4f("view", viewMatrix);

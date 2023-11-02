@@ -11,7 +11,6 @@ namespace v
     protected:
         glm::vec3 m_pos;
         glm::vec3 m_size;
-        glm::vec3 m_rotation;
 
         std::unique_ptr<Shader> m_shader;
         std::unique_ptr<myModel> m_model;
@@ -27,7 +26,6 @@ namespace v
         virtual glm::vec3& getPos() { return m_pos; }
         virtual void setPos(glm::vec3 position) { m_pos = position; }
         virtual void addVelVec(float x, float y, float z) { m_pos += glm::vec3(x, y, z); }
-        virtual void addRotation(float x, float y, float z) { m_rotation += glm::vec3(x, y, z); }
         virtual const myModel& getModel() { return *m_model; }
         virtual Shader& getShader() { return *m_shader; }
     };

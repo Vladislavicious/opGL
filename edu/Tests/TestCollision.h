@@ -43,6 +43,7 @@ namespace test {
 
 		bool cursorActivated = false;
 		glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);
+		void addBody();
 	public:
 		TestCollision();
 		virtual ~TestCollision();
@@ -53,6 +54,7 @@ namespace test {
 
 		void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) override;
 		void mouse_callback(GLFWwindow* window, double xpos, double ypos) override;
+		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) override;
     };
 
 }
