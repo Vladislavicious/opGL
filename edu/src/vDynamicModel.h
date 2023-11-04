@@ -9,14 +9,15 @@ namespace v
 {
     class DynamicModel: public Object
     {
-    private:
-        v::boundBox* m_bBox;
     protected:
+        std::shared_ptr<v::boundBox> m_bBox;
         glm::mat4 createModelMatrix() override;
     public:
         DynamicModel(glm::vec3 position, glm::vec3 size, const std::string& filePath,
                 const std::string& vsShaderPath, const std::string& fsShaderPath);
-        void addBoundBox(glm::vec3 relatedPosition, glm::vec3 size, bool isStatic);
+        void addBoundBox(glm::vec3 relatedPosition, glm::vec3 size, bool isStatic,
+                        bool lockAxisX = false, bool lockAxisY = false, bool lockAxisZ = false);
+        void deleteBoundBox();
         void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) override;
         void Draw() override;
     };

@@ -140,6 +140,7 @@ namespace test {
 	void TestLighting::OnUpdate(float deltaTime)
 	{
         m_renderer->Clear();
+        m_camera->updatePosition();
 	}
 
 	void TestLighting::OnRender()

@@ -30,11 +30,13 @@ private:
     bool firstMouse;
 
     bool direction[4];
+
     void MoveCamera();
 public:
     bool active;
     myCamera();
-    void toggleMouse(GLFWwindow* window);
+    void updatePosition();
+    bool toggleMouse();
     void setPosition(glm::vec3 position) { cameraPos = position; }
     glm::vec3 getPosition() { return cameraPos; }
     glm::vec3 getFront() { return cameraFront; }

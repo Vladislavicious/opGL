@@ -2,7 +2,7 @@
 #define _TEST_COLLISION_H
 #include "src/q3.h"
 #include "Test.h"
-#include "myCamera.h"
+#include "cameraHandler.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
@@ -28,7 +28,7 @@ namespace test {
 		glm::vec3 m_modelMovement;
 
 		std::vector<std::shared_ptr<Texture>> m_textures;
-		std::unique_ptr<v::DynamicModel> m_myModel;
+		std::shared_ptr<v::DynamicModel> m_myModel;
 		std::vector<std::shared_ptr<v::PointLight>> m_pointLights;
 		std::vector<std::shared_ptr<v::Object>> m_bBoxes;
 
@@ -38,7 +38,7 @@ namespace test {
 		std::unique_ptr<v::DirLight> m_directLight;
 		std::unique_ptr<v::SpotLight> m_spotLight;
 
-		std::unique_ptr<myCamera> m_camera;
+		std::unique_ptr<CameraHandler> m_cameraHandler;
 		float z_ortho[2];
 
 		bool cursorActivated = false;

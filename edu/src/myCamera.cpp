@@ -25,7 +25,6 @@ myCamera::myCamera()
 
 glm::mat4 myCamera::getViewMatrix()
 {
-    cameraPos += currentSpeed;
     return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
 
@@ -33,13 +32,6 @@ void myCamera::key_callback(GLFWwindow* window, int key, int scancode, int actio
 {
     if (!active && key != GLFW_KEY_SPACE)
         return;
-
-    if (key == GLFW_KEY_SPACE)
-        if ( action == GLFW_PRESS && action != GLFW_REPEAT)
-        {
-            myCamera::toggleMouse(window);
-            return;
-        }
 
     if (key == GLFW_KEY_W)
     {
@@ -108,21 +100,17 @@ void myCamera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     cameraFront = glm::normalize(direction);
 }
 
-void myCamera::toggleMouse(GLFWwindow *window)
+bool myCamera::toggleMouse()
 {
     if ( active )
     {
         currentSpeed = glm::vec3(0.0f);
         for (int i = 0; i<4; i++)
             direction[i] = false;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         firstMouse = true;
     }
-    else
-    {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
     active = !active;
+    return active;
 }
 
 void myCamera::MoveCamera()
@@ -136,4 +124,10 @@ void myCamera::MoveCamera()
         currentSpeed += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
     else if(direction[dir::Left])
         currentSpeed -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+}
+
+void myCamera::updatePosition()
+{
+
+    cameraPos += currentSpeed;
 }

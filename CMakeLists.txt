@@ -4,7 +4,7 @@ project(CMakeGraphicsProject)
 # OpenGL
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL REQUIRED)
-include_directories(edu/src edu/Tests edu/physics ${OPENGL_INCLUDE_DIRS})
+include_directories(edu/src edu/Tests edu/openGLabs ${OPENGL_INCLUDE_DIRS})
 
 # Address Sanitizer
 if (UNIX)
@@ -68,7 +68,7 @@ add_subdirectory(Dependencies/assimp)
 add_subdirectory(Dependencies/qu3e)
 
 # Set `source` variable to all .h and .cpp files in `edu/src`
-file(GLOB_RECURSE source CONFIGURE_DEPENDS "edu/src/*.h" "edu/src/*.cpp" "edu/Tests/*.h" "edu/Tests/*.cpp")
+file(GLOB_RECURSE source CONFIGURE_DEPENDS "edu/src/*.h" "edu/src/*.cpp" "edu/Tests/*.h" "edu/Tests/*.cpp" "edu/openGLabs/*.h" "edu/openGLabs/*.cpp")
 
 add_executable(CMakeGraphicsProject ${source} ${imgui-source})
 target_link_libraries(CMakeGraphicsProject ${OPENGL_LIBRARIES} glad glfw stb_image glm assimp qu3e)

@@ -122,6 +122,7 @@ namespace test {
 	void TestModel::OnUpdate(float deltaTime)
 	{
         m_renderer->Clear();
+        m_camera->updatePosition();
 	}
 
 	void TestModel::OnRender()

@@ -12,10 +12,12 @@ namespace v
     glm::mat4 DynamicModel::createModelMatrix()
     {
         glm::mat4 model;
-        if (m_bBox)
+        if (m_bBox != nullptr)
         {
             model = m_bBox->getNonScaledModelMatrix();
             model = glm::scale(model, m_size);
+            auto vec = m_bBox->getPos();
+            setPos(vec);
         }
         else
         {
@@ -24,12 +26,20 @@ namespace v
         return model;
     }
 
-    void DynamicModel::addBoundBox(glm::vec3 relatedPosition, glm::vec3 size, bool isStatic)
+    void DynamicModel::addBoundBox(glm::vec3 relatedPosition, glm::vec3 size, bool isStatic,
+                                bool lockAxisX, bool lockAxisY, bool lockAxisZ)
     {
-        if (m_bBox)
+        if (m_bBox != nullptr)
             std::cout << "переопределение bBox'a еще не сделано\n";
         auto scene = v::PhysicScene::getInstance();
-        m_bBox = scene->getBbox(m_pos + relatedPosition, size, isStatic);
+        m_bBox = scene->getBbox(m_pos + relatedPosition, size, isStatic, lockAxisX, lockAxisY, lockAxisZ);
+    }
+
+    void DynamicModel::deleteBoundBox()
+    {
+        auto scene = v::PhysicScene::getInstance();
+        scene->deleteBbox(m_bBox);
+        m_bBox = nullptr;
     }
 
     void DynamicModel::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)

@@ -83,6 +83,7 @@ namespace test {
 	void TestCamera::OnUpdate(float deltaTime)
 	{
         m_renderer->Clear();
+        m_camera->updatePosition();
 	}
 
 	void TestCamera::OnRender()

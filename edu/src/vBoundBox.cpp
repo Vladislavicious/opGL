@@ -27,18 +27,22 @@ namespace v
     }
 
     boundBox::boundBox(glm::vec3 position, glm::vec3 size,
-                       std::shared_ptr<q3Scene> scene, bool isStatic) : Object(position, size, "../edu/res/cube/cube.obj", "../edu/res/cube/bBoxShader.vs",
+                       std::shared_ptr<q3Scene> scene, bool isStatic, bool lockAxisX,
+                       bool lockAxisY, bool lockAxisZ) :
+                       Object(position, size, "../edu/res/cube/cube.obj", "../edu/res/cube/bBoxShader.vs",
                                                                                "../edu/res/cube/bBoxShader.fs")
     {
+        q3BodyDef bodyDef;
         bodyDef.bodyType = eDynamicBody;
         if (isStatic)
             bodyDef.bodyType = eStaticBody;
         bodyDef.position = q3Vec3(position.x, position.y, position.z);
+        bodyDef.lockAxisX = lockAxisX;
+        bodyDef.lockAxisY = lockAxisY;
+        bodyDef.lockAxisZ = lockAxisZ;
         body = scene->CreateBody( bodyDef );
-        q3Transform localSpace; // Contains position and orientation, see q3Transform.h for details
-        q3Identity( localSpace ); // Specify the origin, and identity orientation
-        // Create a box at the origin with width, height, depth = (1.0, 1.0, 1.0)
-        // and add it to a rigid body. The transform is defined relative to the owning body
+        q3Transform localSpace;
+        q3Identity( localSpace );
         q3BoxDef boxDef;
         boxDef.Set( localSpace, q3Vec3( 2 * size.x, 2 * size.y, 2 * size.z ) );
         boxDef.SetRestitution( 0 );
@@ -49,6 +53,12 @@ namespace v
     {
         Object::ToDrawShader(viewMatrix, projMatrix);
         m_shader->SetUniform3f("colour", glm::vec3(0.6f));
+    }
+
+    void boundBox::rotate(q3Vec3 axis, float angle)
+    {
+        auto temp = body->GetTransform();
+        body->SetTransform(temp.position, axis, glm::radians(angle));
     }
 }
 

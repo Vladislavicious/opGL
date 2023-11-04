@@ -13,7 +13,7 @@ namespace test {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         z_ortho[0] = 0.01f;
-        z_ortho[1] = 100.0f;
+        z_ortho[1] = 70.0f;
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
 
@@ -42,19 +42,19 @@ namespace test {
                                                     glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f),
                                                     1.0f, 0.09f, 0.032f, 12.0f, 15.0f);
 
-        m_camera = std::make_unique<myCamera>();
+        m_cameraHandler = std::make_unique<CameraHandler>();
 
         m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
-        m_myModel = std::make_unique<v::DynamicModel>(glm::vec3(1.0f, 4.0f, 0.5f), glm::vec3(1.0f),
+        m_myModel = std::make_shared<v::DynamicModel>(glm::vec3(1.0f, 4.0f, 0.5f), glm::vec3(1.0f),
                                                 "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
         m_myModel->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f), false);
 
         auto scene = v::PhysicScene::getInstance();
-        scene->getBbox(glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f), true);
-        int a = 5;
+        float planeSize = 15.0f;
+        scene->addWorldBorder(planeSize);
 	}
 
 	TestCollision::~TestCollision()
@@ -68,13 +68,14 @@ namespace test {
 	{
         auto scene = v::PhysicScene::getInstance();
         scene->Step();
+        m_cameraHandler->update();
         m_renderer->Clear();
 	}
 
 	void TestCollision::OnRender()
 	{
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
-        auto view = m_camera->getViewMatrix();
+        auto view = m_cameraHandler->getViewMatrix();
         for (auto& pointLight : m_pointLights)
             pointLight->ToDrawShader(view, m_proj);
 
@@ -88,15 +89,15 @@ namespace test {
             pointLight->ToObjectShader(*modelShader, "pointLights[" + std::to_string(i++) +"]");
         }
 
-        modelShader->SetUniform3f("viewPos",  m_camera->getPosition());
+        modelShader->SetUniform3f("viewPos",  m_cameraHandler->getPosition());
 
 		modelShader->SetUniform1f("material.shininess", 32.0f);
 
         m_directLight->setLightColor(m_dirLightPower);
         m_directLight->ToObjectShader(*modelShader, "dirLight");
 
-        m_spotLight->setLightDirection(m_camera->getFront());
-        m_spotLight->setLightPosition(m_camera->getPosition());
+        m_spotLight->setLightDirection(m_cameraHandler->getFront());
+        m_spotLight->setLightPosition(m_cameraHandler->getPosition());
         m_spotLight->ToObjectShader(*modelShader, "spotLight");
 
 		m_textures[0]->bind(0);
@@ -119,8 +120,8 @@ namespace test {
 
 	void TestCollision::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(m_camera->active);
-        if (m_camera->active)
+        ImGui::SetWindowCollapsed(m_cameraHandler->isActive());
+        if (m_cameraHandler->isActive())
             return;
 
         if (ImGui::Button("add_body"))
@@ -128,6 +129,9 @@ namespace test {
 
         if (ImGui::Button("bBoxes"))
             bBoxesVisible = !bBoxesVisible;
+
+        if (ImGui::Button("delete"))
+            m_myModel->deleteBoundBox();
 
         ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
@@ -140,7 +144,7 @@ namespace test {
     void TestCollision::addBody()
     {
         auto scene = v::PhysicScene::getInstance();
-        scene->getBbox(m_camera->getPosition() + m_camera->getFront() * 3.0f, glm::vec3(1.0f), false);
+        scene->getBbox(m_cameraHandler->getPosition() + m_cameraHandler->getFront() * 3.0f, glm::vec3(1.0f), false);
     }
 
     glm::mat4 TestCollision::getProjectionMatrix(float near_z_bound, float far_z_bound)
@@ -150,21 +154,50 @@ namespace test {
 
     void TestCollision::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         {
-            glfwSetWindowShouldClose (window, 1);
+            if (m_cameraHandler->isActive())
+            {
+                if (m_cameraHandler->ToggleCamera())
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                else
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            else
+            {
+                glfwSetWindowShouldClose (window, 1);
+            }
+            return;
         }
-        m_camera->key_callback(window, key, scancode, action, mods);
+        if (key == GLFW_KEY_SPACE)
+        {
+            if (!m_cameraHandler->isActive())
+            {
+                if (m_cameraHandler->ToggleCamera())
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                else
+                    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            else if ( action == GLFW_PRESS && action != GLFW_REPEAT)
+            {
+                if (m_cameraHandler->attached)
+                    m_cameraHandler->unAttach();
+                else
+                    m_cameraHandler->attachCamera(m_myModel, glm::vec3(0.0f, 1.5f, 0.0f));
+            }
+        }
+        if (!m_cameraHandler->attached)
+            m_cameraHandler->key_callback(window, key, scancode, action, mods);
     }
 
     void TestCollision::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
-        m_camera->mouse_callback(window, xpos, ypos);
+        m_cameraHandler->mouse_callback(window, xpos, ypos);
     }
 
     void TestCollision::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     {
-        if (!m_camera->active)
+        if (!m_cameraHandler->isActive())
             return;
         if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
             addBody();
