@@ -1,12 +1,13 @@
 #include "TestCollision.h"
 #include "vBoundBox.h"
+#include "pPhysicsScene.h"
 extern float deltaTime;
 
 namespace test {
 
 	TestCollision::TestCollision()
 	{
-        m_renderer = std::make_shared<Renderer>();
+        m_renderer = Renderer::getInstance();
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -25,18 +26,15 @@ namespace test {
         m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(1.0f, 0.0f, 0.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
-                                                m_renderer));
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos1, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 1.0f, 0.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
-                                                m_renderer));
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos2, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(0.0f, 0.0f, 1.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
-                                                m_renderer));
+                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_directLight = std::make_unique<v::DirLight>(m_dirLightPower, glm::vec3(0.4f, 0.4f, 0.4f),
                                                     glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
 
@@ -44,100 +42,79 @@ namespace test {
                                                     glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f),
                                                     1.0f, 0.09f, 0.032f, 12.0f, 15.0f);
 
-        m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(-0.8f, -0.8f, 1.4f), glm::vec3(0.5f),
-                                                "../edu/res/cube/cube.obj", "../edu/res/lightShader.vs",
-                                                "../edu/res/lightShader.fs", m_renderer));
-
-        m_bBoxes.push_back(std::make_shared<v::Object>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f),
-                                                "../edu/res/plane/plane.obj", "../edu/res/lightShader.vs",
-                                                "../edu/res/lightShader.fs", m_renderer));
-
         m_camera = std::make_unique<myCamera>();
 
         m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
-        m_modelShader = new Shader("../edu/res/meshShader.vs", "../edu/res/meshShader.fs");
+        m_myModel = std::make_unique<v::DynamicModel>(glm::vec3(1.0f, 4.0f, 0.5f), glm::vec3(1.0f),
+                                                "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
+                                                "../edu/res/meshShader.fs");
+        m_myModel->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f), false);
 
-        m_myModel = new myModel("../edu/res/Ancient_Vase.obj");
-
-        m_scene = std::make_shared<q3Scene>( 1.0 / 60.0);
-        m_scene->SetGravity(q3Vec3(0.0f, -1.0f, 0.0f));
-        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 7.0f, 0.0f), glm::vec3(1.0f),
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
-                                                m_renderer, m_scene));
-        m_bBoxes.push_back(std::make_shared<v::boundBox>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(10.0f, 1.0f, 10.0f),
-                                                "../edu/res/lightShader.vs",
-                                                "../edu/res/lightShader.fs", m_renderer, m_scene, true));
+        auto scene = v::PhysicScene::getInstance();
+        scene->getBbox(glm::vec3(0.0f), glm::vec3(10.0f, 1.0f, 10.0f), true);
+        int a = 5;
 	}
 
 	TestCollision::~TestCollision()
 	{
         glDisable(GL_DEPTH_TEST);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        delete m_modelShader;
-
-        delete m_myModel;
+        delete m_renderer;
 	}
 
 	void TestCollision::OnUpdate(float deltaTime)
 	{
+        auto scene = v::PhysicScene::getInstance();
+        scene->Step();
         m_renderer->Clear();
 	}
 
 	void TestCollision::OnRender()
 	{
-        m_scene->Step();
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
         auto view = m_camera->getViewMatrix();
         for (auto& pointLight : m_pointLights)
             pointLight->ToDrawShader(view, m_proj);
 
+        m_myModel->ToDrawShader(view, m_proj);
+        auto modelShader = m_myModel->getShader();
 
-        for (auto& box : m_bBoxes)
-        {
-            box->ToDrawShader(view, m_proj);
-        }
-
-        m_modelShader->Bind();
-        auto modelPlace = glm::translate(glm::mat4(1.0f), m_modelMovement);
-        m_modelShader->SetUniformMat4f("model", modelPlace);
-        m_modelShader->SetUniformMat4f("view", view);
-        m_modelShader->SetUniformMat4f("projection", m_proj);
-
+        modelShader->SetUniform1i("pointLightsNumber", m_pointLights.size());
         int i = 0;
-        m_modelShader->SetUniform1i("pointLightsNumber", m_pointLights.size());
         for (auto& pointLight : m_pointLights)
         {
-            pointLight->ToObjectShader(*m_modelShader, "pointLights[" + std::to_string(i++) +"]");
+            pointLight->ToObjectShader(*modelShader, "pointLights[" + std::to_string(i++) +"]");
         }
 
-        m_modelShader->SetUniform3f("viewPos",  m_camera->getPosition());
+        modelShader->SetUniform3f("viewPos",  m_camera->getPosition());
 
-
-		m_modelShader->SetUniform1f("material.shininess", 32.0f);
+		modelShader->SetUniform1f("material.shininess", 32.0f);
 
         m_directLight->setLightColor(m_dirLightPower);
-        m_directLight->ToObjectShader(*m_modelShader, "dirLight");
+        m_directLight->ToObjectShader(*modelShader, "dirLight");
 
         m_spotLight->setLightDirection(m_camera->getFront());
         m_spotLight->setLightPosition(m_camera->getPosition());
-        m_spotLight->ToObjectShader(*m_modelShader, "spotLight");
+        m_spotLight->ToObjectShader(*modelShader, "spotLight");
 
 		m_textures[0]->bind(0);
-        m_modelShader->SetUniform1i("material.texture_diffuse1", 0);
+        modelShader->SetUniform1i("material.texture_diffuse1", 0);
         m_textures[1]->bind(1);
-        m_modelShader->SetUniform1i("material.texture_specular1", 1);
-        m_renderer->Draw(*m_myModel, *m_modelShader);
+        modelShader->SetUniform1i("material.texture_specular1", 1);
+
+        m_myModel->Draw();
 
         for (auto& pointLight : m_pointLights)
             pointLight->Draw();
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(3.0f);
-        for (auto& box : m_bBoxes)
-            box->Draw();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        if ( bBoxesVisible )
+        {
+            auto scene = v::PhysicScene::getInstance();
+            scene->ToDrawShader(view, m_proj);
+            scene->Draw();
+        }
 	}
 
 	void TestCollision::OnImGuiRender()
@@ -149,11 +126,12 @@ namespace test {
         if (ImGui::Button("add_body"))
             addBody();
 
+        if (ImGui::Button("bBoxes"))
+            bBoxesVisible = !bBoxesVisible;
+
         ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
-
-
 
         auto& io = ImGui::GetIO();
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
@@ -161,9 +139,8 @@ namespace test {
 
     void TestCollision::addBody()
     {
-        m_bBoxes.push_back(std::make_shared<v::boundBox>(m_camera->getPosition() + m_camera->getFront() * 3.0f, glm::vec3(1.0f),
-                                                "../edu/res/lightShader.vs", "../edu/res/lightShader.fs",
-                                                m_renderer, m_scene));
+        auto scene = v::PhysicScene::getInstance();
+        scene->getBbox(m_camera->getPosition() + m_camera->getFront() * 3.0f, glm::vec3(1.0f), false);
     }
 
     glm::mat4 TestCollision::getProjectionMatrix(float near_z_bound, float far_z_bound)

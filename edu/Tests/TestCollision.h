@@ -15,6 +15,7 @@
 #include "pointLight.h"
 #include "vObject.h"
 #include "myLight.h"
+#include "vDynamicModel.h"
 
 namespace test {
 
@@ -27,14 +28,13 @@ namespace test {
 		glm::vec3 m_modelMovement;
 
 		std::vector<std::shared_ptr<Texture>> m_textures;
-		Shader* m_modelShader;
-		myModel* m_myModel;
+		std::unique_ptr<v::DynamicModel> m_myModel;
 		std::vector<std::shared_ptr<v::PointLight>> m_pointLights;
 		std::vector<std::shared_ptr<v::Object>> m_bBoxes;
 
 		std::shared_ptr<q3Scene> m_scene;
 
-		std::shared_ptr<Renderer> m_renderer;
+		Renderer* m_renderer;
 		std::unique_ptr<v::DirLight> m_directLight;
 		std::unique_ptr<v::SpotLight> m_spotLight;
 
@@ -42,6 +42,7 @@ namespace test {
 		float z_ortho[2];
 
 		bool cursorActivated = false;
+		bool bBoxesVisible = true;
 		glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);
 		void addBody();
 	public:

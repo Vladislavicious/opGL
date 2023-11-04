@@ -5,10 +5,30 @@ glm::mat4 rotateMat4(const q3Mat3& rotationMatrix);
 
 namespace v
 {
-    boundBox::boundBox(glm::vec3 position, glm::vec3 size, const std::string& vsShaderPath,
-                    const std::string& fsShaderPath, std::shared_ptr<Renderer> renderer,
-                    std::shared_ptr<q3Scene> scene, bool isStatic):
-                Object(position, size, "../edu/res/cube/cube.obj", vsShaderPath, fsShaderPath, renderer)
+    glm::mat4 boundBox::createModelMatrix()
+    {
+        auto vec = body->GetTransform();
+        setPos(vec.position);
+
+        auto model = glm::translate(glm::mat4(1.0f), m_pos);
+        model = model * rotateMat4(vec.rotation);
+        model = glm::scale(model, glm::vec3(m_size));
+        return model;
+    }
+
+    glm::mat4 boundBox::getNonScaledModelMatrix()
+    {
+        auto vec = body->GetTransform();
+        setPos(vec.position);
+
+        auto model = glm::translate(glm::mat4(1.0f), m_pos);
+        model = model * rotateMat4(vec.rotation);
+        return model;
+    }
+
+    boundBox::boundBox(glm::vec3 position, glm::vec3 size,
+                       std::shared_ptr<q3Scene> scene, bool isStatic) : Object(position, size, "../edu/res/cube/cube.obj", "../edu/res/cube/bBoxShader.vs",
+                                                                               "../edu/res/cube/bBoxShader.fs")
     {
         bodyDef.bodyType = eDynamicBody;
         if (isStatic)
@@ -27,18 +47,8 @@ namespace v
 
     void boundBox::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)
     {
-        auto vec = body->GetTransform();
-        setPos(vec.position);
-
-        auto model = glm::translate(glm::mat4(1.0f), m_pos);
-        model = glm::scale(model, glm::vec3(m_size));
-        model = model * rotateMat4(vec.rotation);
-        m_shader->Bind();
-
-        m_shader->SetUniformMat4f("view", viewMatrix);
-        m_shader->SetUniformMat4f("projection", projMatrix);
+        Object::ToDrawShader(viewMatrix, projMatrix);
         m_shader->SetUniform3f("colour", glm::vec3(0.6f));
-        m_shader->SetUniformMat4f("model", model);
     }
 }
 

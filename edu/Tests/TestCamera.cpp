@@ -67,7 +67,7 @@ namespace test {
 
         m_shader = new Shader("../edu/res/BasicShader.vs", "../edu/res/BasicShader.fs");
 
-        m_renderer = new Renderer();
+        m_renderer = Renderer::getInstance();
 	}
 
 	TestCamera::~TestCamera()
@@ -97,6 +97,7 @@ namespace test {
         m_shader->Bind();
         m_shader->SetUniformMat4f("u_MVP", m_mvp);
 
+        m_renderer = Renderer::getInstance();
         m_renderer->Draw(*m_cubeVertexArray, *m_cubeIndexBuffer, *m_shader);
 	}
 

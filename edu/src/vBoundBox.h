@@ -11,9 +11,11 @@ namespace v
     private:
         q3BodyDef bodyDef;
         q3Body* body;
+    protected:
+        glm::mat4 createModelMatrix() override;
     public:
-        boundBox(glm::vec3 position, glm::vec3 size, const std::string& vsShaderPath,
-                const std::string& fsShaderPath, std::shared_ptr<Renderer> renderer,
+        glm::mat4 getNonScaledModelMatrix();
+        boundBox(glm::vec3 position, glm::vec3 size,
                 std::shared_ptr<q3Scene> scene, bool isStatic = false);
 
         void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)  override;

@@ -17,8 +17,7 @@ namespace v
         PointLight(glm::vec3 position, glm::vec3 size, glm::vec3 ambient, glm::vec3 diffuse,
                     glm::vec3 specular, float constant, float linear,
                     float quadratic, const std::string& filePath,
-                    const std::string& vsShaderPath, const std::string& fsShaderPath,
-                    std::shared_ptr<Renderer> renderer);
+                    const std::string& vsShaderPath, const std::string& fsShaderPath);
         ~PointLight() override;
         void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) override;
         void ToObjectShader(Shader& shader, const std::string& prefix) const override;

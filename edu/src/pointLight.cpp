@@ -4,9 +4,8 @@ namespace v
     PointLight::PointLight(glm::vec3 position, glm::vec3 size, glm::vec3 ambient, glm::vec3 diffuse,
                     glm::vec3 specular, float constant, float linear,
                     float quadratic, const std::string& filePath,
-                    const std::string& vsShaderPath, const std::string& fsShaderPath,
-                    std::shared_ptr<Renderer> renderer):
-            Object(position, size, filePath, vsShaderPath, fsShaderPath, renderer),
+                    const std::string& vsShaderPath, const std::string& fsShaderPath):
+            Object(position, size, filePath, vsShaderPath, fsShaderPath),
             Light(ambient, diffuse, specular), m_constant(constant),
             m_linear(linear), m_quadratic(quadratic)
     {
@@ -29,12 +28,7 @@ namespace v
 
     void PointLight::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)
     {
-        auto lightModel = glm::translate(glm::mat4(1.0f), m_pos);
-        lightModel = glm::scale(lightModel, m_size);
-        m_shader->Bind();
-        m_shader->SetUniformMat4f("model", lightModel);
-        m_shader->SetUniformMat4f("view", viewMatrix);
-        m_shader->SetUniformMat4f("projection", projMatrix);
+        Object::ToDrawShader(viewMatrix, projMatrix);
         m_shader->SetUniform3f("colour", m_diffuse);
     }
 

@@ -96,10 +96,7 @@ int main()
 
     currentTest = new test::TestCollision();
 
-    Renderer renderer;
-
     while (!glfwWindowShouldClose(window)) {
-        renderer.Clear();
 
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;

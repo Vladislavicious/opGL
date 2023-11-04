@@ -118,7 +118,7 @@ namespace test {
 
         m_lightShader = new Shader("../edu/res/lightShader.vs", "../edu/res/lightShader.fs");
 
-        m_renderer = new Renderer();
+        m_renderer = Renderer::getInstance();
 	}
 
 	TestLighting::~TestLighting()
@@ -195,6 +195,7 @@ namespace test {
         m_cubeSpecTexture->bind(1);
         m_cubeShader->SetUniform1i("material.specular", 1);
 
+        m_renderer = Renderer::getInstance();
         for (unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);

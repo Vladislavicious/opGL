@@ -46,7 +46,7 @@ namespace test {
                 m_texture = new Texture("../edu/res/capy.jpg");
                 m_texture->bind(0);
 
-                m_renderer = new Renderer();
+                m_renderer = Renderer::getInstance();
 	}
 
 	TestMovingSquare::~TestMovingSquare()
@@ -72,6 +72,7 @@ namespace test {
                 m_shader->SetUniformMat4f("u_MVP", m_mvp);
                 m_shader->SetUniform1i("u_Texture", 0);
 
+                m_renderer = Renderer::getInstance();
                 m_renderer->Draw(*m_squareVertexArray, *m_squareIndexBuffer, *m_shader);
 	}
 

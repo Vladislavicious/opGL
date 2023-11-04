@@ -31,8 +31,24 @@ bool GLLogCall(const char* function, const char* file, int line);
 
 class Renderer
 {
+private:
+    static Renderer* instancePtr;
+protected:
+    Renderer() {};
 public:
+    static Renderer* getInstance()
+    {
+        if (instancePtr == nullptr)
+        {
+            instancePtr = new Renderer();
+            return instancePtr;
+        }
+        else
+            return instancePtr;
+    }
 
+    Renderer(const Renderer& obj) = delete;
+    ~Renderer() { instancePtr = nullptr; }
     void Clear() const;
 
     void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
