@@ -11,8 +11,8 @@ myCamera::myCamera()
     cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
     cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
     currentSpeed= glm::vec3(0.0f, 0.0f,  0.0f);
-    for (int i = 0; i<4; i++)
-            direction[i] = false;
+
+    Stop();
 
     lastX = WinWidth / 2.0f;
     lastY = WinHeight / 2.0f;
@@ -30,39 +30,9 @@ glm::mat4 myCamera::getViewMatrix()
 
 void myCamera::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (!active && key != GLFW_KEY_SPACE)
-        return;
+    Movable::key_callback(window, key, scancode, action, mods);
 
-    if (key == GLFW_KEY_W)
-    {
-        if ( action == GLFW_PRESS )
-            direction[dir::Forward] = true;
-        else if ( action == GLFW_RELEASE )
-            direction[dir::Forward] = false;
-    }
-    else if (key == GLFW_KEY_S)
-    {
-        if ( action == GLFW_PRESS )
-            direction[dir::Backward] = true;
-        else if ( action == GLFW_RELEASE )
-            direction[dir::Backward] = false;
-    }
-    if (key == GLFW_KEY_D)
-    {
-        if ( action == GLFW_PRESS )
-            direction[dir::Right] = true;
-        else if ( action == GLFW_RELEASE )
-            direction[dir::Right] = false;
-    }
-    else if (key == GLFW_KEY_A)
-    {
-        if ( action == GLFW_PRESS )
-            direction[dir::Left] = true;
-        else if ( action == GLFW_RELEASE )
-            direction[dir::Left] = false;
-    }
-
-    MoveCamera();
+    Move();
 }
 
 void myCamera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -113,16 +83,16 @@ bool myCamera::toggleMouse()
     return active;
 }
 
-void myCamera::MoveCamera()
+void myCamera::Move()
 {
     currentSpeed = glm::vec3(0.0f);
-    if (direction[dir::Forward])
+    if (direction[v::dir::Forward])
         currentSpeed += speed * cameraFront;
-    else if(direction[dir::Backward])
+    else if(direction[v::dir::Backward])
         currentSpeed -= speed * cameraFront;
-    if(direction[dir::Right])
+    if(direction[v::dir::Right])
         currentSpeed += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
-    else if(direction[dir::Left])
+    else if(direction[v::dir::Left])
         currentSpeed -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
 }
 

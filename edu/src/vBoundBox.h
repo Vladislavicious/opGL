@@ -24,6 +24,8 @@ namespace v
         void rotateX(float angle) { rotate(q3Vec3(1.0f, 0.0f, 0.0f), angle); };
         void rotateY(float angle) { rotate(q3Vec3(0.0f, 1.0f, 0.0f), angle); };
         void rotateZ(float angle) { rotate(q3Vec3(0.0f, 0.0f, 1.0f), angle); };
+        virtual void applyVelocity(q3Vec3 force) { body->SetLinearVelocity(force); }
+        q3Vec3 getVelocity() { return body->GetLinearVelocity(); }
     };
 }
 

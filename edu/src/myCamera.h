@@ -5,15 +5,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
+#include "movable.h"
 
-enum dir{
-    Forward = 0,
-    Backward = 1,
-    Left = 2,
-    Right = 3
-};
-
-class myCamera
+class myCamera : public v::Movable
 {
 private:
     glm::vec3 cameraPos;
@@ -28,12 +22,9 @@ private:
     float lastY;
     float speed;
     bool firstMouse;
-
-    bool direction[4];
-
-    void MoveCamera();
 public:
     bool active;
+    void Move() override;
     myCamera();
     void updatePosition();
     bool toggleMouse();
@@ -42,7 +33,7 @@ public:
     glm::vec3 getFront() { return cameraFront; }
     void setInitialFront(glm::vec3 front) { cameraFront = front; }
     glm::mat4 getViewMatrix();
-    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) override;;
     void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
 #endif // MY_CAMERA_H_

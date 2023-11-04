@@ -47,10 +47,10 @@ namespace test {
         m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
         m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
 
-        m_myModel = std::make_shared<v::DynamicModel>(glm::vec3(1.0f, 4.0f, 0.5f), glm::vec3(1.0f),
+        m_myModel = std::make_shared<v::Player>(glm::vec3(1.0f, 4.0f, 0.5f), glm::vec3(1.0f),
                                                 "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
-        m_myModel->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f), false);
+        m_myModel->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f, 1.0f, 0.4f), false, true, true, true);
 
         auto scene = v::PhysicScene::getInstance();
         float planeSize = 15.0f;
@@ -66,10 +66,16 @@ namespace test {
 
 	void TestCollision::OnUpdate(float deltaTime)
 	{
+        m_renderer->Clear();
         auto scene = v::PhysicScene::getInstance();
         scene->Step();
         m_cameraHandler->update();
-        m_renderer->Clear();
+        time_elapsed += deltaTime;
+        if (time_elapsed >= 1.0 / 60.0 )
+        {
+            time_elapsed = 0.0f;
+            m_myModel->Move();
+        }
 	}
 
 	void TestCollision::OnRender()
@@ -169,7 +175,7 @@ namespace test {
             }
             return;
         }
-        if (key == GLFW_KEY_SPACE)
+        if (key == GLFW_KEY_Z)
         {
             if (!m_cameraHandler->isActive())
             {
@@ -188,11 +194,20 @@ namespace test {
         }
         if (!m_cameraHandler->attached)
             m_cameraHandler->key_callback(window, key, scancode, action, mods);
+        else
+        {
+            m_myModel->key_callback(window, key, scancode, action, mods);
+        }
     }
 
     void TestCollision::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
         m_cameraHandler->mouse_callback(window, xpos, ypos);
+        if (m_cameraHandler->attached)
+        {
+            auto vec = m_cameraHandler->getFront();
+            m_myModel->setForward(vec);
+        }
     }
 
     void TestCollision::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)

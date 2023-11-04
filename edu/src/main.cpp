@@ -67,6 +67,7 @@ int main()
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
 
+    GLCall(glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE));
     GLCall(glfwSetKeyCallback(window, key_callback));
     GLCall(glfwSetCursorPosCallback(window, mouse_callback));
     GLCall(glfwSetMouseButtonCallback(window, mouse_button_callback));
@@ -109,7 +110,7 @@ int main()
 
         if (currentTest != nullptr)
         {
-            currentTest->OnUpdate(0.0f);
+            currentTest->OnUpdate(deltaTime);
             currentTest->OnRender();
             ImGui::Begin("Test");
             if (currentTest != testMenu && ImGui::Button("<-"))

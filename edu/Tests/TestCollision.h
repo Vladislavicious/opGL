@@ -15,7 +15,7 @@
 #include "pointLight.h"
 #include "vObject.h"
 #include "myLight.h"
-#include "vDynamicModel.h"
+#include "vPlayer.h"
 
 namespace test {
 
@@ -28,11 +28,12 @@ namespace test {
 		glm::vec3 m_modelMovement;
 
 		std::vector<std::shared_ptr<Texture>> m_textures;
-		std::shared_ptr<v::DynamicModel> m_myModel;
+		std::shared_ptr<v::Player> m_myModel;
 		std::vector<std::shared_ptr<v::PointLight>> m_pointLights;
 		std::vector<std::shared_ptr<v::Object>> m_bBoxes;
 
 		std::shared_ptr<q3Scene> m_scene;
+		float time_elapsed;
 
 		Renderer* m_renderer;
 		std::unique_ptr<v::DirLight> m_directLight;
