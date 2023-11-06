@@ -18,8 +18,6 @@ namespace v
         void addBoundBox(glm::vec3 relatedPosition, glm::vec3 size, bool isStatic,
                         bool lockAxisX = false, bool lockAxisY = false, bool lockAxisZ = false);
         void deleteBoundBox();
-        void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix) override;
-        void Draw() override;
         virtual void applyVelocity(q3Vec3 force) { m_bBox->applyVelocity(force); }
         q3Vec3 getVelocity() { return m_bBox->getVelocity(); }
     };

@@ -5,18 +5,18 @@ CameraHandler::CameraHandler():
 {
 }
 
-void CameraHandler::attachCamera(std::shared_ptr<v::Object> obj, glm::vec3 offset)
+void CameraHandler::attachCamera(v::Object* obj, glm::vec3 offset)
 {
     attachmentOffset = offset;
     prevPosition = m_camera->getPosition();
     attached = true;
-    m_obj = std::weak_ptr<v::Object>(obj);
+    m_obj = obj;
 }
 
 void CameraHandler::update()
 {
-    if (!m_obj.expired())
-        m_camera->setPosition( m_obj.lock()->getPos() + attachmentOffset );
+    if (m_obj != nullptr)
+        m_camera->setPosition( m_obj->getPos() + attachmentOffset );
     else
         m_camera->updatePosition();
 }

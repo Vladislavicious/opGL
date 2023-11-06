@@ -13,9 +13,13 @@ namespace test {
 
 	class Test
 	{
+	private:
+		bool running;
 	public:
 		static GLFWwindow* window;
-		Test() {}
+		virtual bool isRunning() { return running; }
+		virtual void Toggle() { running = !running; }
+		Test() { running = false; }
 		virtual ~Test() {}
 
 		virtual void OnUpdate(float deltaTime) {}

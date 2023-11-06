@@ -10,7 +10,7 @@ class CameraHandler
 {
 private:
     std::unique_ptr<myCamera> m_camera;
-    std::weak_ptr<v::Object> m_obj;
+    v::Object* m_obj;
     glm::vec3 prevPosition;
     glm::vec3 attachmentOffset;
 public:
@@ -21,9 +21,9 @@ public:
     glm::mat4 getViewMatrix() { return m_camera->getViewMatrix(); }
 
     CameraHandler();
-    bool ToggleCamera() { return m_camera->toggleMouse(); }
-    void attachCamera(std::shared_ptr<v::Object> obj, glm::vec3 offset = glm::vec3(0.0f, 1.0f, 0.0f));
-    void unAttach() { attached = false; m_obj.reset(); m_camera->setPosition(prevPosition); }
+    void ToggleCamera() { m_camera->toggleMouse(); }
+    void attachCamera(v::Object* obj, glm::vec3 offset = glm::vec3(0.0f, 1.0f, 0.0f));
+    void unAttach() { attached = false; m_obj = nullptr; m_camera->setPosition(prevPosition); }
     void update();
 
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);

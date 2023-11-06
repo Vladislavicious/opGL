@@ -9,14 +9,16 @@ namespace v
     class PhysicScene
     {
     private:
+        const float frameTime;
         static PhysicScene* instancePtr;
 
         std::shared_ptr<q3Scene> m_scene;
         std::vector<std::shared_ptr<v::boundBox>> m_bBoxes;
+        void remove(std::vector<std::shared_ptr<v::boundBox>>::iterator it);
     protected:
         PhysicScene();
     public:
-
+        float getFrameTime() { return frameTime; };
         // deleting copy constructor
         PhysicScene(const PhysicScene& obj) = delete;
         ~PhysicScene() { instancePtr = nullptr; }
@@ -26,6 +28,11 @@ namespace v
         std::shared_ptr<v::boundBox> getBbox(glm::vec3 positon, glm::vec3 size, bool isStatic,
                                             bool lockAxisX = false, bool lockAxisY = false, bool lockAxisZ = false);
         void deleteBbox(std::shared_ptr<v::boundBox> box);
+        void deleteBbox(v::Object* box);
+        void deleteBbox(q3Body* body);
+        void Dump(q3Body* body);
+        void RayCast( q3QueryCallback *cb, q3RaycastData& rayCast ) const { m_scene->RayCast(cb, rayCast); }
+
         void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix);
         void Draw();
         void Step() { m_scene->Step(); }

@@ -70,7 +70,7 @@ void myCamera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     cameraFront = glm::normalize(direction);
 }
 
-bool myCamera::toggleMouse()
+void myCamera::toggleMouse()
 {
     if ( active )
     {
@@ -80,7 +80,6 @@ bool myCamera::toggleMouse()
         firstMouse = true;
     }
     active = !active;
-    return active;
 }
 
 void myCamera::Move()

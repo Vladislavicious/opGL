@@ -45,7 +45,6 @@ namespace test {
 		bool cursorActivated = false;
 		bool bBoxesVisible = true;
 		glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);
-		void addBody();
 	public:
 		TestCollision();
 		virtual ~TestCollision();

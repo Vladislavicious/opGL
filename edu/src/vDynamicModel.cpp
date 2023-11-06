@@ -41,14 +41,4 @@ namespace v
         scene->deleteBbox(m_bBox);
         m_bBox = nullptr;
     }
-
-    void DynamicModel::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)
-    {
-        Object::ToDrawShader(viewMatrix, projMatrix);
-    }
-
-    void DynamicModel::Draw()
-    {
-        Object::Draw();
-    }
 }

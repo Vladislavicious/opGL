@@ -23,16 +23,18 @@ private:
     float speed;
     bool firstMouse;
 public:
+    myCamera();
     bool active;
     void Move() override;
-    myCamera();
     void updatePosition();
-    bool toggleMouse();
+    void toggleMouse();
     void setPosition(glm::vec3 position) { cameraPos = position; }
+
     glm::vec3 getPosition() { return cameraPos; }
     glm::vec3 getFront() { return cameraFront; }
     void setInitialFront(glm::vec3 front) { cameraFront = front; }
     glm::mat4 getViewMatrix();
+
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) override;;
     void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };

@@ -25,11 +25,16 @@ namespace v
 
     void PhysicScene::deleteBbox(std::shared_ptr<v::boundBox> box)
     {
+        deleteBbox(box.get());
+    }
+
+    void PhysicScene::deleteBbox(v::Object* box)
+    {
         bool found = false;
         auto item = m_bBoxes.begin();
         for (item; item != m_bBoxes.end(); item++)
         {
-            if ( *item == box )
+            if ( item->get() == box )
             {
                 found = true;
                 break;
@@ -37,12 +42,37 @@ namespace v
         }
         if (found)
         {
-            m_bBoxes.erase(item);
+            remove(item);
         }
     }
 
+    void PhysicScene::deleteBbox(q3Body* body)
+    {
+        bool found = false;
+        auto item = m_bBoxes.begin();
+        for (item; item != m_bBoxes.end(); item++)
+        {
+            auto ptr = *item;
+            if ( ptr->getBody() == body )
+            {
+                found = true;
+                break;
+            }
+        }
+        if (found)
+        {
+            remove(item);
+        }
+    }
+
+    void PhysicScene::remove(std::vector<std::shared_ptr<v::boundBox>>::iterator it)
+    {
+        m_scene->RemoveBody(it->get()->getBody());
+        m_bBoxes.erase(it);
+    }
+
     PhysicScene::PhysicScene()
-        : m_scene(std::make_shared<q3Scene>( 1.0 / 60.0 ))
+        : frameTime(1.0f / 60.0f), m_scene(std::make_shared<q3Scene>(frameTime))
     {
         m_scene->SetGravity(q3Vec3(0.0f, -1.0f, 0.0f));
     }
@@ -82,6 +112,13 @@ namespace v
         temp->rotateY(90.0f);
         temp = getBbox(glm::vec3(0.0f, 2 * Width + planeWidth * 2, 0.0f), glm::vec3(Width, Width, planeWidth), true);
         temp->rotateX(90.0f);
+    }
+
+    void PhysicScene::Dump(q3Body *body)
+    {
+        std::FILE* fp = fopen( "../body.txt.log", "w" );
+        body->Dump(fp, 0);
+        fclose(fp);
     }
 
 } // namespace v

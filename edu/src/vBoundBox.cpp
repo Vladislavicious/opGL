@@ -46,6 +46,7 @@ namespace v
         q3BoxDef boxDef;
         boxDef.Set( localSpace, q3Vec3( 2 * size.x, 2 * size.y, 2 * size.z ) );
         boxDef.SetRestitution( 0 );
+        boxDef.SetFriction( 2.0 );
         body->AddBox( boxDef );
     }
 

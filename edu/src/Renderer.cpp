@@ -77,3 +77,8 @@ void Renderer::Draw(const myModel &model, Shader &shader)
     for (auto& mesh : model.getMeshes())
         Draw(*mesh, shader);
 }
+
+void Renderer::DrawLine(const glm::vec3 &from, const glm::vec3 &to)
+{
+
+}

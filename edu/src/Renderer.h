@@ -54,6 +54,7 @@ public:
     void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
     void Draw(const myMesh &mesh, Shader &shader);
     void Draw(const myModel &model, Shader &shader);
+    void DrawLine(const glm::vec3& from, const glm::vec3& to);
 };
 
 #endif //RENDERER_H_
