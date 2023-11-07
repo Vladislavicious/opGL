@@ -1,10 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
 
-#include "TestClearColor.h"
-#include "TestMovingSquare.h"
-#include "TestCube.h"
-#include "TestCamera.h"
 #include "TestLighting.h"
 #include "TestModel.h"
 #include "TestCollision.h"
@@ -87,10 +83,6 @@ int main()
     test::TestMenu* testMenu = new test::TestMenu(currentTest);
     currentTest = testMenu;
 
-    testMenu->RegisterTest<test::TestClearColor>("Clear Color");
-    testMenu->RegisterTest<test::TestMovingSquare>("Moving Square");
-    testMenu->RegisterTest<test::TestCube>("Rotating Cube");
-    testMenu->RegisterTest<test::TestCamera>("Camera");
     testMenu->RegisterTest<test::TestLighting>("Lighting");
     testMenu->RegisterTest<test::TestModel>("Model");
     testMenu->RegisterTest<test::TestCollision>("Collision");

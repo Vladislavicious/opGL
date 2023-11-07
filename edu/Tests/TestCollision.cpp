@@ -87,7 +87,10 @@ namespace test {
         m_proj = getProjectionMatrix(z_ortho[0], z_ortho[1]);
         auto view = m_myModel->getViewMatrix();
         for (auto& pointLight : m_pointLights)
+        {
             pointLight->ToDrawShader(view, m_proj);
+            pointLight->Draw();
+        }
 
         m_myModel->ToDrawShader(view, m_proj);
         auto modelShader = m_myModel->getShader();
@@ -117,9 +120,6 @@ namespace test {
         modelShader->SetUniform1i("material.texture_specular1", 1);
 
         m_myModel->Draw();
-
-        for (auto& pointLight : m_pointLights)
-            pointLight->Draw();
 
         if ( bBoxesVisible )
         {
