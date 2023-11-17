@@ -34,6 +34,11 @@ bool GLLogCall(const char* function, const char* file, int line)
 
 Renderer* Renderer::instancePtr = nullptr;
 
+Renderer::Renderer()
+{
+    GLCall(glEnable(GL_DEPTH_TEST));
+}
+
 void Renderer::Clear() const
 {
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -76,9 +81,4 @@ void Renderer::Draw(const myModel &model, Shader &shader)
 {
     for (auto& mesh : model.getMeshes())
         Draw(*mesh, shader);
-}
-
-void Renderer::DrawLine(const glm::vec3 &from, const glm::vec3 &to)
-{
-
 }

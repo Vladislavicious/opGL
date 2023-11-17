@@ -4,6 +4,7 @@
 #include "TestLighting.h"
 #include "TestModel.h"
 #include "TestCollision.h"
+#include "TestShadow.h"
 
 void glfw_window_size_callback (GLFWwindow* window, int width, int height);
 void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity,
@@ -12,6 +13,8 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+GLFWwindow* window = nullptr;
 
 int WinWidth = 640;
 int WinHeight = 480;
@@ -33,7 +36,7 @@ int main()
 
     GLFWmonitor* mon = glfwGetPrimaryMonitor ();
     const GLFWvidmode* vmode = glfwGetVideoMode (mon);
-    GLFWwindow* window = glfwCreateWindow (WinWidth, WinHeight, "Figure", NULL, NULL);
+    window = glfwCreateWindow (WinWidth, WinHeight, "Figure", NULL, NULL);
     glfwSetWindowSizeCallback (window, glfw_window_size_callback);
 
     if (!window)
@@ -86,10 +89,13 @@ int main()
     testMenu->RegisterTest<test::TestLighting>("Lighting");
     testMenu->RegisterTest<test::TestModel>("Model");
     testMenu->RegisterTest<test::TestCollision>("Collision");
+    testMenu->RegisterTest<test::TestShadow>("Shadow");
 
-    currentTest = new test::TestCollision();
+    currentTest = new test::TestShadow();
 
     while (!glfwWindowShouldClose(window)) {
+        auto renderer = Renderer::getInstance();
+        renderer->Clear();
 
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;

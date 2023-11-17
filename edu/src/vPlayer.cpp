@@ -116,6 +116,13 @@ namespace v
             Ray(RayActions::Push);
     }
 
+    glm::mat4 Player::getProjectionMatrix()
+    {
+        if (m_camHandler.attached)
+            return m_camHandler.getProjectionMatrix(0.01f + 0.5f, 70.0f);
+        return m_camHandler.getProjectionMatrix(0.01f, 70.0f);
+    }
+
     void Player::Draw()
     {
         DynamicModel::Draw();

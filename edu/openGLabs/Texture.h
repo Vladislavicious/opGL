@@ -5,8 +5,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h> // подключение GLFW
 #include "stb_image.h"
-
-class Texture
+#include "loader.h"
+class Texture: public v::Loadable
 {
 private:
 	unsigned int m_TextureID;
@@ -14,6 +14,7 @@ private:
 	unsigned char* m_localBuffer;
 	int m_Width, m_Height, m_BPP;
 	std::string m_type;
+	void Load() override;
 public:
 	Texture(const std::string& path, const std::string& type = "texture_specular");
 	~Texture();

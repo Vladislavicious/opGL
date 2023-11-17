@@ -21,7 +21,7 @@ namespace v
         float getFrameTime() { return frameTime; };
         // deleting copy constructor
         PhysicScene(const PhysicScene& obj) = delete;
-        ~PhysicScene() { instancePtr = nullptr; }
+        ~PhysicScene() { m_scene->Shutdown(); instancePtr = nullptr; }
 
         std::shared_ptr<v::boundBox> getBbox(q3Vec3 positon, q3Vec3 size, bool isStatic,
                                             bool lockAxisX = false, bool lockAxisY = false, bool lockAxisZ = false);

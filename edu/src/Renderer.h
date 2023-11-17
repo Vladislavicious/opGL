@@ -15,7 +15,9 @@ class VertexArray;
 #else
 #define ASSERT(x) if(!(x)) raise(SIGABRT);
 #endif // SIGTRAP
-#define GLCall(x) GLClearError(__FILE__, __LINE__);x;\
+#define GLCall(x) GLClearError(__FILE__, __LINE__);\
+    glfwMakeContextCurrent(window);\
+    x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 
@@ -24,6 +26,8 @@ extern float lastFrame; // Time of last frame
 
 extern int WinWidth;
 extern int WinHeight;
+
+extern GLFWwindow* window;
 
 void GLClearError(const char *file, int line);
 
@@ -34,7 +38,7 @@ class Renderer
 private:
     static Renderer* instancePtr;
 protected:
-    Renderer() {};
+    Renderer();
 public:
     static Renderer* getInstance()
     {
@@ -54,7 +58,6 @@ public:
     void Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const Shader& shader) const;
     void Draw(const myMesh &mesh, Shader &shader);
     void Draw(const myModel &model, Shader &shader);
-    void DrawLine(const glm::vec3& from, const glm::vec3& to);
 };
 
 #endif //RENDERER_H_

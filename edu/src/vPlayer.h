@@ -50,6 +50,7 @@ namespace v
         glm::vec3 getCameraPosition() { return m_camHandler.getPosition(); }
         glm::vec3 getFront() { return m_camHandler.getFront(); }
         glm::mat4 getViewMatrix() { return m_camHandler.getViewMatrix(); }
+        glm::mat4 getProjectionMatrix();
     };
 }
 

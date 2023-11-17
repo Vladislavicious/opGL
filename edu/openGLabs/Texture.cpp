@@ -1,13 +1,10 @@
 #include "Texture.h"
 #include "Renderer.h"
 
-Texture::Texture(const std::string& path, const std::string& type)
-	:m_TextureID(0), m_FilePath(path), m_localBuffer(nullptr),
-	 m_Width(0), m_Height(0), m_BPP(0), m_type(type)
+void Texture::Load()
 {
 	stbi_set_flip_vertically_on_load(1);
-	m_localBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
-
+	m_localBuffer = stbi_load(m_FilePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
 	GLCall(glGenTextures(1, &m_TextureID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_TextureID));
 
@@ -21,6 +18,15 @@ Texture::Texture(const std::string& path, const std::string& type)
 
 	if (m_localBuffer)
 		stbi_image_free(m_localBuffer);
+	v::Loadable::Load();
+}
+
+Texture::Texture(const std::string &path, const std::string &type)
+    : m_TextureID(0), m_FilePath(path), m_localBuffer(nullptr),
+      m_Width(0), m_Height(0), m_BPP(0), m_type(type)
+{
+	//v::Loader::addToLoadQueue(this);
+	Load();
 }
 
 Texture::~Texture()

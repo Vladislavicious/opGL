@@ -1,4 +1,5 @@
 ﻿#include "TestModel.h"
+#include "loader.h"
 
 namespace test {
 
@@ -84,7 +85,7 @@ namespace test {
         z_ortho[0] = 0.01f;
         z_ortho[1] = 20.0f;
 
-        m_camera = std::make_unique<myCamera>();
+        m_camera = std::make_unique<CameraHandler>();
         m_camera->setInitialFront(glm::vec3(0.0f, 0.0f, -1.0f));
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
@@ -100,9 +101,14 @@ namespace test {
 
         m_lightShader = new Shader("../edu/res/lightShader.vs", "../edu/res/lightShader.fs");
 
+
         m_backpack = new myModel("../edu/res/backpack/backpack.obj");
 
+        float a = glfwGetTime();
         m_renderer = Renderer::getInstance();
+        v::Loader::processLoadQueue();
+        std::cout << "Time: " << glfwGetTime() - a << std::endl;
+
 	}
 
 	TestModel::~TestModel()
@@ -121,8 +127,9 @@ namespace test {
 
 	void TestModel::OnUpdate(float deltaTime)
 	{
+
         m_renderer->Clear();
-        m_camera->updatePosition();
+        m_camera->update();
 	}
 
 	void TestModel::OnRender()
@@ -184,8 +191,8 @@ namespace test {
 
 	void TestModel::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(m_camera->active);
-        if (m_camera->active)
+        ImGui::SetWindowCollapsed(isRunning());
+        if (isRunning())
             return;
 
         if ( ImGui::Button("DirLight"))
@@ -211,13 +218,37 @@ namespace test {
     {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         {
-            glfwSetWindowShouldClose (window, 1);
+            if (isRunning())
+            {
+                Toggle();
+                m_camera->ToggleCamera();
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            else
+            {
+                glfwSetWindowShouldClose (window, 1);
+            }
+            return;
         }
+        if (key == GLFW_KEY_SPACE)
+        {
+            if (!isRunning())
+            {
+                Toggle();
+                m_camera->ToggleCamera();
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                return;
+            }
+        }
+        if (!isRunning())
+            return;
         m_camera->key_callback(window, key, scancode, action, mods);
     }
 
     void TestModel::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        if (!isRunning())
+            return;
         m_camera->mouse_callback(window, xpos, ypos);
     }
 }

@@ -13,6 +13,8 @@ private:
     v::Object* m_obj;
     glm::vec3 prevPosition;
     glm::vec3 attachmentOffset;
+
+    float FOV;
 public:
     bool attached;
     bool isActive() { return m_camera->active; }
@@ -21,6 +23,8 @@ public:
     glm::mat4 getViewMatrix() { return m_camera->getViewMatrix(); }
 
     CameraHandler();
+    glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);
+    void setInitialFront(glm::vec3 front) { m_camera->setInitialFront(front); }
     void ToggleCamera() { m_camera->toggleMouse(); }
     void attachCamera(v::Object* obj, glm::vec3 offset = glm::vec3(0.0f, 1.0f, 0.0f));
     void unAttach() { attached = false; m_obj = nullptr; m_camera->setPosition(prevPosition); }

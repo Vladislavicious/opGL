@@ -1,44 +1,51 @@
 #include "myModel.h"
-
-myModel::myModel(const std::string& path)
+myModel::myModel(const std::string& path):
+    m_fullPath(path)
 {
-    loadModel(path);
+    v::Loader::addToLoadQueue(this);
 }
 
-void myModel::loadModel(std::string path)
+void myModel::Load()
 {
-    Assimp::Importer import;
-    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    Assimp::Importer importer;
+    m_scene = importer.ReadFile(m_fullPath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    if(!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
     {
-        std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+        std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
         return;
     }
-    m_directory = path.substr(0, path.find_last_of('/'));
+    m_directory = m_fullPath.substr(0, m_fullPath.find_last_of('/'));
 
-    processNode(scene->mRootNode, scene);
+    processNode(m_scene->mRootNode);
+    std::cout << "loaded" << std::endl;
+    m_scene = nullptr;
+    v::Loadable::Load();
 }
-void myModel::processNode(aiNode *node, const aiScene *scene)
+
+void myModel::processNode(aiNode *node)
 {
     // process all the node's meshes (if any)
-    for(unsigned int i = 0; i < node->mNumMeshes; i++)
+    for(unsigned int j = 0; j < node->mNumMeshes; j++)
     {
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-        m_meshes.push_back(processMesh(mesh, scene));
+        aiMesh *mesh = m_scene->mMeshes[node->mMeshes[j]];
+        processMesh(mesh);
     }
     // then do the same for each of its children
-    for(unsigned int i = 0; i < node->mNumChildren; i++)
+    for(unsigned int j = 0; j < node->mNumChildren; j++)
     {
-        processNode(node->mChildren[i], scene);
+        processNode(node->mChildren[j]);
     }
 }
 
-std::shared_ptr<myMesh> myModel::processMesh(aiMesh *mesh, const aiScene *scene)
+void myModel::processMesh(aiMesh *mesh)
 {
     std::vector<Vertex> vertices;
+    vertices.reserve(mesh->mNumVertices);
     std::vector<unsigned int> indices;
+    indices.reserve(mesh->mNumFaces * 3);
     std::vector<std::shared_ptr<Texture>> textures;
+    textures.reserve(2);
 
     for(unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -77,7 +84,7 @@ std::shared_ptr<myMesh> myModel::processMesh(aiMesh *mesh, const aiScene *scene)
     // process material
     if(mesh->mMaterialIndex >= 0)
     {
-        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+        aiMaterial *material = m_scene->mMaterials[mesh->mMaterialIndex];
         std::vector<std::shared_ptr<Texture>> diffuseMaps = loadMaterialTextures(material,
                                             aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
@@ -85,7 +92,8 @@ std::shared_ptr<myMesh> myModel::processMesh(aiMesh *mesh, const aiScene *scene)
                                             aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
-    return std::make_shared<myMesh>(vertices, indices, textures);
+
+    m_meshes.push_back(std::make_shared<myMesh>(std::move(vertices), std::move(indices), std::move(textures)));
 }
 
 std::vector<std::shared_ptr<Texture>> myModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type,

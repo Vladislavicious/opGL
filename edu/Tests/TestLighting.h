@@ -1,6 +1,6 @@
 #pragma once
 #include "Test.h"
-#include "myCamera.h"
+#include "cameraHandler.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
@@ -40,7 +40,7 @@ namespace test {
 		Renderer* m_renderer;
 
 		float z_ortho[2];
-		std::unique_ptr<myCamera> m_camera;
+		std::unique_ptr<CameraHandler> m_camera;
 
 		bool cursorActivated = false;
 		glm::mat4 getProjectionMatrix(float near_z_bound, float far_z_bound);

@@ -1,6 +1,6 @@
 #pragma once
 #include "Test.h"
-#include "myCamera.h"
+#include "cameraHandler.h"
 #include "Shader.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
@@ -36,7 +36,7 @@ namespace test {
 		Shader* m_lightShader;
 
 		Renderer* m_renderer;
-		std::unique_ptr<myCamera> m_camera;
+		std::unique_ptr<CameraHandler> m_camera;
 
 		float z_ortho[2];
 

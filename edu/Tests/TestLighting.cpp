@@ -100,7 +100,7 @@ namespace test {
         z_ortho[0] = 0.01f;
         z_ortho[1] = 20.0f;
 
-        m_camera = std::make_unique<myCamera>();
+        m_camera = std::make_unique<CameraHandler>();
 
         m_proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, z_ortho[0], z_ortho[1]);
         m_cubeModel = glm::mat4(1.0f);
@@ -140,7 +140,7 @@ namespace test {
 	void TestLighting::OnUpdate(float deltaTime)
 	{
         m_renderer->Clear();
-        m_camera->updatePosition();
+        m_camera->update();
 	}
 
 	void TestLighting::OnRender()
@@ -211,8 +211,8 @@ namespace test {
 
 	void TestLighting::OnImGuiRender()
 	{
-        ImGui::SetWindowCollapsed(m_camera->active);
-        if (m_camera->active)
+        ImGui::SetWindowCollapsed(isRunning());
+        if (isRunning())
             return;
 
         if ( ImGui::Button("DirLight"))
@@ -236,11 +236,39 @@ namespace test {
 
     void TestLighting::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        {
+            if (isRunning())
+            {
+                Toggle();
+                m_camera->ToggleCamera();
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            else
+            {
+                glfwSetWindowShouldClose (window, 1);
+            }
+            return;
+        }
+        if (key == GLFW_KEY_SPACE)
+        {
+            if (!isRunning())
+            {
+                Toggle();
+                m_camera->ToggleCamera();
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                return;
+            }
+        }
+        if (!isRunning())
+            return;
         m_camera->key_callback(window, key, scancode, action, mods);
     }
 
     void TestLighting::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     {
+        if (!isRunning())
+            return;
         m_camera->mouse_callback(window, xpos, ypos);
     }
 }

@@ -78,7 +78,8 @@
 			"map": "cpp",
 			"set": "cpp",
 			"unordered_set": "cpp",
-			"regex": "cpp"
+			"regex": "cpp",
+			"future": "cpp"
 		}
 	},
 	"extensions": {
