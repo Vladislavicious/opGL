@@ -17,7 +17,7 @@ namespace v
         bool direction[4];
         virtual void Stop() { for (int i = 0; i<4; i++) direction[i] = false; }
     public:
-        Movable() { Stop(); }
+        Movable() { for (int i = 0; i<4; i++) direction[i] = false; }
         virtual void Move() {}
         virtual void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
         {

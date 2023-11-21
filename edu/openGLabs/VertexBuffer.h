@@ -12,7 +12,8 @@ private:
 	unsigned int bufferID;
 public:
 	VertexBuffer(const void* data, unsigned int sizeInBites);
-	VertexBuffer(std::vector<Vertex> &vertices);
+	explicit VertexBuffer(std::vector<Vertex> &vertices);
+	VertexBuffer(): bufferID(0) {};
 	~VertexBuffer();
 
 	void Bind() const;

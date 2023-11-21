@@ -3,7 +3,7 @@
 namespace v
 {
     Raycast::Raycast():
-        active(false)
+        impactBody(nullptr), active(false)
     {
     }
 

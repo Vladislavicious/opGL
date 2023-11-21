@@ -28,8 +28,8 @@ namespace v
         std::shared_ptr<v::boundBox> getBbox(glm::vec3 positon, glm::vec3 size, bool isStatic,
                                             bool lockAxisX = false, bool lockAxisY = false, bool lockAxisZ = false);
         void deleteBbox(std::shared_ptr<v::boundBox> box);
-        void deleteBbox(v::Object* box);
-        void deleteBbox(q3Body* body);
+        void deleteBbox(const v::Object* box);
+        void deleteBbox(const q3Body* body);
         void Dump(q3Body* body);
         void RayCast( q3QueryCallback *cb, q3RaycastData& rayCast ) const { m_scene->RayCast(cb, rayCast); }
 

@@ -7,18 +7,23 @@ class VertexBufferLayout;
 #include "VertexBuffer.h"
 class VertexBuffer;
 #include "myVertex.h"
+
 class VertexArray
 {
 private:
 	unsigned int vertexArrayID;
-	VertexBufferLayout *layout;
-	VertexBuffer *buffer;
+	VertexBufferLayout layout;
+	VertexBuffer* buffer;
 public:
 	VertexArray();
-	VertexArray(std::vector<Vertex>& vertices);
+	explicit VertexArray(std::vector<Vertex>& vertices);
+	VertexArray(const VertexArray& other) = delete;
+	VertexArray(VertexArray&& other) = delete;
 	~VertexArray();
 
 	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vbLayout);
+
+	VertexArray operator = (const VertexArray& a) = delete;
 
 	void Bind() const;
 	void UnBind() const;

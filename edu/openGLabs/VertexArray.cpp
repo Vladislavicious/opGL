@@ -1,7 +1,7 @@
 #include "VertexArray.h"
 
 VertexArray::VertexArray() :
-	vertexArrayID(0), layout(nullptr), buffer(nullptr)
+	vertexArrayID(0), layout(), buffer()
 {
 	GLCall(glGenVertexArrays(1, &vertexArrayID));
 }
@@ -10,16 +10,13 @@ VertexArray::VertexArray(std::vector<Vertex>& vertices) :
 	vertexArrayID(0), layout(getLayout()), buffer(new VertexBuffer(vertices))
 {
 	GLCall(glGenVertexArrays(1, &vertexArrayID));
-    AddBuffer(*buffer, *layout);
+    AddBuffer(*buffer, layout);
 }
 
 VertexArray::~VertexArray()
 {
 	GLCall(glDeleteVertexArrays(1, &vertexArrayID));
-	if (buffer != nullptr)
-		delete buffer;
-	if (layout != nullptr)
-		delete layout;
+	delete buffer;
 }
 
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vbLayout)
@@ -27,11 +24,10 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vb
 	this->Bind();
 	if (buffer == nullptr)
 		buffer = new VertexBuffer(vb);
-	if (layout == nullptr)
-		layout = new VertexBufferLayout(vbLayout);
+	layout = VertexBufferLayout(vbLayout);
 	buffer->Bind();
 
-	const auto& elements = layout->GetLayoutElements();
+	const auto& elements = layout.GetLayoutElements();
 
 	unsigned int offset = 0;
 
@@ -40,7 +36,7 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vb
 		const auto& element = elements[i];
 
 
-		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout->GetStride(), (void*)offset));
+		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (void*)offset));
 		GLCall(glEnableVertexAttribArray(i));
 
 		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);

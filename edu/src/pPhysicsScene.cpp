@@ -28,11 +28,11 @@ namespace v
         deleteBbox(box.get());
     }
 
-    void PhysicScene::deleteBbox(v::Object* box)
+    void PhysicScene::deleteBbox(const v::Object* box)
     {
         bool found = false;
         auto item = m_bBoxes.begin();
-        for (item; item != m_bBoxes.end(); item++)
+        for (; item != m_bBoxes.end(); item++)
         {
             if ( item->get() == box )
             {
@@ -46,11 +46,11 @@ namespace v
         }
     }
 
-    void PhysicScene::deleteBbox(q3Body* body)
+    void PhysicScene::deleteBbox(const q3Body* body)
     {
         bool found = false;
         auto item = m_bBoxes.begin();
-        for (item; item != m_bBoxes.end(); item++)
+        for (; item != m_bBoxes.end(); item++)
         {
             auto ptr = *item;
             if ( ptr->getBody() == body )

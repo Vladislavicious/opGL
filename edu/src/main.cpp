@@ -24,6 +24,7 @@ float lastFrame = 0.0f; // Time of last frame
 
 test::Test* currentTest = nullptr;
 
+//if (size == 1896 || size == 592 || size == 632 || size == 216)
 int main()
 {
     //                                        Инициализация
@@ -33,9 +34,6 @@ int main()
         return 1;
     }
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
-
-    GLFWmonitor* mon = glfwGetPrimaryMonitor ();
-    const GLFWvidmode* vmode = glfwGetVideoMode (mon);
     window = glfwCreateWindow (WinWidth, WinHeight, "Figure", NULL, NULL);
     glfwSetWindowSizeCallback (window, glfw_window_size_callback);
 

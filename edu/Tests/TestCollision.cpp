@@ -5,7 +5,8 @@ extern float deltaTime;
 
 namespace test {
 
-	TestCollision::TestCollision()
+	TestCollision::TestCollision():
+        time_elapsed(0.0f)
 	{
         m_renderer = Renderer::getInstance();
 

@@ -11,11 +11,8 @@ public:
 	std::string vertexShader;
 	std::string fragmentShader;
 
-	ShaderProgramSource(std::string verShader, std::string fragShader)
-	{
-		vertexShader = verShader;
-		fragmentShader = fragShader;
-	}
+	ShaderProgramSource(const std::string& verShader, const std::string& fragShader):
+		vertexShader(verShader), fragmentShader(fragShader) {}
 };
 
 enum ShaderType
@@ -49,7 +46,7 @@ public:
 	void SetUniformMat4f(const std::string& name, glm::mat4& matrix);
 
 private://functions
-	int GetUniformLocation(const std::string name);
+	int GetUniformLocation(const std::string& name);
 
 	ShaderProgramSource ParseShader(const std::string& vsFilePath, const std::string& fsFilePath);
 

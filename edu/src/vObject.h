@@ -12,8 +12,8 @@ namespace v
         glm::vec3 m_pos;
         glm::vec3 m_size;
 
-        std::shared_ptr<Shader> m_shader;
-        std::unique_ptr<myModel> m_model;
+        Shader m_shader;
+        myModel m_model;
         Renderer* m_renderer;
         virtual glm::mat4 createModelMatrix();
     public:
@@ -26,8 +26,8 @@ namespace v
         virtual glm::vec3& getPos() { return m_pos; }
         virtual void setPos(glm::vec3 position) { m_pos = position; }
         virtual void addVelVec(float x, float y, float z) { m_pos += glm::vec3(x, y, z); }
-        virtual const myModel& getModel() { return *m_model; }
-        virtual std::shared_ptr<Shader> getShader() { return m_shader; }
+        virtual const myModel& getModel() { return m_model; }
+        virtual Shader* getShader() { return &m_shader; }
     };
 }
 

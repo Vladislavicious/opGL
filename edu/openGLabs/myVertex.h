@@ -15,6 +15,6 @@ struct Vertex {
 };
 
 std::vector<Vertex> getVertices(float* data, unsigned int count);
-VertexBufferLayout* getLayout();
+VertexBufferLayout getLayout();
 
 #endif // _MY_VERTEX_H

@@ -53,7 +53,7 @@ namespace v
     void boundBox::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)
     {
         Object::ToDrawShader(viewMatrix, projMatrix);
-        m_shader->SetUniform3f("colour", glm::vec3(0.6f));
+        m_shader.SetUniform3f("colour", glm::vec3(0.6f));
     }
 
     void boundBox::rotate(q3Vec3 axis, float angle)

@@ -29,7 +29,7 @@ namespace v
     void PointLight::ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix)
     {
         Object::ToDrawShader(viewMatrix, projMatrix);
-        m_shader->SetUniform3f("colour", m_diffuse);
+        m_shader.SetUniform3f("colour", m_diffuse);
     }
 
 

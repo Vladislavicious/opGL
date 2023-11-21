@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h> // подключение GLFW
 #include "stb_image.h"
 #include "loader.h"
+
 class Texture: public v::Loadable
 {
 private:
@@ -15,8 +16,13 @@ private:
 	int m_Width, m_Height, m_BPP;
 	std::string m_type;
 	void Load() override;
+
 public:
-	Texture(const std::string& path, const std::string& type = "texture_specular");
+	explicit Texture(const std::string& path, const std::string& type = "texture_specular");
+	static std::vector<Texture> m_LoadedTextures;
+	static Texture* getTexture(const std::string& path, const std::string& type = "texture_specular");
+	static void deleteTextures();
+
 	~Texture();
 
 	void bind(unsigned int slot = 0) const;

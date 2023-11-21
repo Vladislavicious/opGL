@@ -75,12 +75,15 @@ namespace test {
         float a = glfwGetTime();
         v::Loader::processLoadQueue();
         std::cout << "Time: " << glfwGetTime() - a << std::endl;
+
+        Toggle();
 	}
 
 	TestShadow::~TestShadow()
 	{
         auto scene = v::PhysicScene::getInstance();
         delete scene;
+        Texture::deleteTextures();
 	}
 
 	void TestShadow::OnUpdate(float deltaTime)

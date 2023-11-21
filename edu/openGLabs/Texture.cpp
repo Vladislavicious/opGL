@@ -1,6 +1,8 @@
 #include "Texture.h"
 #include "Renderer.h"
 
+std::vector<Texture> Texture::m_LoadedTextures = std::vector<Texture>();
+
 void Texture::Load()
 {
 	stbi_set_flip_vertically_on_load(1);
@@ -21,12 +23,32 @@ void Texture::Load()
 	v::Loadable::Load();
 }
 
+Texture* Texture::getTexture(const std::string &path, const std::string &type)
+{
+	for(unsigned int j = 0; j < Texture::m_LoadedTextures.size(); j++)
+	{
+		if(std::strcmp(Texture::m_LoadedTextures[j].getPath().data(), path.c_str()) == 0)
+		{
+			return &Texture::m_LoadedTextures[j];
+		}
+	}
+
+	Texture::m_LoadedTextures.emplace_back(path, type);
+	return &Texture::m_LoadedTextures.back();
+}
+
+void Texture::deleteTextures()
+{
+	for (const auto &texture : Texture::m_LoadedTextures)
+		texture.~Texture();
+	m_LoadedTextures.clear();
+}
+
 Texture::Texture(const std::string &path, const std::string &type)
     : m_TextureID(0), m_FilePath(path), m_localBuffer(nullptr),
       m_Width(0), m_Height(0), m_BPP(0), m_type(type)
 {
-	//v::Loader::addToLoadQueue(this);
-	Load();
+	v::Loader::addToLoadQueue(this);
 }
 
 Texture::~Texture()

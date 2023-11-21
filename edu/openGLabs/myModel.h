@@ -19,18 +19,16 @@ class myModel : public v::Loadable
         // model data
         std::string m_fullPath;
         std::string m_directory;
-        std::vector<std::shared_ptr<myMesh>> m_meshes;
-        std::vector<std::shared_ptr<Texture>> m_texturesLoaded;
-        const aiScene *m_scene;
+        std::vector<myMesh> m_meshes;
         void Load() override;
-        void processNode(aiNode *node);
-        void processMesh(aiMesh *mesh);
-        std::vector<std::shared_ptr<Texture>> loadMaterialTextures(aiMaterial *mat,
+        void processNode(aiNode *node, const aiScene *scene);
+        void processMesh(aiMesh *mesh, const aiScene *scene);
+        std::vector<Texture*> loadMaterialTextures(aiMaterial *mat,
                                                                     aiTextureType type,
                                                                     std::string typeName);
     public:
-        inline const std::vector<std::shared_ptr<myMesh>> getMeshes() const { return m_meshes; }
-        myModel(const std::string& path);
+        void Draw(Shader& shader) const;
+        explicit myModel(const std::string& path);
 };
 
 #endif // MY_MODEL_H_

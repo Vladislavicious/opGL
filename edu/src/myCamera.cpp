@@ -5,9 +5,9 @@ extern int WinWidth;
 extern int WinHeight;
 extern float deltaTime;
 
-myCamera::myCamera()
+myCamera::myCamera():
+    cameraPos(glm::vec3(0.0f))
 {
-    cameraPos   = glm::vec3(0.0f, 0.0f,  0.0f);
     cameraFront = glm::vec3(0.0f, 0.0f, 1.0f);
     cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
     currentSpeed= glm::vec3(0.0f, 0.0f,  0.0f);

@@ -70,6 +70,8 @@ add_subdirectory(Dependencies/qu3e)
 # Set `source` variable to all .h and .cpp files in `edu/src`
 file(GLOB_RECURSE source CONFIGURE_DEPENDS "edu/src/*.h" "edu/src/*.cpp" "edu/Tests/*.h" "edu/Tests/*.cpp" "edu/openGLabs/*.h" "edu/openGLabs/*.cpp")
 
+include (CTest)
 add_executable(CMakeGraphicsProject ${source} ${imgui-source})
+add_test(example_test CMakeGraphicsProject)
 target_link_libraries(CMakeGraphicsProject ${OPENGL_LIBRARIES} glad glfw stb_image glm assimp qu3e)
 target_include_directories(CMakeGraphicsProject PRIVATE ${imgui-directory} ${GLM_INCLUDE_DIR} ${STB_IMAGE_DIR} ${ASSIMP_DIR} ${qu3e_DIRECTORY})

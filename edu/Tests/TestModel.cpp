@@ -184,7 +184,7 @@ namespace test {
             m_modelShader->SetUniform3f("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
 
         m_renderer = Renderer::getInstance();
-        m_renderer->Draw(*m_backpack, *m_modelShader);
+        m_backpack->Draw(*m_modelShader);
 
         m_renderer->Draw(*m_lightVertexArray, *m_lightIndexBuffer, *m_lightShader);
 	}
