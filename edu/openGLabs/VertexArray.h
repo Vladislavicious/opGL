@@ -18,7 +18,8 @@ public:
 	VertexArray();
 	explicit VertexArray(std::vector<Vertex>& vertices);
 	VertexArray(const VertexArray& other) = delete;
-	VertexArray(VertexArray&& other) = delete;
+	VertexArray(VertexArray&& other) noexcept: vertexArrayID(other.vertexArrayID),
+												layout(std::move(other.layout)), buffer(std::move(other.buffer)) {};
 	~VertexArray();
 
 	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vbLayout);

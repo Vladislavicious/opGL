@@ -16,9 +16,9 @@ namespace test {
 		m_textures.push_back(std::make_shared<Texture>("../edu/res/cont.png", "texture_diffuse"));
         m_textures.push_back(std::make_shared<Texture>("../edu/res/spec.png", "texture_specular"));
 
-        auto lightPos = glm::vec3(0.8f, -0.8f, 0.4f);
+        auto lightPos = glm::vec3(0.8f, 3.0f, 0.4f);
         auto lightPos1 = glm::vec3(8.8f, 2.3f, 1.4f);
-        auto lightPos2 = glm::vec3(3.8f, 1.8f, -0.4f);
+        auto lightPos2 = glm::vec3(-7.8f, 1.8f, -6.4f);
         m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
                                                 glm::vec3(1.0f, 0.0f, 0.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
@@ -28,36 +28,33 @@ namespace test {
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
                                                 "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_pointLights.push_back(std::make_shared<v::PointLight>(lightPos2, glm::vec3(0.5f), glm::vec3(0.3f, 0.3f, 0.3f),
-                                                glm::vec3(0.0f, 0.0f, 1.0f),
+                                                glm::vec3(0.7f, 0.0f, 1.0f),
                                                 glm::vec3(1.0f), 1.0f, 0.09f, 0.032f, "../edu/res/cube/cube.obj",
                                                 "../edu/res/lightShader.vs", "../edu/res/lightShader.fs"));
         m_directLight = std::make_unique<v::DirLight>(m_dirLightPower, glm::vec3(0.4f, 0.4f, 0.4f),
-                                                    glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(-0.2f, -1.0f, -0.3f));
+                                                    glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(-0.1f, -1.0f, 1.0f));
 
         m_spotLight = std::make_unique<v::SpotLight>(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.4f, 0.4f, 0.4f),
                                                     glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(0.8f),
                                                     1.0f, 0.09f, 0.032f, 12.0f, 15.0f);
 
 
-        m_dirLightPower = glm::vec3(0.95f, 0.0f, 0.0f);
-        m_modelMovement = glm::vec3(0.05f, 0.05f, 3.05f);
-
-        m_Player = std::make_shared<v::Player>(glm::vec3(1.0f, 4.0f, 0.5f), glm::vec3(1.0f),
-                                                "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
+        m_dirLightPower = glm::vec3(0.95f, 0.95f, 0.95f);
+        m_Player = std::make_shared<v::Player>(glm::vec3(0.0f, 7.0f, 0.5f), glm::vec3(1.0f),
+                                                "../edu/res/capybarbie/capybarbie.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
-        m_Player->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f, 1.0f, 0.4f), false, true, true, true);
+        m_Player->addBoundBox(glm::vec3(0.0f, -1.5f, 0.0f), glm::vec3(0.6f, 1.5f, 0.4f), false, true, true, true);
+        m_Player->setCameraPosition(glm::vec3(7.5f, 9.0f, -16.0f));
         m_models.push_back(m_Player);
-        auto temp = std::make_shared<v::DynamicModel>(glm::vec3(4.0f, 6.0f, 3.5f), glm::vec3(1.0f),
+        auto temp = std::make_shared<v::DynamicModel>(glm::vec3(0.0f), glm::vec3(1.0f),
+                                                "../edu/res/capybar/capybar.obj", "../edu/res/meshShader.vs",
+                                                "../edu/res/meshShader.fs");
+        m_models.push_back(temp);
+        temp = std::make_shared<v::DynamicModel>(glm::vec3(-3.0f, 7.0f, 2.5f), glm::vec3(1.0f),
                                                 "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
-        temp->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f, 1.0f, 0.4f), false, false, false, false);
         m_models.push_back(temp);
-        temp = std::make_shared<v::DynamicModel>(glm::vec3(-3.0f, 4.0f, 2.5f), glm::vec3(1.0f),
-                                                "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
-                                                "../edu/res/meshShader.fs");
-        temp->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f, 1.0f, 0.4f), false, false, false, false);
-        m_models.push_back(temp);
-        temp = std::make_shared<v::DynamicModel>(glm::vec3(-3.0f, 5.0f, -5.5f), glm::vec3(1.0f),
+        temp = std::make_shared<v::DynamicModel>(glm::vec3(-3.0f, 7.0f, -5.5f), glm::vec3(1.0f),
                                                 "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
         temp->addBoundBox(glm::vec3(0.0f), glm::vec3(0.6f, 1.0f, 0.4f), false, false, false, false);
@@ -69,14 +66,12 @@ namespace test {
         m_models.push_back(temp);
 
         auto scene = v::PhysicScene::getInstance();
-        float planeSize = 15.0f;
-        scene->addWorldBorder(planeSize);
+        float planeSize = 20.0f;
+        scene->addWorldBorder(planeSize, glm::vec3(0.0f, -1.0f, 0.0f));
 
         float a = glfwGetTime();
         v::Loader::processLoadQueue();
         std::cout << "Time: " << glfwGetTime() - a << std::endl;
-
-        Toggle();
 	}
 
 	TestShadow::~TestShadow()
@@ -166,7 +161,6 @@ namespace test {
         if (ImGui::Button("delete"))
             m_Player->deleteBoundBox();
 
-        ImGui::SliderFloat3("Object movement", &m_modelMovement.x, -10.0f, 10.0f, "%.2f");
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
 	}

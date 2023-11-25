@@ -47,6 +47,7 @@ namespace v
         void Update();
         bool isActive() { return m_camHandler.isActive(); }
         void ToggleCamera() { m_camHandler.ToggleCamera(); }
+        void setCameraPosition(glm::vec3 position) { m_camHandler.setPosition(position); }
         glm::vec3 getCameraPosition() { return m_camHandler.getPosition(); }
         glm::vec3 getFront() { return m_camHandler.getFront(); }
         glm::mat4 getViewMatrix() { return m_camHandler.getViewMatrix(); }

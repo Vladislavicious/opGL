@@ -11,6 +11,7 @@ namespace v
     {
     protected:
         std::shared_ptr<v::boundBox> m_bBox;
+        glm::vec3 m_pos_offset;
         glm::mat4 createModelMatrix() override;
     public:
         DynamicModel(glm::vec3 position, glm::vec3 size, const std::string& filePath,

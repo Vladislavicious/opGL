@@ -12,6 +12,7 @@ myMesh::myMesh(myMesh &&other) noexcept
     m_textures(std::move(other.m_textures)), m_VertexArray(std::move(other.m_VertexArray)),
     m_IndexBuffer(std::move(other.m_IndexBuffer))
 {
+    std::cout << "myMesh moved" << std::endl;
 }
 
 myMesh::~myMesh()

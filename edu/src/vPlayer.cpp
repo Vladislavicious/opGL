@@ -55,8 +55,11 @@ namespace v
         {
             addBody();
         }
+        if (m_camHandler.attached)
+                return;
         if (button == GLFW_MOUSE_BUTTON_LEFT)
         {
+
             if (action == GLFW_PRESS)
                 m_ray.Activate();
             if (action == GLFW_RELEASE)
@@ -119,7 +122,7 @@ namespace v
     glm::mat4 Player::getProjectionMatrix()
     {
         if (m_camHandler.attached)
-            return m_camHandler.getProjectionMatrix(0.01f + 0.5f, 70.0f);
+            return m_camHandler.getProjectionMatrix(0.01f + 0.9f, 70.0f);
         return m_camHandler.getProjectionMatrix(0.01f, 70.0f);
     }
 

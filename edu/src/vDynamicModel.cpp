@@ -5,7 +5,7 @@ namespace v
 {
     DynamicModel::DynamicModel(glm::vec3 position, glm::vec3 size, const std::string& filePath,
                 const std::string& vsShaderPath, const std::string& fsShaderPath):
-        Object(position, size, filePath, vsShaderPath, fsShaderPath), m_bBox(nullptr)
+        Object(position, size, filePath, vsShaderPath, fsShaderPath), m_bBox(nullptr), m_pos_offset(0.0f)
     {
     }
 
@@ -16,6 +16,7 @@ namespace v
         {
             model = m_bBox->getNonScaledModelMatrix();
             model = glm::scale(model, m_size);
+            model = glm::translate(model, m_pos_offset);
             auto vec = m_bBox->getPos();
             setPos(vec);
         }
@@ -32,7 +33,8 @@ namespace v
         if (m_bBox != nullptr)
             std::cout << "переопределение bBox'a еще не сделано\n";
         auto scene = v::PhysicScene::getInstance();
-        m_bBox = scene->getBbox(m_pos + relatedPosition, size, isStatic, lockAxisX, lockAxisY, lockAxisZ);
+        m_pos_offset = relatedPosition;
+        m_bBox = scene->getBbox(m_pos, size, isStatic, lockAxisX, lockAxisY, lockAxisZ);
     }
 
     void DynamicModel::deleteBoundBox()

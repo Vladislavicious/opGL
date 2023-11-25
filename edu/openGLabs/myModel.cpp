@@ -7,7 +7,7 @@ void myModel::Draw(Shader& shader) const
 
     for (const auto& mesh : m_meshes)
     {
-        mesh.Draw(shader);
+        mesh->Draw(shader);
     }
 }
 
@@ -103,8 +103,8 @@ void myModel::processMesh(aiMesh *mesh, const aiScene *scene)
                                             aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
-
-    m_meshes.emplace_back(std::move(vertices), std::move(indices), std::move(textures));
+    auto ptr = std::make_shared<myMesh>(std::move(vertices), std::move(indices), std::move(textures));
+    m_meshes.push_back(ptr);
 }
 
 std::vector<Texture*> myModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type,

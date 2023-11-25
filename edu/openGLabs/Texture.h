@@ -19,7 +19,7 @@ private:
 
 public:
 	explicit Texture(const std::string& path, const std::string& type = "texture_specular");
-	static std::vector<Texture> m_LoadedTextures;
+	static std::vector<Texture*> m_LoadedTextures;
 	static Texture* getTexture(const std::string& path, const std::string& type = "texture_specular");
 	static void deleteTextures();
 

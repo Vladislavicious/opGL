@@ -15,8 +15,9 @@ void Loader::Load(Loadable *loadable)
 void Loader::addToLoadQueue(Loadable *loadable)
 {
     Loader::loadQueue.push_back(loadable);
-    //Load(loadable);
-    futures.push_back(std::async(std::launch::async, Loader::Load, loadable));
+    Load(loadable);
+    //auto a = std::thread(&Loader::Load, loadable);
+    //a.detach();
 }
 
 void Loader::processLoadQueue()

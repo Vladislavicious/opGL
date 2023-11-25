@@ -19,7 +19,7 @@ class myModel : public v::Loadable
         // model data
         std::string m_fullPath;
         std::string m_directory;
-        std::vector<myMesh> m_meshes;
+        std::vector<std::shared_ptr<myMesh>> m_meshes;
         void Load() override;
         void processNode(aiNode *node, const aiScene *scene);
         void processMesh(aiMesh *mesh, const aiScene *scene);

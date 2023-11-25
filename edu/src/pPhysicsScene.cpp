@@ -96,21 +96,21 @@ namespace v
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-    void PhysicScene::addWorldBorder(float Width)
+    void PhysicScene::addWorldBorder(float Width, glm::vec3 position)
     {
         float planeWidth = 1.0f;
-        getBbox(glm::vec3(0.0f), glm::vec3(Width, planeWidth, Width), true);
-        getBbox(glm::vec3(0.0f, Width + planeWidth, Width + planeWidth),
+        getBbox(glm::vec3(0.0f) + position, glm::vec3(Width, planeWidth, Width), true);
+        getBbox(glm::vec3(0.0f, Width + planeWidth, Width + planeWidth) + position,
                         glm::vec3(Width, Width, planeWidth), true);
-        getBbox(glm::vec3(0.0f, Width + planeWidth, -Width - planeWidth),
+        getBbox(glm::vec3(0.0f, Width + planeWidth, -Width - planeWidth) + position,
                         glm::vec3(Width, Width, planeWidth), true);
-        auto temp = getBbox(glm::vec3(Width + planeWidth, Width + planeWidth, 0.0f),
-                        glm::vec3(Width, Width, planeWidth), true);
-        temp->rotateY(90.0f);
-        temp = getBbox(glm::vec3(-Width - planeWidth, Width + planeWidth, 0.0f),
+        auto temp = getBbox(glm::vec3(Width + planeWidth, Width + planeWidth, 0.0f) + position,
                         glm::vec3(Width, Width, planeWidth), true);
         temp->rotateY(90.0f);
-        temp = getBbox(glm::vec3(0.0f, 2 * Width + planeWidth * 2, 0.0f), glm::vec3(Width, Width, planeWidth), true);
+        temp = getBbox(glm::vec3(-Width - planeWidth, Width + planeWidth, 0.0f) + position,
+                        glm::vec3(Width, Width, planeWidth), true);
+        temp->rotateY(90.0f);
+        temp = getBbox(glm::vec3(0.0f, 2 * Width + planeWidth * 2, 0.0f) + position, glm::vec3(Width, Width, planeWidth), true);
         temp->rotateX(90.0f);
     }
 

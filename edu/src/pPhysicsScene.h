@@ -36,7 +36,7 @@ namespace v
         void ToDrawShader(glm::mat4& viewMatrix, glm::mat4& projMatrix);
         void Draw();
         void Step() { m_scene->Step(); }
-        void addWorldBorder(float Width);
+        void addWorldBorder(float Width, glm::vec3 position = glm::vec3(0.0f));
         static PhysicScene* getInstance()
         {
             if (instancePtr == nullptr)

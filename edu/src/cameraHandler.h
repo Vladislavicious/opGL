@@ -27,6 +27,7 @@ public:
     void setInitialFront(glm::vec3 front) { m_camera->setInitialFront(front); }
     void ToggleCamera() { m_camera->toggleMouse(); }
     void attachCamera(v::Object* obj, glm::vec3 offset = glm::vec3(0.0f, 1.0f, 0.0f));
+    void setPosition(glm::vec3 position) { m_camera->setPosition(position); }
     void unAttach() { attached = false; m_obj = nullptr; m_camera->setPosition(prevPosition); }
     void update();
 
