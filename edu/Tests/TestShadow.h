@@ -16,6 +16,7 @@ namespace test {
 
 		glm::vec3 m_dirLightPower;
 		glm::vec3 m_modelMovement;
+		glm::vec3 m_dirLightDirection;
 
 		std::vector<std::shared_ptr<Texture>> m_textures;
 		std::shared_ptr<v::Player> m_Player;

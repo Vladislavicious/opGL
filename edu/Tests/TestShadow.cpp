@@ -50,10 +50,6 @@ namespace test {
                                                 "../edu/res/capybar/capybar.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
         m_models.push_back(temp);
-        temp = std::make_shared<v::DynamicModel>(glm::vec3(-3.0f, 7.0f, 2.5f), glm::vec3(1.0f),
-                                                "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
-                                                "../edu/res/meshShader.fs");
-        m_models.push_back(temp);
         temp = std::make_shared<v::DynamicModel>(glm::vec3(-3.0f, 7.0f, -5.5f), glm::vec3(1.0f),
                                                 "../edu/res/Ancient_Vase.obj", "../edu/res/meshShader.vs",
                                                 "../edu/res/meshShader.fs");
@@ -126,6 +122,7 @@ namespace test {
 
             modelShader->SetUniform1f("material.shininess", 32.0f);
 
+            m_directLight->ChangeLightDir(m_dirLightDirection);
             m_directLight->setLightColor(m_dirLightPower);
             m_directLight->ToObjectShader(*modelShader, "dirLight");
 
@@ -163,6 +160,7 @@ namespace test {
 
         ImGui::SliderFloat3("light colour", &m_pointLights[0]->getLightColor().x, 0.0f, 1.0f, "%.2f");
         ImGui::SliderFloat3("directional light", &m_dirLightPower.x, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat3("dirlight direction", &m_dirLightDirection.x, -1.0f, 1.0f, "%.2f");
 	}
 
     void TestShadow::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
